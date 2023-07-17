@@ -8,8 +8,8 @@
 
 import Foundation
 
-public extension Performance {
-    static let sample = Performance(
+public extension PerformanceEntity {
+    static let sample = PerformanceEntity(
         category: .sample,
         title: "sample",
         todos: [.sample]

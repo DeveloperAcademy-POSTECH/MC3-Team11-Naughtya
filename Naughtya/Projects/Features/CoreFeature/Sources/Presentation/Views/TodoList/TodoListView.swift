@@ -11,11 +11,7 @@ import SwiftUI
 public struct TodoListView: View {
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
-    private let todos: [Todo]
-
-    public init(todos: [Todo]) {
-        self.todos = todos
-    }
+    public let todos: [TodoModel]
 
     public var body: some View {
         VStack {
@@ -23,9 +19,10 @@ public struct TodoListView: View {
                 buildTodoItem(todo)
             }
         }
+        .padding(.leading, 16)
     }
 
-    private func toggleCompleted(_ todo: Todo) {
+    private func toggleCompleted(_ todo: TodoEntity) {
         if todo.isCompleted {
             Self.todoUseCase.undoCompleted(todo)
         } else {
@@ -33,10 +30,10 @@ public struct TodoListView: View {
         }
     }
 
-    private func buildTodoItem(_ todo: Todo) -> some View {
+    private func buildTodoItem(_ todo: TodoModel) -> some View {
         HStack {
             Button(todo.isCompleted ? "✅" : "◻️") {
-                toggleCompleted(todo)
+                toggleCompleted(todo.entity)
             }
             Text(todo.id.uuidString)
             Spacer()

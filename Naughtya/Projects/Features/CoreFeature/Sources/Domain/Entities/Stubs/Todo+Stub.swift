@@ -8,6 +8,6 @@
 
 import Foundation
 
-public extension Todo {
-    static let sample = Todo(project: .sample)
+public extension TodoEntity {
+    static let sample = TodoEntity(project: .sample)
 }

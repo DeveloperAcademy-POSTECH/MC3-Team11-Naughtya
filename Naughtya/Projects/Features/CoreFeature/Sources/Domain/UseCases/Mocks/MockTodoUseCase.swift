@@ -9,20 +9,22 @@
 import Foundation
 
 struct MockTodoUseCase: TodoUseCase {
-    func create(project: Project) async throws -> Todo {
-        Todo(project: project)
+    func create(project: ProjectEntity) async throws -> TodoEntity {
+        let todo = TodoEntity(project: project)
+        project.todos.append(todo)
+        return todo
     }
 
-    func update(_ todo: Todo, title: String) async throws -> Todo {
+    func update(_ todo: TodoEntity, title: String) async throws -> TodoEntity {
         todo.title = title
         return todo
     }
 
-    func complete(_ todo: Todo) {
+    func complete(_ todo: TodoEntity) {
         todo.completedAt = .now
     }
 
-    func undoCompleted(_ todo: Todo) {
+    func undoCompleted(_ todo: TodoEntity) {
         todo.completedAt = nil
     }
 }

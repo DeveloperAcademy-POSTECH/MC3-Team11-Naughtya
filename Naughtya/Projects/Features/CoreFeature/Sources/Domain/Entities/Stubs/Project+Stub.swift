@@ -8,6 +8,6 @@
 
 import Foundation
 
-public extension Project {
-    static let sample = Project(category: "sample")
+public extension ProjectEntity {
+    static let sample = ProjectEntity(category: "sample")
 }

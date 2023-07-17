@@ -8,26 +8,26 @@
 
 import Foundation
 
-public extension TodoHistory {
-    static let sampleNotDaily = TodoHistory(
+public extension TodoHistoryEntity {
+    static let sampleNotDaily = TodoHistoryEntity(
         isDaily: false,
         isCompleted: false,
         createdAt: .now
     )
 
-    static let sampleDaily = TodoHistory(
+    static let sampleDaily = TodoHistoryEntity(
         isDaily: true,
         isCompleted: false,
         createdAt: .now
     )
 
-    static let sampleCompleted = TodoHistory(
+    static let sampleCompleted = TodoHistoryEntity(
         isDaily: false,
         isCompleted: true,
         createdAt: .now
     )
 
-    static let sampleDailyCompleted = TodoHistory(
+    static let sampleDailyCompleted = TodoHistoryEntity(
         isDaily: true,
         isCompleted: true,
         createdAt: .now

@@ -9,14 +9,11 @@
 import SwiftUI
 
 public struct ProjectListView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
+    private static let projectUseCase: ProjectUseCase = MockProjectUseCase.shared
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
-    @State private var projects: [Project] = []
+    public let projects: [ProjectModel]
     @State private var newProjectCategory: String = ""
-
-    public init() {
-    }
 
     public var body: some View {
         List {
@@ -33,40 +30,33 @@ public struct ProjectListView: View {
                 Spacer()
             }
         }
-        .onAppear {
-            Task {
-                projects = try await Self.projectUseCase.readList()
-            }
-        }
     }
 
     private func appendNewProject() {
         Task {
-            let project = try await Self.projectUseCase.create(
+            try await Self.projectUseCase.create(
                 category: newProjectCategory,
                 goals: nil,
                 startedAt: nil,
                 endedAt: nil
             )
-            projects.append(project)
             newProjectCategory = ""
         }
     }
 
-    private func appendNewTodo(project: Project) {
+    private func appendNewTodo(project: ProjectEntity) {
         Task {
-            let todo = try await Self.todoUseCase.create(project: project)
-            project.todos.append(todo)
+            try await Self.todoUseCase.create(project: project)
         }
     }
 
-    private func buildProjectItem(_ project: Project) -> some View {
+    private func buildProjectItem(_ project: ProjectModel) -> some View {
         VStack {
             HStack {
                 Text(project.category)
                 Text("\(project.completedTodos.count)/\(project.todos.count)")
                 Button("추가") {
-                    appendNewTodo(project: project)
+                    appendNewTodo(project: project.entity)
                 }
                 Spacer()
             }
@@ -77,6 +67,6 @@ public struct ProjectListView: View {
 
 struct ProjectListView_Previews: PreviewProvider {
     static var previews: some View {
-        ProjectListView()
+        ProjectListView(projects: [])
     }
 }

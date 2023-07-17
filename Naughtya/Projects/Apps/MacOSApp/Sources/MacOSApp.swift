@@ -13,7 +13,7 @@ import MacOSCoreFeature
 struct MacOSApp: App {
     var body: some Scene {
         WindowGroup {
-            ProjectListView()
+            DashboardView()
         }
     }
 }

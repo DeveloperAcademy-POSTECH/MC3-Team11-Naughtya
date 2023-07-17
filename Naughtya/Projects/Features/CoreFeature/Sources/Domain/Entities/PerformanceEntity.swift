@@ -1,5 +1,5 @@
 //
-//  Performance.swift
+//  PerformanceEntity.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-public struct Performance {
+public struct PerformanceEntity {
     public let category: PerformanceCategory
     public let title: String
-    public let todos: [Todo]
+    public let todos: [TodoEntity]
 }

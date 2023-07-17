@@ -1,5 +1,5 @@
 //
-//  TodoHistory.swift
+//  TodoHistoryEntity.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct TodoHistory: Equatable {
+public struct TodoHistoryEntity: Equatable {
     public let isDaily: Bool
     public let isCompleted: Bool
     public let createdAt: Date

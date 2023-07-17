@@ -9,13 +9,14 @@
 import Foundation
 
 public protocol TodoUseCase {
-    func create(project: Project) async throws -> Todo
+    @discardableResult
+    func create(project: ProjectEntity) async throws -> TodoEntity
 
     func update(
-        _ todo: Todo,
+        _ todo: TodoEntity,
         title: String
-    ) async throws -> Todo
+    ) async throws -> TodoEntity
 
-    func complete(_ todo: Todo)
-    func undoCompleted(_ todo: Todo)
+    func complete(_ todo: TodoEntity)
+    func undoCompleted(_ todo: TodoEntity)
 }

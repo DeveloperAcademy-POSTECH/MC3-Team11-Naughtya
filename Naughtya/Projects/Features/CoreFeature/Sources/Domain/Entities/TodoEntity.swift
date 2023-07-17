@@ -1,5 +1,5 @@
 //
-//  Todo.swift
+//  TodoEntity.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -8,19 +8,19 @@
 
 import Foundation
 
-public class Todo: Equatable, Identifiable {
+public class TodoEntity: Equatable, Identifiable {
     public let id: UUID = .init()
-    public unowned let project: Project
+    public unowned let project: ProjectEntity
     public internal(set) var title: String?
     public internal(set) var createdAt: Date
-    public internal(set) var histories: [TodoHistory]
+    public internal(set) var histories: [TodoHistoryEntity]
     public internal(set) var completedAt: Date?
 
     public init(
-        project: Project,
+        project: ProjectEntity,
         title: String? = nil,
         createdAt: Date = .now,
-        histories: [TodoHistory] = [],
+        histories: [TodoHistoryEntity] = [],
         completedAt: Date? = nil
     ) {
         self.project = project
@@ -34,7 +34,7 @@ public class Todo: Equatable, Identifiable {
         completedAt != nil
     }
 
-    public static func == (lhs: Todo, rhs: Todo) -> Bool {
+    public static func == (lhs: TodoEntity, rhs: TodoEntity) -> Bool {
         lhs === rhs
     }
 }
