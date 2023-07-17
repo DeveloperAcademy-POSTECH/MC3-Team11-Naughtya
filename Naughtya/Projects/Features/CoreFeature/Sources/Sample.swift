@@ -9,5 +9,5 @@
 import Foundation
 
 public enum Sample {
-    public static let test = "test"
+    public static let test: String = "test"
 }
