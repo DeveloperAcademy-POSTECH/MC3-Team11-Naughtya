@@ -23,6 +23,12 @@ final class MockProjectUseCase: ProjectUseCase {
         startedAt: Date? = nil,
         endedAt: Date? = nil
     ) async throws -> ProjectEntity {
+        guard validateNotEmptyCategory(category) else {
+            throw DomainError(message: "category 없음")
+        }
+        guard validateUniqueCategory(category) else {
+            throw DomainError(message: "category 중복")
+        }
         let project = ProjectEntity(
             category: category,
             goals: goals,
@@ -51,5 +57,13 @@ final class MockProjectUseCase: ProjectUseCase {
         project.startedAt = startedAt
         project.endedAt = endedAt
         return project
+    }
+
+    private func validateNotEmptyCategory(_ category: String) -> Bool {
+        !category.isEmpty
+    }
+
+    private func validateUniqueCategory(_ category: String) -> Bool {
+        projects.first { $0.category == category } == nil
     }
 }

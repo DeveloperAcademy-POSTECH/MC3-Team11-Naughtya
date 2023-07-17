@@ -15,6 +15,8 @@ public struct ProjectModel: Equatable, Identifiable, Modelable {
     public let startedAt: Date?
     public let endedAt: Date?
     public let todos: [TodoModel]
+    public let coldTodos: [TodoModel]
+    public let dailyTodos: [TodoModel]
     public let completedTodos: [TodoModel]
 
     public var id: String {
@@ -29,6 +31,10 @@ public struct ProjectModel: Equatable, Identifiable, Modelable {
             startedAt: entity.startedAt,
             endedAt: entity.endedAt,
             todos: entity.todos
+                .map { .from(entity: $0) },
+            coldTodos: entity.coldTodos
+                .map { .from(entity: $0) },
+            dailyTodos: entity.dailyTodos
                 .map { .from(entity: $0) },
             completedTodos: entity.completedTodos
                 .map { .from(entity: $0) }

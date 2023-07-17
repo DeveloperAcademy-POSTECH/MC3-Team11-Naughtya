@@ -29,11 +29,36 @@ public class ProjectEntity: Equatable {
         self.todos = todos
     }
 
+    public var coldTodos: [TodoEntity] {
+        todos
+            .filter { !$0.isDaily }
+            .sortedByCompleted()
+    }
+
+    public var dailyTodos: [TodoEntity] {
+        todos.filter { $0.isDaily }
+    }
+
     public var completedTodos: [TodoEntity] {
         todos.filter { $0.isCompleted }
     }
 
     public static func == (lhs: ProjectEntity, rhs: ProjectEntity) -> Bool {
         lhs === rhs
+    }
+}
+
+// TODO: generic하게 만들기
+private extension Collection where Element == TodoEntity {
+    func sortedByCompleted() -> [Element] {
+        self.sorted {
+            if $0.isCompleted && !$1.isCompleted {
+                return false
+            } else if !$0.isCompleted && $1.isCompleted {
+                return true
+            } else {
+                return false
+            }
+        }
     }
 }

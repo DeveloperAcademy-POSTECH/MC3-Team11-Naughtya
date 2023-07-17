@@ -15,20 +15,28 @@ public struct ProjectListView: View {
     public let projects: [ProjectModel]
     @State private var newProjectCategory: String = ""
 
+    public init(projects: [ProjectModel]) {
+        self.projects = projects
+    }
+
     public var body: some View {
-        List {
+        VStack(spacing: 16) {
+            projectInputView
             ForEach(projects) { project in
                 buildProjectItem(project)
             }
-            HStack {
-                TextField(text: $newProjectCategory) {
-                    Text("새 프로젝트")
-                }
-                Button("추가") {
-                    appendNewProject()
-                }
-                Spacer()
+        }
+    }
+
+    private var projectInputView: some View {
+        HStack {
+            TextField(text: $newProjectCategory) {
+                Text("Category")
             }
+            Button("Project 추가") {
+                appendNewProject()
+            }
+            Spacer()
         }
     }
 
@@ -46,21 +54,27 @@ public struct ProjectListView: View {
 
     private func appendNewTodo(project: ProjectEntity) {
         Task {
-            try await Self.todoUseCase.create(project: project)
+            try await Self.todoUseCase.create(
+                project: project,
+                isDaily: false
+            )
         }
     }
 
     private func buildProjectItem(_ project: ProjectModel) -> some View {
-        VStack {
+        VStack(spacing: 8) {
             HStack {
                 Text(project.category)
+                    .font(.headline)
                 Text("\(project.completedTodos.count)/\(project.todos.count)")
-                Button("추가") {
+                Button("Todo 추가") {
                     appendNewTodo(project: project.entity)
                 }
                 Spacer()
             }
-            TodoListView(todos: project.todos.reversed())
+            if !project.coldTodos.isEmpty {
+                TodoListView(todos: project.coldTodos)
+            }
         }
     }
 }

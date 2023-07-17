@@ -13,6 +13,7 @@ public struct TodoModel: Equatable, Identifiable, Modelable {
     public let id: UUID
     public let title: String?
     public let createdAt: Date
+    public let isDaily: Bool
     public let histories: [TodoHistoryEntity]
     public let completedAt: Date?
     public let isCompleted: Bool
@@ -23,6 +24,7 @@ public struct TodoModel: Equatable, Identifiable, Modelable {
             id: entity.id,
             title: entity.title,
             createdAt: entity.createdAt,
+            isDaily: entity.isDaily,
             histories: entity.histories,
             completedAt: entity.completedAt,
             isCompleted: entity.isCompleted

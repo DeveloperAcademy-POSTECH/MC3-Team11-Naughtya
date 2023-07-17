@@ -9,8 +9,14 @@
 import Foundation
 
 struct MockTodoUseCase: TodoUseCase {
-    func create(project: ProjectEntity) async throws -> TodoEntity {
-        let todo = TodoEntity(project: project)
+    func create(
+        project: ProjectEntity,
+        isDaily: Bool
+    ) async throws -> TodoEntity {
+        let todo = TodoEntity(
+            project: project,
+            isDaily: isDaily
+        )
         project.todos.append(todo)
         return todo
     }
@@ -18,6 +24,14 @@ struct MockTodoUseCase: TodoUseCase {
     func update(_ todo: TodoEntity, title: String) async throws -> TodoEntity {
         todo.title = title
         return todo
+    }
+
+    func addToDaily(_ todo: TodoEntity) {
+        todo.isDaily = true
+    }
+
+    func removeFromDaily(_ todo: TodoEntity) {
+        todo.isDaily = false
     }
 
     func complete(_ todo: TodoEntity) {

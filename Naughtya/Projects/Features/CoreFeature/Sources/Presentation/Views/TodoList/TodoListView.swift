@@ -13,13 +13,24 @@ public struct TodoListView: View {
 
     public let todos: [TodoModel]
 
+    public init(todos: [TodoModel]) {
+        self.todos = todos
+    }
+
     public var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             ForEach(todos) { todo in
                 buildTodoItem(todo)
             }
         }
-        .padding(.leading, 16)
+    }
+
+    private func toggleDaily(_ todo: TodoEntity) {
+        if todo.isDaily {
+            Self.todoUseCase.removeFromDaily(todo)
+        } else {
+            Self.todoUseCase.addToDaily(todo)
+        }
     }
 
     private func toggleCompleted(_ todo: TodoEntity) {
@@ -36,6 +47,11 @@ public struct TodoListView: View {
                 toggleCompleted(todo.entity)
             }
             Text(todo.id.uuidString)
+            if !todo.isCompleted {
+                Button("🔄") {
+                    toggleDaily(todo.entity)
+                }
+            }
             Spacer()
         }
     }
