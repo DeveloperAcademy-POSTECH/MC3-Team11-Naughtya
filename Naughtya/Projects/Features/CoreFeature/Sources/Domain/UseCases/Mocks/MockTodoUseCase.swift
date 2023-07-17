@@ -17,4 +17,12 @@ struct MockTodoUseCase: TodoUseCase {
         todo.title = title
         return todo
     }
+
+    func complete(_ todo: Todo) {
+        todo.completedAt = .now
+    }
+
+    func undoCompleted(_ todo: Todo) {
+        todo.completedAt = nil
+    }
 }

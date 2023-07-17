@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Project: Identifiable {
+public class Project: Equatable, Identifiable {
     public let category: String
     public internal(set) var goals: String?
     public internal(set) var startedAt: Date?
@@ -31,5 +31,13 @@ public class Project: Identifiable {
 
     public var id: String {
         category
+    }
+
+    public var completedTodos: [Todo] {
+        todos.filter { $0.isCompleted }
+    }
+
+    public static func == (lhs: Project, rhs: Project) -> Bool {
+        lhs === rhs
     }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Todo: Identifiable {
+public class Todo: Equatable, Identifiable {
     public let id: UUID = .init()
     public unowned let project: Project
     public internal(set) var title: String?
@@ -32,5 +32,9 @@ public class Todo: Identifiable {
 
     public var isCompleted: Bool {
         completedAt != nil
+    }
+
+    public static func == (lhs: Todo, rhs: Todo) -> Bool {
+        lhs === rhs
     }
 }

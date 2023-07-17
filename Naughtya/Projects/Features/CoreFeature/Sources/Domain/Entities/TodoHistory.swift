@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct TodoHistory {
+public struct TodoHistory: Equatable {
     public let isDaily: Bool
     public let isCompleted: Bool
     public let createdAt: Date

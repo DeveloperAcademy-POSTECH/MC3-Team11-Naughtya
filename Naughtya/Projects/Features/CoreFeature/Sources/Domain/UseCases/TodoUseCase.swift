@@ -15,4 +15,7 @@ public protocol TodoUseCase {
         _ todo: Todo,
         title: String
     ) async throws -> Todo
+
+    func complete(_ todo: Todo)
+    func undoCompleted(_ todo: Todo)
 }
