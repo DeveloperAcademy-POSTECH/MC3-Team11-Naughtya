@@ -9,6 +9,7 @@
 import SwiftUI
 
 public struct TodoListView: View {
+    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
     public let todos: [TodoModel]
@@ -31,18 +32,28 @@ public struct TodoListView: View {
     }
 
     private func toggleDaily(_ todo: TodoEntity) {
-        if todo.isDaily {
-            Self.todoUseCase.removeFromDaily(todo)
-        } else {
-            Self.todoUseCase.addToDaily(todo)
+        Task {
+            if todo.isDaily {
+                try Self.todoUseCase.removeFromDaily(todo)
+            } else {
+                try Self.todoUseCase.addToDaily(todo)
+            }
         }
     }
 
     private func toggleCompleted(_ todo: TodoEntity) {
-        if todo.isCompleted {
-            Self.todoUseCase.undoCompleted(todo)
-        } else {
-            Self.todoUseCase.complete(todo)
+        Task {
+            if todo.isCompleted {
+                try Self.todoUseCase.undoCompleted(todo)
+            } else {
+                try Self.todoUseCase.complete(todo)
+            }
+        }
+    }
+
+    private func delete(_ todo: TodoEntity) {
+        Task {
+            try Self.projectUseCase.delete(todo: todo)
         }
     }
 
@@ -60,6 +71,9 @@ public struct TodoListView: View {
                 Button("🔄") {
                     toggleDaily(todo.entity)
                 }
+            }
+            Button("🚮") {
+                delete(todo.entity)
             }
             Spacer()
         }

@@ -14,7 +14,7 @@ struct MockTodoUseCase: TodoUseCase {
     func create(
         project: ProjectEntity,
         isDaily: Bool
-    ) async throws -> TodoEntity {
+    ) throws -> TodoEntity {
         defer { Self.projectStore.update() }
         let todo = TodoEntity(
             project: project,
@@ -24,7 +24,7 @@ struct MockTodoUseCase: TodoUseCase {
         return todo
     }
 
-    func update(_ todo: TodoEntity, title: String) async throws -> TodoEntity {
+    func update(_ todo: TodoEntity, title: String) throws -> TodoEntity {
         defer { Self.projectStore.update() }
         todo.title = title
         return todo

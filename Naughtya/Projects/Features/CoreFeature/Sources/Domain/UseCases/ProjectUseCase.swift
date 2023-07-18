@@ -15,15 +15,17 @@ public protocol ProjectUseCase {
         goals: String?,
         startedAt: Date?,
         endedAt: Date?
-    ) async throws -> ProjectEntity
+    ) throws -> ProjectEntity
 
-    func readList() async throws -> [ProjectEntity]
-    func readItem(category: String) async throws -> ProjectEntity
+    func readList() throws -> [ProjectEntity]
+    func readItem(category: String) throws -> ProjectEntity
 
     func update(
         _ project: ProjectEntity,
         goals: String?,
         startedAt: Date?,
         endedAt: Date?
-    ) async throws -> ProjectEntity
+    ) throws -> ProjectEntity
+
+    func delete(todo: TodoEntity) throws
 }

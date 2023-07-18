@@ -25,7 +25,7 @@ final class MockProjectUseCase: ProjectUseCase {
         goals: String? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil
-    ) async throws -> ProjectEntity {
+    ) throws -> ProjectEntity {
         guard validateNotEmptyCategory(category) else {
             throw DomainError(message: "category 없음")
         }
@@ -42,11 +42,11 @@ final class MockProjectUseCase: ProjectUseCase {
         return project
     }
 
-    func readList() async throws -> [ProjectEntity] {
+    func readList() throws -> [ProjectEntity] {
         projects
     }
 
-    func readItem(category: String) async throws -> ProjectEntity {
+    func readItem(category: String) throws -> ProjectEntity {
         projects.first { $0.category == category }!
     }
 
@@ -55,12 +55,20 @@ final class MockProjectUseCase: ProjectUseCase {
         goals: String? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil
-    ) async throws -> ProjectEntity {
+    ) throws -> ProjectEntity {
         defer { Self.store.update() }
         project.goals = goals
         project.startedAt = startedAt
         project.endedAt = endedAt
         return project
+    }
+
+    func delete(todo: TodoEntity) throws {
+        defer { Self.store.update() }
+        projects
+            .first { $0 === todo.project }?
+            .todos
+            .removeAll(where: { $0 === todo })
     }
 
     private func validateNotEmptyCategory(_ category: String) -> Bool {

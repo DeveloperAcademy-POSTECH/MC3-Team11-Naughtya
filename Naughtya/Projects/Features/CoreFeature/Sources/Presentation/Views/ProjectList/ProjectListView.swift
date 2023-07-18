@@ -42,7 +42,7 @@ public struct ProjectListView: View {
 
     private func appendNewProject() {
         Task {
-            try await Self.projectUseCase.create(
+            try Self.projectUseCase.create(
                 category: newProjectCategory,
                 goals: nil,
                 startedAt: nil,
@@ -54,7 +54,7 @@ public struct ProjectListView: View {
 
     private func appendNewTodo(project: ProjectEntity) {
         Task {
-            try await Self.todoUseCase.create(
+            try Self.todoUseCase.create(
                 project: project,
                 isDaily: false
             )

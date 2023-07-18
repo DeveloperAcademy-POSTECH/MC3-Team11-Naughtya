@@ -13,15 +13,15 @@ public protocol TodoUseCase {
     func create(
         project: ProjectEntity,
         isDaily: Bool
-    ) async throws -> TodoEntity
+    ) throws -> TodoEntity
 
     func update(
         _ todo: TodoEntity,
         title: String
-    ) async throws -> TodoEntity
+    ) throws -> TodoEntity
 
-    func addToDaily(_ todo: TodoEntity)
-    func removeFromDaily(_ todo: TodoEntity)
-    func complete(_ todo: TodoEntity)
-    func undoCompleted(_ todo: TodoEntity)
+    func addToDaily(_ todo: TodoEntity) throws
+    func removeFromDaily(_ todo: TodoEntity) throws
+    func complete(_ todo: TodoEntity) throws
+    func undoCompleted(_ todo: TodoEntity) throws
 }
