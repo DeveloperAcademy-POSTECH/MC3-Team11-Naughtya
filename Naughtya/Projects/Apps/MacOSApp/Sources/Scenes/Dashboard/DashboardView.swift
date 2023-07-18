@@ -15,6 +15,11 @@ struct DashboardView: View {
     var body: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading) {
+                List {
+                    ProjectListView(projects: viewModel.projects)
+                }
+            }
+            VStack(alignment: .leading) {
                 Text("Daily")
                     .font(.title)
                 List {
@@ -25,7 +30,7 @@ struct DashboardView: View {
                 Text("Projects")
                     .font(.title)
                 List {
-                    ProjectListView(projects: viewModel.projects)
+                    ProjectTodoListView(projects: viewModel.projects)
                 }
             }
         }

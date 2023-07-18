@@ -23,7 +23,7 @@ struct DashboardView: View {
             VStack(alignment: .leading) {
                 Text("Projects")
                 ScrollView {
-                    ProjectListView(projects: viewModel.projects)
+                    ProjectTodoListView(projects: viewModel.projects)
                 }
             }
         }
