@@ -47,18 +47,3 @@ public class ProjectEntity: Equatable {
         lhs === rhs
     }
 }
-
-// TODO: generic하게 만들기
-private extension Collection where Element == TodoEntity {
-    func sortedByCompleted() -> [Element] {
-        self.sorted {
-            if $0.isCompleted && !$1.isCompleted {
-                return false
-            } else if !$0.isCompleted && $1.isCompleted {
-                return true
-            } else {
-                return false
-            }
-        }
-    }
-}

@@ -7,28 +7,32 @@
 //
 
 import Foundation
+import Combine
 
 @MainActor
 public final class DashboardViewModel: ObservableObject {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase.shared
+    private static let projectStore: ProjectStore = .shared
 
     @Published public var projects: [ProjectModel] = []
     @Published public var dailyTodos: [TodoModel] = []
+    private var cancellable = Set<AnyCancellable>()
 
     public init() {
         setupFetchingData()
     }
 
     private func setupFetchingData() {
-        // TODO: observing 필요
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [unowned self] _ in
-            fetchData()
-        }
+        Self.projectStore.objectWillChange
+            .sink { _ in
+            } receiveValue: { [unowned self] _ in
+                fetchData()
+            }
+            .store(in: &cancellable)
     }
 
     private func fetchData() {
         Task {
-            projects = try await Self.projectUseCase.readList()
+            projects = Self.projectStore.projects
                 .map { .from(entity: $0) }
             dailyTodos = projects
                 .flatMap { $0.dailyTodos }

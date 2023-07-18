@@ -9,12 +9,15 @@
 import Foundation
 
 final class MockProjectUseCase: ProjectUseCase {
-    static let shared: ProjectUseCase = MockProjectUseCase()
+    private static let store: ProjectStore = .shared
 
-    // TODO: Store 필요
-    private var projects: [ProjectEntity] = []
-
-    private init() {
+    private var projects: [ProjectEntity] {
+        get {
+            Self.store.projects
+        }
+        set {
+            Self.store.projects = newValue
+        }
     }
 
     func create(
@@ -53,6 +56,7 @@ final class MockProjectUseCase: ProjectUseCase {
         startedAt: Date? = nil,
         endedAt: Date? = nil
     ) async throws -> ProjectEntity {
+        defer { Self.store.update() }
         project.goals = goals
         project.startedAt = startedAt
         project.endedAt = endedAt
