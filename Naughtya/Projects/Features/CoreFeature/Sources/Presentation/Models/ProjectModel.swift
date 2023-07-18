@@ -20,7 +20,7 @@ public struct ProjectModel: Equatable, Identifiable, Modelable {
     public let completedTodos: [TodoModel]
 
     public var id: String {
-        category
+        entity.id
     }
 
     public static func from(entity: ProjectEntity) -> Self {

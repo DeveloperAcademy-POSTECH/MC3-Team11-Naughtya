@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class ProjectEntity: Equatable {
+public class ProjectEntity: Equatable, Identifiable {
     public let category: String
     public internal(set) var goals: String?
     public internal(set) var startedAt: Date?
@@ -29,10 +29,12 @@ public class ProjectEntity: Equatable {
         self.todos = todos
     }
 
+    public var id: String {
+        category
+    }
+
     public var coldTodos: [TodoEntity] {
-        todos
-            .filter { !$0.isDaily }
-            .sortedByCompleted()
+        todos.filter { !$0.isDaily }
     }
 
     public var dailyTodos: [TodoEntity] {

@@ -9,7 +9,6 @@
 import Foundation
 
 public class TodoEntity: Equatable, Identifiable {
-    public let id: UUID = .init()
     public unowned let project: ProjectEntity
     public internal(set) var title: String?
     public internal(set) var createdAt: Date
@@ -33,8 +32,23 @@ public class TodoEntity: Equatable, Identifiable {
         self.completedAt = completedAt
     }
 
+    public var id: ObjectIdentifier {
+        ObjectIdentifier(self)
+    }
+
     public var isCompleted: Bool {
         completedAt != nil
+    }
+
+    public func swap(_ other: TodoEntity) {
+        defer { isDaily = other.isDaily }
+        guard let myIndex = project.todos.firstIndex(of: self),
+              let otherIndex = project.todos.firstIndex(of: other) else {
+            return
+        }
+        let mine = project.todos[myIndex]
+        project.todos.remove(at: myIndex)
+        project.todos.insert(mine, at: otherIndex)
     }
 
     public static func == (lhs: TodoEntity, rhs: TodoEntity) -> Bool {
