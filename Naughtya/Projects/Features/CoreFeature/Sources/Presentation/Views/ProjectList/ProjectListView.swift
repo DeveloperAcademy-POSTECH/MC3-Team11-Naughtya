@@ -73,7 +73,10 @@ public struct ProjectListView: View {
                 Spacer()
             }
             if !project.coldTodos.isEmpty {
-                TodoListView(todos: project.coldTodos)
+                TodoListView(
+                    todos: project.coldTodos,
+                    isNested: true
+                )
             }
         }
     }

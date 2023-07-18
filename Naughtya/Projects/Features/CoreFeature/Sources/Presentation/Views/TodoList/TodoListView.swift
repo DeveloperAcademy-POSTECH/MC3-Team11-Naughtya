@@ -12,9 +12,14 @@ public struct TodoListView: View {
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
     public let todos: [TodoModel]
+    public let isNested: Bool
 
-    public init(todos: [TodoModel]) {
+    public init(
+        todos: [TodoModel] = [],
+        isNested: Bool = false
+    ) {
         self.todos = todos
+        self.isNested = isNested
     }
 
     public var body: some View {
@@ -46,7 +51,11 @@ public struct TodoListView: View {
             Button(todo.isCompleted ? "✅" : "◻️") {
                 toggleCompleted(todo.entity)
             }
-            Text(todo.id.uuidString)
+            if !isNested {
+                Text("[\(todo.category)]")
+                    .font(.headline)
+            }
+            Text(todo.id.uuidString.prefix(8))
             if !todo.isCompleted {
                 Button("🔄") {
                     toggleDaily(todo.entity)
