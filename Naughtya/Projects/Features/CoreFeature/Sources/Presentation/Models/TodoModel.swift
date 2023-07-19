@@ -11,7 +11,7 @@ import Foundation
 public struct TodoModel: Modelable {
     public let entity: TodoEntity
     public let category: String
-    public let title: String?
+    public let title: String
     public let isDaily: Bool
     public let isCompleted: Bool
 

@@ -11,7 +11,7 @@ import Foundation
 public class TodoEntity: Equatable, Identifiable {
     public unowned let project: ProjectEntity
     public unowned var dailyTodoList: DailyTodoListEntity?
-    public internal(set) var title: String?
+    public internal(set) var title: String
     public internal(set) var createdAt: Date
     public internal(set) var histories: [TodoHistoryEntity]
     public internal(set) var completedAt: Date?
@@ -19,7 +19,7 @@ public class TodoEntity: Equatable, Identifiable {
     public init(
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity? = nil,
-        title: String? = nil,
+        title: String = "",
         createdAt: Date = .now,
         histories: [TodoHistoryEntity] = [],
         completedAt: Date? = nil

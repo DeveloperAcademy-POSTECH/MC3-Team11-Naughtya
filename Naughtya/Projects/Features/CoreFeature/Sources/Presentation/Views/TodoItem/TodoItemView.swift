@@ -16,6 +16,7 @@ public struct TodoItemView: View {
     public let isNested: Bool
     public let isDummy: Bool
     public let dragDropDelegate: DragDropDelegate
+    @State private var title: String
     @State private var absoluteRect: CGRect!
     @State private var isBeenDragging = false
 
@@ -29,6 +30,7 @@ public struct TodoItemView: View {
         self.isNested = isNested
         self.isDummy = isDummy
         self.dragDropDelegate = dragDropDelegate
+        self.title = todo.title
     }
 
     public var body: some View {
@@ -37,23 +39,28 @@ public struct TodoItemView: View {
             VStack {
                 Spacer()
                 HStack(alignment: .center) {
+                    Text("🖱️")
                     Button(todo.isCompleted ? "✅" : "◻️") {
-                        toggleCompleted(todo.entity)
+                        toggleCompleted()
                     }
                     .buttonStyle(.borderless)
                     if !isNested {
                         Text("[\(todo.category)]")
                             .font(.headline)
                     }
-                    Text("\(todo.id.hashValue)")
+                    TextField(text: $title) {
+                        Text("Todo")
+                            .foregroundColor(.gray)
+                    }
+                    .textFieldStyle(.plain)
                     if !todo.isCompleted {
                         Button("🔄") {
-                            toggleDaily(todo.entity)
+                            toggleDaily()
                         }
                         .buttonStyle(.borderless)
                     }
                     Button("🚮") {
-                        delete(todo.entity)
+                        delete()
                     }
                     .buttonStyle(.borderless)
                     Spacer()
@@ -71,6 +78,7 @@ public struct TodoItemView: View {
             }
         }
         .frame(height: 40)
+        .background(.white)
         .opacity(isBeenDragging ? 0 : 1)
         .gesture(
             DragGesture()
@@ -98,6 +106,9 @@ public struct TodoItemView: View {
                     )
                 }
         )
+        .onChange(of: title) { _ in
+            updateTitle()
+        }
     }
 
     private func setupAbsoluteRect(_ rect: CGRect) {
@@ -108,29 +119,38 @@ public struct TodoItemView: View {
         )
     }
 
-    private func toggleDaily(_ todo: TodoEntity) {
+    private func updateTitle() {
         Task {
-            if todo.isDaily {
-                try Self.dailyTodoListUseCase.removeTodoFromDaily(todo)
+            try Self.todoUseCase.update(
+                todo.entity,
+                title: title
+            )
+        }
+    }
+
+    private func toggleDaily() {
+        Task {
+            if todo.entity.isDaily {
+                try Self.dailyTodoListUseCase.removeTodoFromDaily(todo.entity)
             } else {
-                try Self.dailyTodoListUseCase.addTodoToDaily(todo)
+                try Self.dailyTodoListUseCase.addTodoToDaily(todo.entity)
             }
         }
     }
 
-    private func toggleCompleted(_ todo: TodoEntity) {
+    private func toggleCompleted() {
         Task {
-            if todo.isCompleted {
-                try Self.todoUseCase.undoCompleted(todo)
+            if todo.entity.isCompleted {
+                try Self.todoUseCase.undoCompleted(todo.entity)
             } else {
-                try Self.todoUseCase.complete(todo)
+                try Self.todoUseCase.complete(todo.entity)
             }
         }
     }
 
-    private func delete(_ todo: TodoEntity) {
+    private func delete() {
         Task {
-            try Self.todoUseCase.delete(todo)
+            try Self.todoUseCase.delete(todo.entity)
         }
     }
 }
