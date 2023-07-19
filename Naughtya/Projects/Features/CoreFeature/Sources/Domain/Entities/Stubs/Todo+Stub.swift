@@ -9,8 +9,5 @@
 import Foundation
 
 public extension TodoEntity {
-    static let sample = TodoEntity(
-        project: .sample,
-        isDaily: false
-    )
+    static let sample = TodoEntity(project: .sample)
 }

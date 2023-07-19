@@ -9,14 +9,14 @@
 import Foundation
 
 final class MockProjectUseCase: ProjectUseCase {
-    private static let store: ProjectStore = .shared
+    private static let projectStore: ProjectStore = .shared
 
     private var projects: [ProjectEntity] {
         get {
-            Self.store.projects
+            Self.projectStore.projects
         }
         set {
-            Self.store.projects = newValue
+            Self.projectStore.projects = newValue
         }
     }
 
@@ -56,19 +56,11 @@ final class MockProjectUseCase: ProjectUseCase {
         startedAt: Date? = nil,
         endedAt: Date? = nil
     ) throws -> ProjectEntity {
-        defer { Self.store.update() }
+        defer { Self.projectStore.update() }
         project.goals = goals
         project.startedAt = startedAt
         project.endedAt = endedAt
         return project
-    }
-
-    func delete(todo: TodoEntity) throws {
-        defer { Self.store.update() }
-        projects
-            .first { $0 === todo.project }?
-            .todos
-            .removeAll(where: { $0 === todo })
     }
 
     private func validateNotEmptyCategory(_ category: String) -> Bool {

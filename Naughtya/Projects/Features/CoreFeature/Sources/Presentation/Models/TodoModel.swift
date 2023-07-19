@@ -8,16 +8,12 @@
 
 import Foundation
 
-public struct TodoModel: Equatable, Identifiable, Modelable {
+public struct TodoModel: Modelable {
     public let entity: TodoEntity
     public let category: String
     public let title: String?
     public let isDaily: Bool
     public let isCompleted: Bool
-
-    public var id: ObjectIdentifier {
-        entity.id
-    }
 
     public static func from(entity: TodoEntity) -> Self {
         TodoModel(

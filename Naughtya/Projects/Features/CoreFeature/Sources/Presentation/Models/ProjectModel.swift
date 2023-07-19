@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ProjectModel: Equatable, Identifiable, Modelable {
+public struct ProjectModel: Modelable {
     public let entity: ProjectEntity
     public let category: String
     public let goals: String?
@@ -18,10 +18,6 @@ public struct ProjectModel: Equatable, Identifiable, Modelable {
     public let coldTodos: [TodoModel]
     public let dailyTodos: [TodoModel]
     public let completedTodos: [TodoModel]
-
-    public var id: String {
-        entity.id
-    }
 
     public static func from(entity: ProjectEntity) -> Self {
         ProjectModel(

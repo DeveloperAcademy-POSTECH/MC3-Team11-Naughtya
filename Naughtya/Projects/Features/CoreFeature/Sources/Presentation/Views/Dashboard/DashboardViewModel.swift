@@ -14,7 +14,6 @@ public final class DashboardViewModel: ObservableObject {
     private static let projectStore: ProjectStore = .shared
 
     @Published public var projects: [ProjectModel] = []
-    @Published public var dailyTodos: [TodoModel] = []
     private var cancellable = Set<AnyCancellable>()
 
     public init() {
@@ -23,19 +22,12 @@ public final class DashboardViewModel: ObservableObject {
 
     private func setupFetchingData() {
         Self.projectStore.objectWillChange
+            .receive(on: DispatchQueue.main)
             .sink { _ in
             } receiveValue: { [unowned self] _ in
-                fetchData()
+                projects = Self.projectStore.projects
+                    .map { .from(entity: $0) }
             }
             .store(in: &cancellable)
-    }
-
-    private func fetchData() {
-        Task {
-            projects = Self.projectStore.projects
-                .map { .from(entity: $0) }
-            dailyTodos = projects
-                .flatMap { $0.dailyTodos }
-        }
     }
 }

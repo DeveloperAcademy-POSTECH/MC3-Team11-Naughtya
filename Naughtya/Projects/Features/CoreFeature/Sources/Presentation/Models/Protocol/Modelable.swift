@@ -8,10 +8,17 @@
 
 import Foundation
 
-public protocol Modelable {
-    associatedtype Entity
+public protocol Modelable: Equatable, Identifiable {
+    associatedtype Entity: Identifiable
 
     var entity: Entity { get }
+    var id: Entity.ID { get }
 
     static func from(entity: Entity) -> Self
+}
+
+public extension Modelable {
+    var id: Entity.ID {
+        entity.id
+    }
 }

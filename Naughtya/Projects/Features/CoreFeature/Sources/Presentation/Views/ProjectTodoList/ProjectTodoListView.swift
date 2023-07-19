@@ -56,7 +56,7 @@ public struct ProjectTodoListView: View {
         Task {
             try Self.todoUseCase.create(
                 project: project,
-                isDaily: false
+                dailyTodoList: nil
             )
         }
     }

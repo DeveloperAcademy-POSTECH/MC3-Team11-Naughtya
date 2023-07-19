@@ -9,10 +9,11 @@
 import SwiftUI
 
 public struct TodoItemView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
     public let todo: TodoModel
+    public let isNested: Bool
     public let isDummy: Bool
     public let dragDropDelegate: DragDropDelegate
     @State private var absoluteRect: CGRect!
@@ -20,10 +21,12 @@ public struct TodoItemView: View {
 
     public init(
         todo: TodoModel,
+        isNested: Bool = false,
         isDummy: Bool = false,
         dragDropDelegate: DragDropDelegate = DragDropManager.shared
     ) {
         self.todo = todo
+        self.isNested = isNested
         self.isDummy = isDummy
         self.dragDropDelegate = dragDropDelegate
     }
@@ -38,6 +41,10 @@ public struct TodoItemView: View {
                         toggleCompleted(todo.entity)
                     }
                     .buttonStyle(.borderless)
+                    if !isNested {
+                        Text("[\(todo.category)]")
+                            .font(.headline)
+                    }
                     Text("\(todo.id.hashValue)")
                     if !todo.isCompleted {
                         Button("🔄") {
@@ -104,9 +111,9 @@ public struct TodoItemView: View {
     private func toggleDaily(_ todo: TodoEntity) {
         Task {
             if todo.isDaily {
-                try Self.todoUseCase.removeFromDaily(todo)
+                try Self.dailyTodoListUseCase.removeTodoFromDaily(todo)
             } else {
-                try Self.todoUseCase.addToDaily(todo)
+                try Self.dailyTodoListUseCase.addTodoToDaily(todo)
             }
         }
     }
@@ -123,7 +130,7 @@ public struct TodoItemView: View {
 
     private func delete(_ todo: TodoEntity) {
         Task {
-            try Self.projectUseCase.delete(todo: todo)
+            try Self.todoUseCase.delete(todo)
         }
     }
 }

@@ -9,8 +9,10 @@
 import Foundation
 
 public final class DragDropManager: ObservableObject, DragDropDelegate {
-    public static let shared = DragDropManager()
+    public static let shared: DragDropManager = .init()
     private static let projectStore: ProjectStore = .shared
+    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
     @Published public var dragged: DraggedModel?
     @Published public var todoAbsoluteRectMap = [TodoEntity: CGRect]()
@@ -50,14 +52,24 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         _ item: DragDropItemable,
         touchLocation: CGPoint
     ) {
-        if let todo = item as? TodoEntity {
-            if let targetTodo = todoAbsoluteRectMap
-                .first(where: { $1.contains(touchLocation) })?
-                .key {
-                todo.swap(targetTodo)
-                Self.projectStore.update()
+        if let todo = item as? TodoEntity,
+           let targetTodo = getTargetTodo(touchLocation: touchLocation) {
+            Task {
+                defer { updateStores() }
+                try Self.todoUseCase.swap(todo, targetTodo)
             }
         }
         dragged = nil
+    }
+
+    private func updateStores() {
+        Self.projectStore.update()
+        Self.dailyTodoListStore.update()
+    }
+
+    private func getTargetTodo(touchLocation: CGPoint) -> TodoEntity? {
+        todoAbsoluteRectMap
+            .first(where: { $1.contains(touchLocation) })?
+            .key
     }
 }

@@ -10,24 +10,24 @@ import Foundation
 
 public class TodoEntity: Equatable, Identifiable {
     public unowned let project: ProjectEntity
+    public unowned var dailyTodoList: DailyTodoListEntity?
     public internal(set) var title: String?
     public internal(set) var createdAt: Date
-    public internal(set) var isDaily: Bool
     public internal(set) var histories: [TodoHistoryEntity]
     public internal(set) var completedAt: Date?
 
     public init(
         project: ProjectEntity,
+        dailyTodoList: DailyTodoListEntity? = nil,
         title: String? = nil,
         createdAt: Date = .now,
-        isDaily: Bool,
         histories: [TodoHistoryEntity] = [],
         completedAt: Date? = nil
     ) {
         self.project = project
+        self.dailyTodoList = dailyTodoList
         self.title = title
         self.createdAt = createdAt
-        self.isDaily = isDaily
         self.histories = histories
         self.completedAt = completedAt
     }
@@ -36,19 +36,12 @@ public class TodoEntity: Equatable, Identifiable {
         ObjectIdentifier(self)
     }
 
-    public var isCompleted: Bool {
-        completedAt != nil
+    public var isDaily: Bool {
+        dailyTodoList != nil
     }
 
-    public func swap(_ other: TodoEntity) {
-        defer { isDaily = other.isDaily }
-        guard let myIndex = project.todos.firstIndex(of: self),
-              let otherIndex = project.todos.firstIndex(of: other) else {
-            return
-        }
-        let mine = project.todos[myIndex]
-        project.todos.remove(at: myIndex)
-        project.todos.insert(mine, at: otherIndex)
+    public var isCompleted: Bool {
+        completedAt != nil
     }
 
     public static func == (lhs: TodoEntity, rhs: TodoEntity) -> Bool {
