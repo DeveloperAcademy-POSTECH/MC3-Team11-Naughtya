@@ -14,6 +14,8 @@ public protocol DragDropDelegate: AnyObject {
         rect: CGRect
     )
 
+    func unregisterAbsoluteRect(_ item: DragDropItemable)
+
     func startToDrag(
         _ item: DragDropItemable,
         size: CGSize,

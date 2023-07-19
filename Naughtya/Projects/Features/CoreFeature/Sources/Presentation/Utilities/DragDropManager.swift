@@ -29,6 +29,12 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         }
     }
 
+    public func unregisterAbsoluteRect(_ item: DragDropItemable) {
+        if let todo = item as? TodoEntity {
+            todoAbsoluteRectMap.removeValue(forKey: todo)
+        }
+    }
+
     public func startToDrag(
         _ item: DragDropItemable,
         size: CGSize,

@@ -39,7 +39,7 @@ public struct TodoItemView: View {
             VStack {
                 Spacer()
                 HStack(alignment: .center) {
-                    Text("🖱️")
+                    dragIndicator
                     Button(todo.isCompleted ? "✅" : "◻️") {
                         toggleCompleted()
                     }
@@ -53,12 +53,10 @@ public struct TodoItemView: View {
                             .foregroundColor(.gray)
                     }
                     .textFieldStyle(.plain)
-                    if !todo.isCompleted {
-                        Button("🔄") {
-                            toggleDaily()
-                        }
-                        .buttonStyle(.borderless)
+                    Button("🔄") {
+                        toggleDaily()
                     }
+                    .buttonStyle(.borderless)
                     Button("🚮") {
                         delete()
                     }
@@ -76,39 +74,54 @@ public struct TodoItemView: View {
                 }
                 setupAbsoluteRect($0)
             }
+            .onChange(of: isBeenDragging) {
+                guard !$0 else {
+                    return
+                }
+                setupAbsoluteRect(absoluteRect)
+            }
         }
         .frame(height: 40)
         .background(.white)
-        .opacity(isBeenDragging ? 0 : 1)
-        .gesture(
-            DragGesture()
-                .onChanged {
-                    let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
-                    if !isBeenDragging {
-                        dragDropDelegate.startToDrag(
-                            todo.entity,
-                            size: absoluteRect.size,
-                            itemLocation: itemLocation
-                        )
-                    } else {
-                        dragDropDelegate.drag(
-                            todo.entity,
-                            itemLocation: itemLocation
-                        )
-                    }
-                    isBeenDragging = true
-                }
-                .onEnded {
-                    isBeenDragging = false
-                    dragDropDelegate.drop(
-                        todo.entity,
-                        touchLocation: absoluteRect.origin + $0.location
-                    )
-                }
-        )
+        .opacity(isBeenDragging || todo.isPlaceholder ? 0 : 1)
         .onChange(of: title) { _ in
             updateTitle()
         }
+        .onDisappear {
+            dragDropDelegate.unregisterAbsoluteRect(todo.entity)
+        }
+    }
+
+    private var dragIndicator: some View {
+        Text("🖱️")
+            .gesture(
+                DragGesture()
+                    .onChanged {
+                        let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
+                        if !isBeenDragging {
+                            dragDropDelegate.startToDrag(
+                                todo.entity,
+                                size: absoluteRect.size,
+                                itemLocation: itemLocation
+                            )
+                        } else {
+                            dragDropDelegate.drag(
+                                todo.entity,
+                                itemLocation: itemLocation
+                            )
+                        }
+                        isBeenDragging = true
+                    }
+                    .onEnded {
+                        dragDropDelegate.drop(
+                            todo.entity,
+                            touchLocation: absoluteRect.origin + $0.location
+                        )
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            isBeenDragging = false
+                        }
+                    }
+            )
     }
 
     private func setupAbsoluteRect(_ rect: CGRect) {

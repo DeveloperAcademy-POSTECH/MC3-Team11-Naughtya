@@ -38,6 +38,13 @@ final class MockProjectUseCase: ProjectUseCase {
             startedAt: startedAt,
             endedAt: endedAt
         )
+        project.todos = [
+            .buildEmptyTodo(
+                project: project,
+                title: "placeholder"
+            ),
+            .buildEmptyTodo(project: project)
+        ]
         projects.append(project)
         return project
     }

@@ -22,7 +22,7 @@ public struct TodoListView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            ForEach(todos) { todo in
+            ForEach(todos.sorted { $1.isPlaceholder }) { todo in
                 TodoItemView(
                     todo: todo,
                     isNested: isNested

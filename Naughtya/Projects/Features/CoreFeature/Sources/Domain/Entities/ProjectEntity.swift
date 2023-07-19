@@ -33,18 +33,6 @@ public class ProjectEntity: Equatable, Identifiable {
         category
     }
 
-    public var coldTodos: [TodoEntity] {
-        todos.filter { !$0.isDaily }
-    }
-
-    public var dailyTodos: [TodoEntity] {
-        todos.filter { $0.isDaily }
-    }
-
-    public var completedTodos: [TodoEntity] {
-        todos.filter { $0.isCompleted }
-    }
-
     public static func == (lhs: ProjectEntity, rhs: ProjectEntity) -> Bool {
         lhs === rhs
     }

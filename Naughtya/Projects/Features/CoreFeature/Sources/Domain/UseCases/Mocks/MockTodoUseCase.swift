@@ -66,12 +66,14 @@ struct MockTodoUseCase: TodoUseCase {
     }
 
     private func swapInProject(_ lhs: TodoEntity, _ rhs: TodoEntity) {
-        guard lhs.project === rhs.project,
-              let indexInProject = rhs.project.todos.firstIndex(of: rhs) else {
-            return
+        if rhs.isPlaceholder {
+            lhs.project.todos.removeAll(where: { $0 === lhs })
+            lhs.project.todos.append(lhs)
+        } else if lhs.project === rhs.project,
+                  let indexInProject = rhs.project.todos.firstIndex(of: rhs) {
+            lhs.project.todos.removeAll(where: { $0 === lhs })
+            lhs.project.todos.insert(lhs, at: indexInProject)
         }
-        lhs.project.todos.removeAll(where: { $0 === lhs })
-        lhs.project.todos.insert(lhs, at: indexInProject)
     }
 
     private func moveToDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) {
@@ -89,11 +91,13 @@ struct MockTodoUseCase: TodoUseCase {
     }
 
     private func swapInDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) {
-        guard let indexInDaily = rhs.dailyTodoList?.todos.firstIndex(of: rhs) else {
-            return
+        if rhs.isPlaceholder {
+            lhs.dailyTodoList?.todos.removeAll(where: { $0 === lhs })
+            lhs.dailyTodoList?.todos.append(lhs)
+        } else if let indexInDaily = rhs.dailyTodoList?.todos.firstIndex(of: rhs) {
+            lhs.dailyTodoList?.todos.removeAll(where: { $0 === lhs })
+            lhs.dailyTodoList?.todos.insert(lhs, at: indexInDaily)
         }
-        lhs.dailyTodoList?.todos.removeAll(where: { $0 === lhs })
-        lhs.dailyTodoList?.todos.insert(lhs, at: indexInDaily)
     }
 
     private func updateStores() {

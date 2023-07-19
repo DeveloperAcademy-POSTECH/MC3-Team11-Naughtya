@@ -12,6 +12,7 @@ public struct TodoModel: Modelable {
     public let entity: TodoEntity
     public let category: String
     public let title: String
+    public let isPlaceholder: Bool
     public let isDaily: Bool
     public let isCompleted: Bool
 
@@ -20,6 +21,7 @@ public struct TodoModel: Modelable {
             entity: entity,
             category: entity.project.category,
             title: entity.title,
+            isPlaceholder: entity.isPlaceholder,
             isDaily: entity.isDaily,
             isCompleted: entity.isCompleted
         )

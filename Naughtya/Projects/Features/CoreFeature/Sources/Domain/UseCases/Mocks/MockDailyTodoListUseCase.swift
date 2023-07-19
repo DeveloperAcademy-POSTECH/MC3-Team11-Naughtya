@@ -24,6 +24,13 @@ final class MockDailyTodoListUseCase: DailyTodoListUseCase {
     func create(date: Date) throws -> DailyTodoListEntity {
         defer { Self.dailyTodoListStore.update() }
         let dailyTodoList = DailyTodoListEntity(date: date)
+        dailyTodoList.todos = [
+            .buildEmptyTodo(
+                project: .sample,
+                dailyTodoList: dailyTodoList,
+                title: "placeholder"
+            )
+        ]
         dailyTodoLists.append(dailyTodoList)
         return dailyTodoList
     }

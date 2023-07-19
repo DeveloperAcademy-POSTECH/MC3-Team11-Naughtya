@@ -36,6 +36,11 @@ public class TodoEntity: Equatable, Identifiable {
         ObjectIdentifier(self)
     }
 
+    public var isPlaceholder: Bool {
+        // TODO: 정규화
+        title == "placeholder"
+    }
+
     public var isDaily: Bool {
         dailyTodoList != nil
     }

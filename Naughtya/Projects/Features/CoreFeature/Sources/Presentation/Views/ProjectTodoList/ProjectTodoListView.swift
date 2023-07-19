@@ -20,10 +20,12 @@ public struct ProjectTodoListView: View {
     }
 
     public var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 40) {
             projectInputView
-            ForEach(projects) { project in
-                buildProjectItem(project)
+            VStack(spacing: 0) {
+                ForEach(projects) { project in
+                    buildProjectItem(project)
+                }
             }
         }
     }
@@ -38,6 +40,7 @@ public struct ProjectTodoListView: View {
             }
             Spacer()
         }
+        .frame(height: 40)
     }
 
     private func appendNewProject() {
@@ -66,7 +69,7 @@ public struct ProjectTodoListView: View {
             HStack {
                 Text(project.category)
                     .font(.headline)
-                Text("\(project.completedTodos.count)/\(project.todos.count)")
+                Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
                 Button("Todo 추가") {
                     appendNewTodo(project: project.entity)
                 }
