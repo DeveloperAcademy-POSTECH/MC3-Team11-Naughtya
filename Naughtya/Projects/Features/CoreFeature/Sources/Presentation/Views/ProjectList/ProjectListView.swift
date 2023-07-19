@@ -15,14 +15,26 @@ public struct ProjectListView: View {
         self.projects = projects
     }
 
+    @State private var showModal = false
+
     public var body: some View {
-        VStack(spacing: 16) {
-            ForEach(projects) { project in
-                HStack {
-                    Text(project.category.uppercased())
-                        .font(.title.weight(.black))
-                    Spacer()
-                    Text("\(project.completedTodos.count)/\(project.todos.count)")
+        VStack {
+            VStack(spacing: 16) {
+                ForEach(projects) { project in
+                    HStack {
+                        Text(project.category.uppercased())
+                            .font(.title.weight(.black))
+                        Spacer()
+                        Text("\(project.completedTodos.count)/\(project.todos.count)")
+                    }
+                }
+            }
+            HStack(alignment: .bottom) {
+                Button("새 프로젝트 생성") {
+                    self.showModal = true
+                }
+                .sheet(isPresented: self.$showModal) {
+                    ProjectSetModalView()
                 }
             }
         }
