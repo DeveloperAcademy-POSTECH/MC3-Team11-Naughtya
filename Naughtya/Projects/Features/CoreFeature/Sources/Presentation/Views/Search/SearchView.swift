@@ -24,17 +24,24 @@ public struct SearchView: View {
         .background(.white)
         .overlay(alignment: .top) {
             if !viewModel.searchedTodos.isEmpty {
-                TodoListView(todos: viewModel.searchedTodos)
-                    .padding()
-                    .background(.white)
-                    .border(.gray)
-                    .offset(y: textFieldHeight)
+                searchedTodoList
             }
         }
         .onChange(of: viewModel.searchedText) { _ in
             viewModel.updateSearchingState()
             viewModel.fetchSearchedTodos()
         }
+    }
+
+    private var searchedTodoList: some View {
+        ScrollView {
+            TodoListView(todos: viewModel.searchedTodos)
+                .padding()
+        }
+        .frame(height: 256)
+        .background(.white)
+        .border(.gray)
+        .offset(y: textFieldHeight)
     }
 }
 
