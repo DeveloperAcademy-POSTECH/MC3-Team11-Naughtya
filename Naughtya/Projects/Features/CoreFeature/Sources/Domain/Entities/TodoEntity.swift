@@ -9,28 +9,40 @@
 import Foundation
 
 public class TodoEntity: Equatable, Identifiable {
-    public let id: UUID = .init()
     public unowned let project: ProjectEntity
-    public internal(set) var title: String?
+    public unowned var dailyTodoList: DailyTodoListEntity?
+    public internal(set) var title: String
     public internal(set) var createdAt: Date
-    public internal(set) var isDaily: Bool
     public internal(set) var histories: [TodoHistoryEntity]
     public internal(set) var completedAt: Date?
 
     public init(
         project: ProjectEntity,
-        title: String? = nil,
+        dailyTodoList: DailyTodoListEntity? = nil,
+        title: String = "",
         createdAt: Date = .now,
-        isDaily: Bool,
         histories: [TodoHistoryEntity] = [],
         completedAt: Date? = nil
     ) {
         self.project = project
+        self.dailyTodoList = dailyTodoList
         self.title = title
         self.createdAt = createdAt
-        self.isDaily = isDaily
         self.histories = histories
         self.completedAt = completedAt
+    }
+
+    public var id: ObjectIdentifier {
+        ObjectIdentifier(self)
+    }
+
+    public var isPlaceholder: Bool {
+        // TODO: 정규화
+        title == "placeholder"
+    }
+
+    public var isDaily: Bool {
+        dailyTodoList != nil
     }
 
     public var isCompleted: Bool {

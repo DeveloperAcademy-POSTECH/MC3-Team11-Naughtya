@@ -12,7 +12,7 @@ public protocol TodoUseCase {
     @discardableResult
     func create(
         project: ProjectEntity,
-        isDaily: Bool
+        dailyTodoList: DailyTodoListEntity?
     ) throws -> TodoEntity
 
     func update(
@@ -20,8 +20,8 @@ public protocol TodoUseCase {
         title: String
     ) throws -> TodoEntity
 
-    func addToDaily(_ todo: TodoEntity) throws
-    func removeFromDaily(_ todo: TodoEntity) throws
+    func delete(_ todo: TodoEntity) throws
     func complete(_ todo: TodoEntity) throws
     func undoCompleted(_ todo: TodoEntity) throws
+    func swap(_ lhs: TodoEntity, _ rhs: TodoEntity) throws
 }

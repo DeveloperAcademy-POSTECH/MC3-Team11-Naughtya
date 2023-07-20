@@ -8,19 +8,32 @@
 
 import Foundation
 
-public struct ProjectModel: Equatable, Identifiable, Modelable {
+public struct ProjectModel: Modelable {
     public let entity: ProjectEntity
     public let category: String
     public let goals: String?
     public let startedAt: Date?
     public let endedAt: Date?
     public let todos: [TodoModel]
-    public let coldTodos: [TodoModel]
-    public let dailyTodos: [TodoModel]
-    public let completedTodos: [TodoModel]
 
-    public var id: String {
-        category
+    public var coldTodos: [TodoModel] {
+        todos.filter { !$0.isDaily }
+    }
+
+    public var dailyTodos: [TodoModel] {
+        todos.filter { $0.isDaily }
+    }
+
+    public var completedTodos: [TodoModel] {
+        todos.filter { $0.isCompleted }
+    }
+
+    public var completedTodosCount: Int {
+        completedTodos.filter { !$0.isPlaceholder }.count
+    }
+
+    public var totalTodosCount: Int {
+        todos.filter { !$0.isPlaceholder }.count
     }
 
     public static func from(entity: ProjectEntity) -> Self {
@@ -31,12 +44,6 @@ public struct ProjectModel: Equatable, Identifiable, Modelable {
             startedAt: entity.startedAt,
             endedAt: entity.endedAt,
             todos: entity.todos
-                .map { .from(entity: $0) },
-            coldTodos: entity.coldTodos
-                .map { .from(entity: $0) },
-            dailyTodos: entity.dailyTodos
-                .map { .from(entity: $0) },
-            completedTodos: entity.completedTodos
                 .map { .from(entity: $0) }
         )
     }

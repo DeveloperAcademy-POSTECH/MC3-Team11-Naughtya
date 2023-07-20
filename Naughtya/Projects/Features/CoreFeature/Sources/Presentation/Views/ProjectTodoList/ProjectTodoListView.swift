@@ -21,42 +21,17 @@ public struct ProjectTodoListView: View {
 
     public var body: some View {
         VStack(spacing: 16) {
-//            projectInputView
             ForEach(projects) { project in
                 buildProjectItem(project)
             }
         }
     }
 
-//    private var projectInputView: some View {
-//        HStack {
-//            TextField(text: $newProjectCategory) {
-//                Text("Category")
-//            }
-//            Button("Project 추가") {
-//                appendNewProject()
-//            }
-//            Spacer()
-//        }
-//    }
-
-//    private func appendNewProject() {
-//        Task {
-//            try Self.projectUseCase.create(
-//                category: newProjectCategory,
-//                goals: nil,
-//                startedAt: nil,
-//                endedAt: nil
-//            )
-//            newProjectCategory = ""
-//        }
-//    }
-
     private func appendNewTodo(project: ProjectEntity) {
         Task {
             try Self.todoUseCase.create(
                 project: project,
-                isDaily: false
+                dailyTodoList: nil
             )
         }
     }
@@ -66,7 +41,7 @@ public struct ProjectTodoListView: View {
             HStack {
                 Text(project.category)
                     .font(.headline)
-                Text("\(project.completedTodos.count)/\(project.todos.count)")
+                Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
                 Button("Todo 추가") {
                     appendNewTodo(project: project.entity)
                 }

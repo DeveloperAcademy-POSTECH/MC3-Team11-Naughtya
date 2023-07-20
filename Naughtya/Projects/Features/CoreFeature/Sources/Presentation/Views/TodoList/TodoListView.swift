@@ -9,9 +9,6 @@
 import SwiftUI
 
 public struct TodoListView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
-
     public let todos: [TodoModel]
     public let isNested: Bool
 
@@ -24,58 +21,13 @@ public struct TodoListView: View {
     }
 
     public var body: some View {
-        VStack(spacing: 8) {
-            ForEach(todos) { todo in
-                buildTodoItem(todo)
+        VStack(spacing: 0) {
+            ForEach(todos.sorted { $1.isPlaceholder }) { todo in
+                TodoItemView(
+                    todo: todo,
+                    isNested: isNested
+                )
             }
-        }
-    }
-
-    private func toggleDaily(_ todo: TodoEntity) {
-        Task {
-            if todo.isDaily {
-                try Self.todoUseCase.removeFromDaily(todo)
-            } else {
-                try Self.todoUseCase.addToDaily(todo)
-            }
-        }
-    }
-
-    private func toggleCompleted(_ todo: TodoEntity) {
-        Task {
-            if todo.isCompleted {
-                try Self.todoUseCase.undoCompleted(todo)
-            } else {
-                try Self.todoUseCase.complete(todo)
-            }
-        }
-    }
-
-    private func delete(_ todo: TodoEntity) {
-        Task {
-            try Self.projectUseCase.delete(todo: todo)
-        }
-    }
-
-    private func buildTodoItem(_ todo: TodoModel) -> some View {
-        HStack {
-            Button(todo.isCompleted ? "✅" : "◻️") {
-                toggleCompleted(todo.entity)
-            }
-            if !isNested {
-                Text("[\(todo.category)]")
-                    .font(.headline)
-            }
-            Text(todo.id.uuidString.prefix(8))
-            if !todo.isCompleted {
-                Button("🔄") {
-                    toggleDaily(todo.entity)
-                }
-            }
-            Button("🚮") {
-                delete(todo.entity)
-            }
-            Spacer()
         }
     }
 }

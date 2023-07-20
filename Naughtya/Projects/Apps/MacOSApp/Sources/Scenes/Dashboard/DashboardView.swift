@@ -20,17 +20,15 @@ struct DashboardView: View {
                 }
             }
             VStack(alignment: .leading) {
-                Text("Daily")
-                    .font(.title)
-                List {
-                    TodoListView(todos: viewModel.dailyTodos)
-                }
-            }
-            VStack(alignment: .leading) {
                 Text("Projects")
                     .font(.title)
                 List {
                     ProjectTodoListView(projects: viewModel.projects)
+                }
+            }
+            VStack(alignment: .leading) {
+                List {
+                    DailyTodoListView()
                 }
             }
         }

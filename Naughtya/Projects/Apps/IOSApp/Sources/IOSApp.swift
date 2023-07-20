@@ -13,7 +13,10 @@ import IOSCoreFeature
 struct IOSApp: App {
     var body: some Scene {
         WindowGroup {
-            DashboardView()
+            ZStack {
+                DashboardView()
+                DragDropStageView()
+            }
         }
     }
 }

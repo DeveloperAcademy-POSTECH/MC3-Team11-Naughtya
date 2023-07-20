@@ -25,7 +25,7 @@ public struct ProjectListView: View {
                         Text(project.category.uppercased())
                             .font(.title.weight(.black))
                         Spacer()
-                        Text("\(project.completedTodos.count)/\(project.todos.count)")
+                        Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
                     }
                 }
             }

@@ -26,6 +26,4 @@ public protocol ProjectUseCase {
         startedAt: Date?,
         endedAt: Date?
     ) throws -> ProjectEntity
-
-    func delete(todo: TodoEntity) throws
 }
