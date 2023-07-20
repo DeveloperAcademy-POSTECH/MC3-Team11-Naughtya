@@ -21,12 +21,18 @@ public struct ProjectListView: View {
         VStack {
             VStack(spacing: 16) {
                 ForEach(projects) { project in
-                    HStack {
-                        Text(project.category.uppercased())
-                            .font(.title.weight(.black))
-                        Spacer()
-                        Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
-                    }
+//                    HStack {
+//                        Text(project.category.uppercased())
+//                            .font(.title.weight(.black))
+//                        Spacer()
+//                        Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
+//                    }
+                    ProjectCardView(
+                        projectName: project.category,
+                        projectEndDay: project.endedAt!,
+                        completedTodosCount: project.completedTodosCount,
+                        totalTodosCount: project.totalTodosCount
+                    )
                 }
             }
             HStack(alignment: .bottom) {
