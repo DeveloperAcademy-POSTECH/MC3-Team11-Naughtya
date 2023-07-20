@@ -15,6 +15,7 @@ public struct TodoModel: Modelable {
     public let isPlaceholder: Bool
     public let isDaily: Bool
     public let isCompleted: Bool
+    public let isDailyCompleted: Bool
 
     public static func from(entity: TodoEntity) -> Self {
         TodoModel(
@@ -23,7 +24,8 @@ public struct TodoModel: Modelable {
             title: entity.title,
             isPlaceholder: entity.isPlaceholder,
             isDaily: entity.isDaily,
-            isCompleted: entity.isCompleted
+            isCompleted: entity.isCompleted,
+            isDailyCompleted: entity.isDailyCompleted
         )
     }
 }

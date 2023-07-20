@@ -9,7 +9,7 @@
 import Foundation
 
 public struct TodoHistoryEntity: Codable, Equatable {
-    public let isDaily: Bool
+    public let dailyTodoList: DailyTodoListEntity?
     public let isCompleted: Bool
     public let createdAt: Date
 }

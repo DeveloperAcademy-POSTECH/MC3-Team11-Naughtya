@@ -10,11 +10,19 @@ import Foundation
 
 public class TodoEntity: Codable, Equatable, Identifiable {
     public unowned let project: ProjectEntity
-    public unowned var dailyTodoList: DailyTodoListEntity?
+    public unowned var dailyTodoList: DailyTodoListEntity? {
+        didSet {
+            histories.append(historyStamp)
+        }
+    }
     public internal(set) var title: String
     public internal(set) var createdAt: Date
     public internal(set) var histories: [TodoHistoryEntity]
-    public internal(set) var completedAt: Date?
+    public internal(set) var completedAt: Date? {
+        didSet {
+            histories.append(historyStamp)
+        }
+    }
 
     public init(
         project: ProjectEntity,
@@ -47,6 +55,22 @@ public class TodoEntity: Codable, Equatable, Identifiable {
 
     public var isCompleted: Bool {
         completedAt != nil
+    }
+
+    public var isDailyCompleted: Bool {
+        guard let firstMovedToDaily = histories.first(where: { $0.dailyTodoList != nil }),
+              let firstCompleted = histories.last(where: { $0.isCompleted }) else {
+            return false
+        }
+        return firstMovedToDaily.createdAt.isSame(firstCompleted.createdAt)
+    }
+
+    private var historyStamp: TodoHistoryEntity {
+        TodoHistoryEntity(
+            dailyTodoList: dailyTodoList,
+            isCompleted: isCompleted,
+            createdAt: dailyTodoList?.date ?? .now
+        )
     }
 
     public static func == (lhs: TodoEntity, rhs: TodoEntity) -> Bool {
