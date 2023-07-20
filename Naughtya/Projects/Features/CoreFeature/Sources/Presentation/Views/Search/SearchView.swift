@@ -1,0 +1,44 @@
+//
+//  SearchView.swift
+//  CoreFeature
+//
+//  Created by byo on 2023/07/20.
+//  Copyright © 2023 Naughtya. All rights reserved.
+//
+
+import SwiftUI
+
+public struct SearchView: View {
+    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+
+    @StateObject private var viewModel = SearchViewModel()
+    private let textFieldHeight = CGFloat(40)
+
+    public var body: some View {
+        TextField(text: $viewModel.searchedText) {
+            Text("Search")
+        }
+        .textFieldStyle(.plain)
+        .padding(.horizontal)
+        .frame(height: textFieldHeight)
+        .background(.white)
+        .overlay(alignment: .top) {
+            if !viewModel.searchedTodos.isEmpty {
+                TodoListView(todos: viewModel.searchedTodos)
+                    .padding()
+                    .background(.white)
+                    .border(.gray)
+                    .offset(y: textFieldHeight)
+            }
+        }
+        .onChange(of: viewModel.searchedText) { _ in
+            viewModel.fetchSearchedTodos()
+        }
+    }
+}
+
+struct SearchView_Previews: PreviewProvider {
+    static var previews: some View {
+        SearchView()
+    }
+}

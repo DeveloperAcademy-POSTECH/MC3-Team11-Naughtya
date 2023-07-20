@@ -10,23 +10,8 @@ import SwiftUI
 import IOSCoreFeature
 
 struct DashboardView: View {
-    @StateObject private var viewModel = DashboardViewModel()
-
     var body: some View {
-        VStack(alignment: .leading) {
-            VStack(alignment: .leading) {
-                Text("Daily")
-                ScrollView {
-                    TodoListView(todos: viewModel.dailyTodos)
-                }
-            }
-            VStack(alignment: .leading) {
-                Text("Projects")
-                ScrollView {
-                    ProjectTodoListView(projects: viewModel.projects)
-                }
-            }
-        }
+        Text("iOS")
     }
 }
 

@@ -15,6 +15,8 @@ public protocol TodoUseCase {
         dailyTodoList: DailyTodoListEntity?
     ) throws -> TodoEntity
 
+    func readList(searchedText: String) throws -> [TodoEntity]
+
     func update(
         _ todo: TodoEntity,
         title: String
