@@ -43,7 +43,7 @@ public struct TodoItemView: View {
             VStack {
                 Spacer()
                 HStack(alignment: .center) {
-                    dragIndicator
+                    Text("🖱️")
                         .opacity(isHovered ? 1 : 0)
                         .animation(.easeOut, value: isHovered)
                     Button(todo.isCompleted ? "✅" : "◻️") {
@@ -58,10 +58,10 @@ public struct TodoItemView: View {
                         TextField(text: $title) {
                             placeholder
                         }
+                        .textFieldStyle(.plain)
                         Color.white
                             .opacity(isBlockedToEdit ? 0.01 : 0)
                     }
-                    .textFieldStyle(.plain)
                     Button("🔄") {
                         toggleDaily()
                     }
@@ -93,6 +93,34 @@ public struct TodoItemView: View {
         .frame(height: 40)
         .background(.white)
         .opacity(opacity)
+        .gesture(
+            DragGesture()
+                .onChanged {
+                    let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
+                    if !isBeingDragged {
+                        dragDropDelegate.startToDrag(
+                            todo.entity,
+                            size: absoluteRect.size,
+                            itemLocation: itemLocation
+                        )
+                    } else {
+                        dragDropDelegate.drag(
+                            todo.entity,
+                            itemLocation: itemLocation
+                        )
+                    }
+                    isBeingDragged = true
+                }
+                .onEnded {
+                    dragDropDelegate.drop(
+                        todo.entity,
+                        touchLocation: absoluteRect.origin + $0.location
+                    )
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        isBeingDragged = false
+                    }
+                }
+        )
         .onHover {
             isHovered = $0
         }
@@ -102,38 +130,6 @@ public struct TodoItemView: View {
         .onDisappear {
             dragDropDelegate.unregisterAbsoluteRect(todo.entity)
         }
-    }
-
-    private var dragIndicator: some View {
-        Text("🖱️")
-            .gesture(
-                DragGesture()
-                    .onChanged {
-                        let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
-                        if !isBeingDragged {
-                            dragDropDelegate.startToDrag(
-                                todo.entity,
-                                size: absoluteRect.size,
-                                itemLocation: itemLocation
-                            )
-                        } else {
-                            dragDropDelegate.drag(
-                                todo.entity,
-                                itemLocation: itemLocation
-                            )
-                        }
-                        isBeingDragged = true
-                    }
-                    .onEnded {
-                        dragDropDelegate.drop(
-                            todo.entity,
-                            touchLocation: absoluteRect.origin + $0.location
-                        )
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            isBeingDragged = false
-                        }
-                    }
-            )
     }
 
     private var placeholder: some View {
