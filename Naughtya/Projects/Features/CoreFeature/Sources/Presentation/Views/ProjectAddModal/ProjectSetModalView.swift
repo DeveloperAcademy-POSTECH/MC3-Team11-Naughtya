@@ -16,6 +16,8 @@ struct ProjectSetModalView: View {
 
     @State private var newProjectCategory: String = ""
     @State private var newProjectGoal: String = ""
+    @State private var projectStartDay = Date()
+    @State private var projectEndDay = Date()
 
     var body: some View {
         VStack {
@@ -33,7 +35,8 @@ struct ProjectSetModalView: View {
                     VStack(alignment: .leading) {
                         Text("시작")
                             .font(.caption)
-                        Text("2023.07.13")
+                        DatePicker("", selection: $projectStartDay, displayedComponents: [.date])
+                            .datePickerStyle(.compact)
                     }
                     VStack {
                         Spacer().frame(height: 10)
@@ -42,7 +45,8 @@ struct ProjectSetModalView: View {
                     VStack(alignment: .leading) {
                         Text("종료")
                             .font(.caption)
-                        Text("2023.07.18")
+                        DatePicker("", selection: $projectEndDay, displayedComponents: [.date])
+                            .datePickerStyle(.compact)
                     }
                 }
             }
@@ -52,14 +56,15 @@ struct ProjectSetModalView: View {
             }
         }
         .padding()
+        .frame(width: 484)
     }
     private func appendNewProject() {
         Task {
             try Self.projectUseCase.create(
                 category: newProjectCategory,
                 goals: newProjectGoal,
-                startedAt: nil,
-                endedAt: nil
+                startedAt: projectStartDay,
+                endedAt: projectEndDay
             )
             newProjectCategory = ""
             newProjectGoal = ""
