@@ -5,5 +5,6 @@
 ```shell
 cd Naughtya
 make install
+tuist fetch
 make generate
 ```
