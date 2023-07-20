@@ -20,38 +20,10 @@ public struct ProjectTodoListView: View {
     }
 
     public var body: some View {
-        VStack(spacing: 40) {
-            projectInputView
-            VStack(spacing: 0) {
-                ForEach(projects) { project in
-                    buildProjectItem(project)
-                }
+        VStack(spacing: 16) {
+            ForEach(projects) { project in
+                buildProjectItem(project)
             }
-        }
-    }
-
-    private var projectInputView: some View {
-        HStack {
-            TextField(text: $newProjectCategory) {
-                Text("Category")
-            }
-            Button("Project 추가") {
-                appendNewProject()
-            }
-            Spacer()
-        }
-        .frame(height: 40)
-    }
-
-    private func appendNewProject() {
-        Task {
-            try Self.projectUseCase.create(
-                category: newProjectCategory,
-                goals: nil,
-                startedAt: nil,
-                endedAt: nil
-            )
-            newProjectCategory = ""
         }
     }
 
