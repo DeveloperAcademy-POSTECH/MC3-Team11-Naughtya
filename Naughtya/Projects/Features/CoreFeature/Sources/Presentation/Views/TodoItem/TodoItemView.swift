@@ -15,6 +15,7 @@ public struct TodoItemView: View {
     public let todo: TodoModel
     public let isNested: Bool
     public let isDummy: Bool
+    public let isBlockedToEdit: Bool
     public let dragDropDelegate: DragDropDelegate
     @State private var title: String
     @State private var absoluteRect: CGRect!
@@ -25,11 +26,13 @@ public struct TodoItemView: View {
         todo: TodoModel,
         isNested: Bool = false,
         isDummy: Bool = false,
+        isBlockedToEdit: Bool = false,
         dragDropDelegate: DragDropDelegate = DragDropManager.shared
     ) {
         self.todo = todo
         self.isNested = isNested
         self.isDummy = isDummy
+        self.isBlockedToEdit = isBlockedToEdit
         self.dragDropDelegate = dragDropDelegate
         self.title = todo.title
     }
@@ -51,8 +54,12 @@ public struct TodoItemView: View {
                         Text("[\(todo.category)]")
                             .font(.headline)
                     }
-                    TextField(text: $title) {
-                        placeholder
+                    ZStack {
+                        TextField(text: $title) {
+                            placeholder
+                        }
+                        Color.white
+                            .opacity(isBlockedToEdit ? 0.01 : 0)
                     }
                     .textFieldStyle(.plain)
                     Button("🔄") {

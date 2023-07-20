@@ -32,6 +32,7 @@ public struct SearchView: View {
             }
         }
         .onChange(of: viewModel.searchedText) { _ in
+            viewModel.updateSearchingState()
             viewModel.fetchSearchedTodos()
         }
     }

@@ -11,6 +11,7 @@ import Combine
 
 @MainActor
 public final class SearchViewModel: ObservableObject {
+    private static let searchManager: SearchManager = .shared
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
@@ -21,6 +22,10 @@ public final class SearchViewModel: ObservableObject {
 
     public init() {
         setupFetchingData()
+    }
+
+    public func updateSearchingState() {
+        Self.searchManager.isSearching = !searchedText.isEmpty
     }
 
     public func fetchSearchedTodos() {
