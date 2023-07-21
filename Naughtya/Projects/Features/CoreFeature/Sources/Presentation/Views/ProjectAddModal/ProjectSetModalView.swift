@@ -37,7 +37,7 @@ struct ProjectSetModalView: View {
                         Text("시작")
                             .font(.caption)
                         DatePicker("", selection: $projectStartDay, displayedComponents: [.date])
-                            .datePickerStyle(.compact)
+                            .datePickerStyle(.field)
                     }
                     VStack {
                         Spacer().frame(height: 10)
@@ -47,7 +47,7 @@ struct ProjectSetModalView: View {
                         Text("종료")
                             .font(.caption)
                         DatePicker("", selection: $projectEndDay, displayedComponents: [.date])
-                            .datePickerStyle(.compact)
+                            .datePickerStyle(.field)
                     }
                 }
             }
