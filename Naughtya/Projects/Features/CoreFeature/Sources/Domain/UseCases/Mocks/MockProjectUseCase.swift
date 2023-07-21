@@ -24,7 +24,8 @@ final class MockProjectUseCase: ProjectUseCase {
         category: String,
         goals: String? = nil,
         startedAt: Date? = nil,
-        endedAt: Date? = nil
+        endedAt: Date? = nil,
+        isSelected: Bool = false
     ) throws -> ProjectEntity {
         guard validateNotEmptyCategory(category) else {
             throw DomainError(message: "category 없음")
@@ -36,7 +37,8 @@ final class MockProjectUseCase: ProjectUseCase {
             category: category,
             goals: goals,
             startedAt: startedAt,
-            endedAt: endedAt
+            endedAt: endedAt,
+            isSelected: isSelected
         )
         project.todos = [
             .buildEmptyTodo(
@@ -67,6 +69,15 @@ final class MockProjectUseCase: ProjectUseCase {
         project.goals = goals
         project.startedAt = startedAt
         project.endedAt = endedAt
+        return project
+    }
+
+    func toggleSelected(
+        _ project: ProjectEntity,
+        isSelected: Bool
+    ) throws -> ProjectEntity {
+        defer { Self.projectStore.update() }
+        project.isSelected = isSelected
         return project
     }
 

@@ -21,7 +21,7 @@ public struct ProjectTodoListView: View {
 
     public var body: some View {
         VStack(spacing: 16) {
-            ForEach(projects) { project in
+            ForEach(projects.filter { $0.isSelected }) { project in
                 buildProjectItem(project)
             }
         }
@@ -57,8 +57,8 @@ public struct ProjectTodoListView: View {
     }
 }
 
-struct ProjectTodoListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProjectTodoListView(projects: [])
-    }
-}
+// struct ProjectTodoListView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProjectTodoListView(projects: [])
+//    }
+// }

@@ -14,6 +14,7 @@ public final class DashboardViewModel: ObservableObject {
     private static let projectStore: ProjectStore = .shared
 
     @Published public var projects: [ProjectModel] = []
+    @Published public var isSelected = false
     private var cancellable = Set<AnyCancellable>()
 
     public init() {
