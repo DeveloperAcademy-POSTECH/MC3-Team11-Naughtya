@@ -18,6 +18,7 @@ struct ProjectSetModalView: View {
     @State private var newProjectGoal: String = ""
     @State private var projectStartDay = Date()
     @State private var projectEndDay = Date()
+    var isSelected: Bool = false
 
     var body: some View {
         VStack {
@@ -64,7 +65,8 @@ struct ProjectSetModalView: View {
                 category: newProjectCategory,
                 goals: newProjectGoal,
                 startedAt: projectStartDay,
-                endedAt: projectEndDay
+                endedAt: projectEndDay,
+                isSelected: isSelected
             )
             newProjectCategory = ""
             newProjectGoal = ""

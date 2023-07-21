@@ -9,13 +9,30 @@
 import SwiftUI
 
 struct ProjectCardView: View {
+    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
+    public let project: ProjectModel
 
-    var cornerRadius: CGFloat = 16
+    let cornerRadius: CGFloat = 16
 
-    var projectName: String
-    var projectEndDay = Date()
-    var completedTodosCount: Int
-    var totalTodosCount: Int
+    var projectName: String {
+        project.category
+    }
+
+    var projectEndDay: Date {
+        project.endedAt!
+    }
+
+    var completedTodosCount: Int {
+        project.completedTodosCount
+    }
+
+    var totalTodosCount: Int {
+        project.totalTodosCount
+    }
+
+    var isSelected: Bool {
+        project.isSelected
+    }
 
     var body: some View {
         VStack {
@@ -39,8 +56,16 @@ struct ProjectCardView: View {
         .padding(20)
         .background(
             RoundedRectangle(cornerRadius: cornerRadius)
-                .fill(Color.blue)
+                .fill(isSelected ? Color.blue : Color.gray)
         )
+        .onTapGesture {
+            Task {
+                try Self.projectUseCase.toggleSelected(
+                    project.entity,
+                    isSelected: !isSelected
+                )
+            }
+        }
     }
 
     func changeDateFormat() -> String {

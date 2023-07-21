@@ -16,23 +16,13 @@ public struct ProjectListView: View {
     }
 
     @State private var showModal = false
+    @State var isSelected: Bool = false
 
     public var body: some View {
         VStack {
             VStack(spacing: 16) {
                 ForEach(projects) { project in
-//                    HStack {
-//                        Text(project.category.uppercased())
-//                            .font(.title.weight(.black))
-//                        Spacer()
-//                        Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
-//                    }
-                    ProjectCardView(
-                        projectName: project.category,
-                        projectEndDay: project.endedAt!,
-                        completedTodosCount: project.completedTodosCount,
-                        totalTodosCount: project.totalTodosCount
-                    )
+                    ProjectCardView(project: project)
                 }
             }
             HStack(alignment: .bottom) {

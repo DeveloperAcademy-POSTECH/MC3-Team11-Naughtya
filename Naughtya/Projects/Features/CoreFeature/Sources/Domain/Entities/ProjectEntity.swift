@@ -14,19 +14,22 @@ public class ProjectEntity: Equatable, Identifiable {
     public internal(set) var startedAt: Date?
     public internal(set) var endedAt: Date?
     public internal(set) var todos: [TodoEntity] = []
+    public internal(set) var isSelected: Bool
 
     public init(
         category: String,
         goals: String? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil,
-        todos: [TodoEntity] = []
+        todos: [TodoEntity] = [],
+        isSelected: Bool = false
     ) {
         self.category = category
         self.goals = goals
         self.startedAt = startedAt
         self.endedAt = endedAt
         self.todos = todos
+        self.isSelected = isSelected
     }
 
     public var id: String {
