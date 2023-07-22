@@ -23,7 +23,6 @@ public struct DragDropStageView: View {
                         todo: .from(entity: todo),
                         isDummy: true
                     )
-                    .opacity(0.5)
                     .offset(
                         x: dragged.location.x,
                         y: dragged.location.y - dragged.size.height / 2

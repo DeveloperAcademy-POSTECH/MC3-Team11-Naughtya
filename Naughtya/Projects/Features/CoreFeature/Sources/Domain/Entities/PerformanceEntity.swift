@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct PerformanceEntity {
+public struct PerformanceEntity: Codable, Equatable {
     public let category: PerformanceCategory
     public let title: String
     public let todos: [TodoEntity]

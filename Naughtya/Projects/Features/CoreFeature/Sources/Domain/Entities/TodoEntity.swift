@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class TodoEntity: Equatable, Identifiable {
+public class TodoEntity: Codable, Equatable, Identifiable {
     public unowned let project: ProjectEntity
     public unowned var dailyTodoList: DailyTodoListEntity?
     public internal(set) var title: String

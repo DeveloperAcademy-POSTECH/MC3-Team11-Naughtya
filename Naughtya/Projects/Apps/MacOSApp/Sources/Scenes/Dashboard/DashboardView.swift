@@ -13,24 +13,30 @@ struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
 
     var body: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading) {
-                List {
-                    ProjectListView(projects: viewModel.projects)
+        ZStack {
+            VStack(spacing: 0) {
+                TopBarView()
+                    .zIndex(1)
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading) {
+                        List {
+                            ProjectListView(projects: viewModel.projects)
+                        }
+                    }
+                    VStack(alignment: .leading) {
+                        List {
+                            ProjectTodoListView(projects: viewModel.projects)
+                        }
+                    }
+                    VStack(alignment: .leading) {
+                        List {
+                            DailyTodoListView()
+                        }
+                    }
                 }
+                .zIndex(0)
             }
-            VStack(alignment: .leading) {
-                Text("Projects")
-                    .font(.title)
-                List {
-                    ProjectTodoListView(projects: viewModel.projects)
-                }
-            }
-            VStack(alignment: .leading) {
-                List {
-                    DailyTodoListView()
-                }
-            }
+            DragDropStageView()
         }
     }
 }

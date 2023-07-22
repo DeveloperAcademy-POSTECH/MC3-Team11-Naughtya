@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class ProjectEntity: Equatable, Identifiable {
+public class ProjectEntity: Codable, Equatable, Identifiable {
     public let category: String
     public internal(set) var goals: String?
     public internal(set) var startedAt: Date?
