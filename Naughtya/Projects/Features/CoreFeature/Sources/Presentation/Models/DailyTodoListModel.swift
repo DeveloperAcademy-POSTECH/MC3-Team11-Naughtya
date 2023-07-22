@@ -10,6 +10,7 @@ import Foundation
 
 public struct DailyTodoListModel: Modelable {
     public let entity: DailyTodoListEntity
+    public let dateString: String
     public let date: Date
     public let dateTitle: String
     public let todos: [TodoModel]
@@ -17,6 +18,7 @@ public struct DailyTodoListModel: Modelable {
     public static func from(entity: DailyTodoListEntity) -> Self {
         DailyTodoListModel(
             entity: entity,
+            dateString: entity.dateString,
             date: entity.date,
             dateTitle: entity.dateTitle,
             todos: entity.todos

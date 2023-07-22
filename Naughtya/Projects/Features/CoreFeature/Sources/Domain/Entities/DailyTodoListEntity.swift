@@ -16,19 +16,23 @@ public class DailyTodoListEntity: Codable, Equatable, Identifiable {
         return dateFormatter
     }()
 
-    public let date: Date
+    public let dateString: String
     public internal(set) var todos: [TodoEntity]
 
     public init(
-        date: Date = .now,
+        dateString: String,
         todos: [TodoEntity] = []
     ) {
-        self.date = date
+        self.dateString = dateString
         self.todos = todos
     }
 
     public var id: String {
-        dateTitle
+        dateString
+    }
+
+    public var date: Date {
+        .parse(dateString)
     }
 
     public var dateTitle: String {
@@ -36,6 +40,6 @@ public class DailyTodoListEntity: Codable, Equatable, Identifiable {
     }
 
     public static func == (lhs: DailyTodoListEntity, rhs: DailyTodoListEntity) -> Bool {
-        lhs === rhs
+        lhs.dateString == rhs.dateString
     }
 }

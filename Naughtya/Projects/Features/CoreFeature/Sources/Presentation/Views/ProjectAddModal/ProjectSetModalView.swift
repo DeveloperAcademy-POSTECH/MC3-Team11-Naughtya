@@ -60,7 +60,7 @@ struct ProjectSetModalView: View {
     }
     private func appendNewProject() {
         Task {
-            try Self.projectUseCase.create(
+            try await Self.projectUseCase.create(
                 category: newProjectCategory,
                 goals: newProjectGoal,
                 startedAt: projectStartDay,

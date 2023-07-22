@@ -33,6 +33,13 @@ public class ProjectEntity: Codable, Equatable, Identifiable {
         category
     }
 
+    public var isEnded: Bool {
+        guard let endedAt = endedAt else {
+            return false
+        }
+        return endedAt.timeIntervalSinceNow < Date.now.timeIntervalSinceNow
+    }
+
     public static func == (lhs: ProjectEntity, rhs: ProjectEntity) -> Bool {
         lhs === rhs
     }

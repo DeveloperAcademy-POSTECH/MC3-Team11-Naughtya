@@ -9,6 +9,7 @@
 import SwiftUI
 
 public struct TodoItemView: View {
+    private static let dailyTodoListStore: DailyTodoListStore = .shared
     private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
@@ -157,7 +158,7 @@ public struct TodoItemView: View {
 
     private func updateTitle() {
         Task {
-            try Self.todoUseCase.update(
+            try await Self.todoUseCase.update(
                 todo.entity,
                 title: title
             )
@@ -167,9 +168,12 @@ public struct TodoItemView: View {
     private func toggleDaily() {
         Task {
             if todo.entity.isDaily {
-                try Self.dailyTodoListUseCase.removeTodoFromDaily(todo.entity)
+                try await Self.dailyTodoListUseCase.removeTodoFromDaily(todo.entity)
             } else {
-                try Self.dailyTodoListUseCase.addTodoToDaily(todo.entity)
+                try await Self.dailyTodoListUseCase.addTodoToDaily(
+                    todo: todo.entity,
+                    dailyTodoList: Self.dailyTodoListStore.currentDailyTodoList
+                )
             }
         }
     }
@@ -177,16 +181,19 @@ public struct TodoItemView: View {
     private func toggleCompleted() {
         Task {
             if todo.entity.isCompleted {
-                try Self.todoUseCase.undoCompleted(todo.entity)
+                try await Self.todoUseCase.undoCompleted(todo.entity)
             } else {
-                try Self.todoUseCase.complete(todo.entity)
+                try await Self.todoUseCase.complete(
+                    todo.entity,
+                    date: .now
+                )
             }
         }
     }
 
     private func delete() {
         Task {
-            try Self.todoUseCase.delete(todo.entity)
+            try await Self.todoUseCase.delete(todo.entity)
         }
     }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class ProjectResultEntity: Codable {
+public class ProjectResultEntity: Codable, Equatable {
     public let project: ProjectEntity
     public internal(set) var performances: [PerformanceEntity]
 
@@ -18,5 +18,14 @@ public class ProjectResultEntity: Codable {
     ) {
         self.project = project
         self.performances = performances
+    }
+
+    public var dailyCompletedTodos: [TodoEntity] {
+        project.todos
+            .filter { $0.isDailyCompleted }
+    }
+
+    public static func == (lhs: ProjectResultEntity, rhs: ProjectResultEntity) -> Bool {
+        lhs.project === rhs.project
     }
 }

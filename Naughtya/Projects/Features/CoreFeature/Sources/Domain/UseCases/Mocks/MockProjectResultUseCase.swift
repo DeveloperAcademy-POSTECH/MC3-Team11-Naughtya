@@ -9,7 +9,7 @@
 import Foundation
 
 struct MockProjectResultUseCase: ProjectResultUseCase {
-    func create(project: ProjectEntity) throws -> ProjectResultEntity {
+    func create(project: ProjectEntity) async throws -> ProjectResultEntity {
         ProjectResultEntity(project: project)
     }
 }

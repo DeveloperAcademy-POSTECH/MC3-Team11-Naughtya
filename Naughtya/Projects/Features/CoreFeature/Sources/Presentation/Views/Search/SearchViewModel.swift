@@ -29,8 +29,11 @@ public final class SearchViewModel: ObservableObject {
     }
 
     public func fetchSearchedTodos() {
+        guard !searchedText.isEmpty else {
+            return
+        }
         Task {
-            searchedTodos = try Self.todoUseCase.readList(searchedText: searchedText)
+            searchedTodos = try await Self.todoUseCase.readList(searchedText: searchedText)
                 .map { .from(entity: $0) }
         }
     }

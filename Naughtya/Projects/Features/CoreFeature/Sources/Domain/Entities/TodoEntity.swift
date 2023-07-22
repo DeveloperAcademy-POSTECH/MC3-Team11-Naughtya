@@ -69,7 +69,7 @@ public class TodoEntity: Codable, Equatable, Identifiable {
         TodoHistoryEntity(
             dailyTodoList: dailyTodoList,
             isCompleted: isCompleted,
-            createdAt: dailyTodoList?.date ?? .now
+            createdAt: completedAt ?? dailyTodoList?.date ?? .now
         )
     }
 

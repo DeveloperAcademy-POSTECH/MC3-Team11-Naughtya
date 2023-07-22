@@ -11,11 +11,12 @@ import Foundation
 struct MockTodoUseCase: TodoUseCase {
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
 
     func create(
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity?
-    ) throws -> TodoEntity {
+    ) async throws -> TodoEntity {
         defer { updateStores() }
         let todo = TodoEntity(
             project: project,
@@ -26,7 +27,7 @@ struct MockTodoUseCase: TodoUseCase {
         return todo
     }
 
-    func readList(searchedText: String) throws -> [TodoEntity] {
+    func readList(searchedText: String) async throws -> [TodoEntity] {
         Self.projectStore.projects
             .flatMap { $0.todos }
             .filter { $0.title.contains(searchedText) && !$0.isPlaceholder }
@@ -35,29 +36,41 @@ struct MockTodoUseCase: TodoUseCase {
     func update(
         _ todo: TodoEntity,
         title: String
-    ) throws -> TodoEntity {
+    ) async throws -> TodoEntity {
         defer { updateStores() }
         todo.title = title
         return todo
     }
 
-    func delete(_ todo: TodoEntity) throws {
+    func update(
+        _ todo: TodoEntity,
+        dailyTodoList: DailyTodoListEntity?
+    ) async throws -> TodoEntity {
+        defer { updateStores() }
+        todo.dailyTodoList = dailyTodoList
+        return todo
+    }
+
+    func delete(_ todo: TodoEntity) async throws {
         defer { updateStores() }
         todo.project.todos.removeAll { $0 === todo }
         todo.dailyTodoList?.todos.removeAll { $0 === todo }
     }
 
-    func complete(_ todo: TodoEntity) throws {
+    func complete(
+        _ todo: TodoEntity,
+        date: Date?
+    ) async throws {
         defer { updateStores() }
-        todo.completedAt = .now
+        todo.completedAt = date
     }
 
-    func undoCompleted(_ todo: TodoEntity) throws {
+    func undoCompleted(_ todo: TodoEntity) async throws {
         defer { updateStores() }
         todo.completedAt = nil
     }
 
-    func swap(_ lhs: TodoEntity, _ rhs: TodoEntity) throws {
+    func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
         defer { updateStores() }
         switch (lhs.isDaily, rhs.isDaily) {
         case (false, false):
@@ -83,17 +96,23 @@ struct MockTodoUseCase: TodoUseCase {
     }
 
     private func moveToDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) {
-        lhs.dailyTodoList = rhs.dailyTodoList
-        swapInDaily(lhs, rhs)
+        Task {
+            try await Self.dailyTodoListUseCase.addTodoToDaily(
+                todo: lhs,
+                dailyTodoList: rhs.dailyTodoList
+            )
+            swapInDaily(lhs, rhs)
+        }
     }
 
     private func moveToProject(_ lhs: TodoEntity, _ rhs: TodoEntity) {
         guard lhs.project === rhs.project else {
             return
         }
-        lhs.dailyTodoList?.todos.removeAll(where: { $0 === lhs })
-        lhs.dailyTodoList = nil
-        swapInProject(lhs, rhs)
+        Task {
+            try await Self.dailyTodoListUseCase.removeTodoFromDaily(lhs)
+            swapInProject(lhs, rhs)
+        }
     }
 
     private func swapInDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) {

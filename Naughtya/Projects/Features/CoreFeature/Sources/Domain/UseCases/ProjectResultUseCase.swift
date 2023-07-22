@@ -9,5 +9,5 @@
 import Foundation
 
 public protocol ProjectResultUseCase {
-    func create(project: ProjectEntity) throws -> ProjectResultEntity
+    func create(project: ProjectEntity) async throws -> ProjectResultEntity
 }

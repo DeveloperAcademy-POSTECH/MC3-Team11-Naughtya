@@ -25,7 +25,7 @@ final class MockProjectUseCase: ProjectUseCase {
         goals: String? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil
-    ) throws -> ProjectEntity {
+    ) async throws -> ProjectEntity {
         guard validateNotEmptyCategory(category) else {
             throw DomainError(message: "category 없음")
         }
@@ -49,11 +49,11 @@ final class MockProjectUseCase: ProjectUseCase {
         return project
     }
 
-    func readList() throws -> [ProjectEntity] {
+    func readList() async throws -> [ProjectEntity] {
         projects
     }
 
-    func readItem(category: String) throws -> ProjectEntity {
+    func readItem(category: String) async throws -> ProjectEntity {
         projects.first { $0.category == category }!
     }
 
@@ -62,7 +62,7 @@ final class MockProjectUseCase: ProjectUseCase {
         goals: String? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil
-    ) throws -> ProjectEntity {
+    ) async throws -> ProjectEntity {
         defer { Self.projectStore.update() }
         project.goals = goals
         project.startedAt = startedAt

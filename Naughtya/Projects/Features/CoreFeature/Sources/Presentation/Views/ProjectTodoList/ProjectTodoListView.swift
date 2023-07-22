@@ -29,7 +29,7 @@ public struct ProjectTodoListView: View {
 
     private func appendNewTodo(project: ProjectEntity) {
         Task {
-            try Self.todoUseCase.create(
+            try await Self.todoUseCase.create(
                 project: project,
                 dailyTodoList: nil
             )

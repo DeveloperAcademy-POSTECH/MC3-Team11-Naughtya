@@ -9,6 +9,8 @@
 import SwiftUI
 
 public struct ProjectListView: View {
+    private static let dummyDataGenerator: DummyDataGenerator = .shared
+
     public let projects: [ProjectModel]
 
     public init(projects: [ProjectModel] = []) {
@@ -21,11 +23,17 @@ public struct ProjectListView: View {
         VStack {
             VStack(spacing: 16) {
                 ForEach(projects) { project in
-                    HStack {
-                        Text(project.category.uppercased())
-                            .font(.title.weight(.black))
-                        Spacer()
-                        Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
+                    VStack {
+                        HStack {
+                            Text(project.category.uppercased())
+                                .font(.title.weight(.black))
+                            Spacer()
+                            Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
+                        }
+                        if let startedAt = project.startedAt,
+                           let endedAt = project.endedAt {
+                            Text("\(startedAt.getDateString())~\(endedAt.getDateString())")
+                        }
                     }
                 }
             }
@@ -35,6 +43,9 @@ public struct ProjectListView: View {
                 }
                 .sheet(isPresented: self.$showModal) {
                     ProjectSetModalView()
+                }
+                Button("더미 프로젝트 생성") {
+                    Self.dummyDataGenerator.generate()
                 }
             }
         }

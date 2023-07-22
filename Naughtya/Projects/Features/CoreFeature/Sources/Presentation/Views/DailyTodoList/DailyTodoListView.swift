@@ -33,11 +33,11 @@ public struct DailyTodoListView: View {
     private var dateHeader: some View {
         HStack {
             Button("Prev") {
-                viewModel.gotoYesterday()
+                viewModel.gotoOneDayBefore()
             }
             Text(viewModel.dateTitle)
             Button("Next") {
-                viewModel.gotoTomorrow()
+                viewModel.gotoOneDayAfter()
             }
         }
     }

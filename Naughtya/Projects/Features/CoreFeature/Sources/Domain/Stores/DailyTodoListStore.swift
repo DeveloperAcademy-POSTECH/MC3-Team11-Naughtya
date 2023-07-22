@@ -12,19 +12,19 @@ public final class DailyTodoListStore: ObservableObject {
     public static let shared: DailyTodoListStore = .init()
 
     @Published public var dailyTodoLists: [DailyTodoListEntity] = []
-    public var currentDailyTodoList: DailyTodoListEntity?
+    public private(set) var currentDailyTodoList: DailyTodoListEntity?
 
     private init() {
     }
 
-    public func getDailyTodoList(date: Date) -> DailyTodoListEntity? {
-        let dailyTodoList = dailyTodoLists
-            .first(where: { $0.date.isSame(date) })
-        currentDailyTodoList = dailyTodoList
-        return dailyTodoList
-    }
-
     public func update() {
         objectWillChange.send()
+    }
+
+    public func getDailyTodoList(dateString: String) -> DailyTodoListEntity? {
+        let dailyTodoList = dailyTodoLists
+            .first(where: { $0.dateString == dateString })
+        currentDailyTodoList = dailyTodoList
+        return dailyTodoList
     }
 }

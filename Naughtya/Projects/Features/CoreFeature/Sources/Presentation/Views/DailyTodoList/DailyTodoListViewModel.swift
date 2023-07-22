@@ -30,42 +30,47 @@ public final class DailyTodoListViewModel: ObservableObject {
     }
 
     public func fetchToday() {
-        fetchDailyTodoList(date: .now)
+        let dateString = Date.today.getDateString()
+        fetchDailyTodoList(dateString: dateString)
     }
 
-    public func gotoYesterday() {
-        guard let yesterday = dailyTodoList?.date.getYesterday() else {
+    public func gotoOneDayBefore() {
+        guard let oneDayBefore = dailyTodoList?.date.getOneDayBefore() else {
             return
         }
-        fetchDailyTodoList(date: yesterday)
+        fetchDailyTodoList(dateString: oneDayBefore.getDateString())
     }
 
-    public func gotoTomorrow() {
-        guard let tomorrow = dailyTodoList?.date.getTomorrow() else {
+    public func gotoOneDayAfter() {
+        guard let oneDayAfter = dailyTodoList?.date.getOneDayAfter() else {
             return
         }
-        fetchDailyTodoList(date: tomorrow)
+        fetchDailyTodoList(dateString: oneDayAfter.getDateString())
     }
 
     private func setupFetchingData() {
         Self.dailyTodoListStore.objectWillChange
+            .debounce(
+                for: .milliseconds(100),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
             .receive(on: DispatchQueue.main)
             .sink { _ in
             } receiveValue: { [unowned self] _ in
-                guard let date = dailyTodoList?.date else {
+                guard let dateString = dailyTodoList?.dateString else {
                     return
                 }
-                fetchDailyTodoList(date: date)
+                fetchDailyTodoList(dateString: dateString)
             }
             .store(in: &cancellable)
     }
 
-    private func fetchDailyTodoList(date: Date) {
+    private func fetchDailyTodoList(dateString: String) {
         Task {
-            if let existing = try Self.dailyTodoListUseCase.readByDate(date) {
+            if let existing = try await Self.dailyTodoListUseCase.readByDate(dateString: dateString) {
                 dailyTodoList = .from(entity: existing)
             } else {
-                let new = try Self.dailyTodoListUseCase.create(date: date)
+                let new = try await Self.dailyTodoListUseCase.create(dateString: dateString)
                 dailyTodoList = .from(entity: new)
             }
         }

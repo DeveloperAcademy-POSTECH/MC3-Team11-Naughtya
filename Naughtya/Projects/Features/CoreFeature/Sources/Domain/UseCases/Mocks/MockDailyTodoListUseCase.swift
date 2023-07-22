@@ -21,9 +21,9 @@ final class MockDailyTodoListUseCase: DailyTodoListUseCase {
         }
     }
 
-    func create(date: Date) throws -> DailyTodoListEntity {
+    func create(dateString: String) async throws -> DailyTodoListEntity {
         defer { Self.dailyTodoListStore.update() }
-        let dailyTodoList = DailyTodoListEntity(date: date)
+        let dailyTodoList = DailyTodoListEntity(dateString: dateString)
         dailyTodoList.todos = [
             .buildEmptyTodo(
                 project: .sample,
@@ -35,20 +35,23 @@ final class MockDailyTodoListUseCase: DailyTodoListUseCase {
         return dailyTodoList
     }
 
-    func readByDate(_ date: Date) throws -> DailyTodoListEntity? {
-        Self.dailyTodoListStore.getDailyTodoList(date: date)
+    func readByDate(dateString: String) async throws -> DailyTodoListEntity? {
+        Self.dailyTodoListStore.getDailyTodoList(dateString: dateString)
     }
 
-    func addTodoToDaily(_ todo: TodoEntity) throws {
-        defer { updateStores() }
-        guard let dailyTodoList = Self.dailyTodoListStore.currentDailyTodoList else {
+    func addTodoToDaily(
+        todo: TodoEntity,
+        dailyTodoList: DailyTodoListEntity?
+    ) async throws {
+        guard let dailyTodoList = dailyTodoList else {
             return
         }
+        defer { updateStores() }
         todo.dailyTodoList = dailyTodoList
         dailyTodoList.todos.append(todo)
     }
 
-    func removeTodoFromDaily(_ todo: TodoEntity) throws {
+    func removeTodoFromDaily(_ todo: TodoEntity) async throws {
         defer { updateStores() }
         todo.dailyTodoList?.todos.removeAll(where: { $0 === todo })
         todo.dailyTodoList = nil

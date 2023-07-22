@@ -61,16 +61,10 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         if let todo = item as? TodoEntity,
            let targetTodo = getTargetTodo(touchLocation: touchLocation) {
             Task {
-                defer { updateStores() }
-                try Self.todoUseCase.swap(todo, targetTodo)
+                try await Self.todoUseCase.swapTodos(todo, targetTodo)
             }
         }
         dragged = nil
-    }
-
-    private func updateStores() {
-        Self.projectStore.update()
-        Self.dailyTodoListStore.update()
     }
 
     private func getTargetTodo(touchLocation: CGPoint) -> TodoEntity? {
