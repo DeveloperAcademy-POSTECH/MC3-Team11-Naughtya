@@ -12,7 +12,7 @@ public struct SearchView: View {
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
     @StateObject private var viewModel = SearchViewModel()
-    private let textFieldHeight = CGFloat(40)
+    private let textFieldHeight: CGFloat = 40
 
     public var body: some View {
         TextField(text: $viewModel.searchedText) {
