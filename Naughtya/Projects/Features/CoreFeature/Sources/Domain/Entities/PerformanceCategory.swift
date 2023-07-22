@@ -8,6 +8,6 @@
 
 import Foundation
 
-public enum PerformanceCategory {
+public enum PerformanceCategory: String, Codable {
     case sample
 }
