@@ -15,6 +15,7 @@ public final class DailyTodoListViewModel: ObservableObject {
     private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
 
     @Published public var dailyTodoList: DailyTodoListModel?
+    private var isTodayFetched = false
     private var cancellable = Set<AnyCancellable>()
 
     public init() {
@@ -29,7 +30,11 @@ public final class DailyTodoListViewModel: ObservableObject {
         dailyTodoList?.todos ?? []
     }
 
-    public func fetchToday() {
+    public func fetchTodayIfNeeded() {
+        guard !isTodayFetched else {
+            return
+        }
+        isTodayFetched = true
         let dateString = Date.today.getDateString()
         fetchDailyTodoList(dateString: dateString)
     }

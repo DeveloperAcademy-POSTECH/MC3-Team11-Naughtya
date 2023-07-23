@@ -26,7 +26,7 @@ public struct DailyTodoListView: View {
             TodoListView(todos: viewModel.todos)
         }
         .onAppear {
-            viewModel.fetchToday()
+            viewModel.fetchTodayIfNeeded()
         }
     }
 
