@@ -8,3 +8,4 @@ make install
 tuist fetch
 make generate
 ```
+
