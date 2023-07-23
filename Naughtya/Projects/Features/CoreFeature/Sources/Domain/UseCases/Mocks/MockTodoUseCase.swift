@@ -28,7 +28,10 @@ struct MockTodoUseCase: TodoUseCase {
     }
 
     func readList(searchedText: String) async throws -> [TodoEntity] {
-        Self.projectStore.projects
+        guard !searchedText.isEmpty else {
+            return []
+        }
+        return Self.projectStore.projects
             .flatMap { $0.todos }
             .filter { $0.title.contains(searchedText) && !$0.isPlaceholder }
     }

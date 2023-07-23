@@ -12,7 +12,7 @@ public extension TodoEntity {
     static let sample = TodoEntity(project: .sample)
 
     static func buildEmptyTodo(
-        project: ProjectEntity,
+        project: ProjectEntity = .sample,
         dailyTodoList: DailyTodoListEntity? = nil,
         title: String = ""
     ) -> TodoEntity {

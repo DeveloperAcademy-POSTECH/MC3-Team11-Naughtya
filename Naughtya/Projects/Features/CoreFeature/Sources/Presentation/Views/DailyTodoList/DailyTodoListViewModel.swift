@@ -56,7 +56,7 @@ public final class DailyTodoListViewModel: ObservableObject {
     private func setupFetchingData() {
         Self.dailyTodoListStore.objectWillChange
             .debounce(
-                for: .milliseconds(100),
+                for: .milliseconds(10),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .receive(on: DispatchQueue.main)

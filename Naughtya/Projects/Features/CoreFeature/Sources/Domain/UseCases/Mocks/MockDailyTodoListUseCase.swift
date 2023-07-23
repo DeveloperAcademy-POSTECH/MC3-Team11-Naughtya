@@ -8,30 +8,20 @@
 
 import Foundation
 
-final class MockDailyTodoListUseCase: DailyTodoListUseCase {
+struct MockDailyTodoListUseCase: DailyTodoListUseCase {
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-
-    private var dailyTodoLists: [DailyTodoListEntity] {
-        get {
-            Self.dailyTodoListStore.dailyTodoLists
-        }
-        set {
-            Self.dailyTodoListStore.dailyTodoLists = newValue
-        }
-    }
 
     func create(dateString: String) async throws -> DailyTodoListEntity {
         defer { Self.dailyTodoListStore.update() }
         let dailyTodoList = DailyTodoListEntity(dateString: dateString)
         dailyTodoList.todos = [
             .buildEmptyTodo(
-                project: .sample,
                 dailyTodoList: dailyTodoList,
                 title: "placeholder"
             )
         ]
-        dailyTodoLists.append(dailyTodoList)
+        Self.dailyTodoListStore.dailyTodoLists.append(dailyTodoList)
         return dailyTodoList
     }
 

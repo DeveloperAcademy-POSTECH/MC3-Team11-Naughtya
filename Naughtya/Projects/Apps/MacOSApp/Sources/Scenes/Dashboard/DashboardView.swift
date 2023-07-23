@@ -36,7 +36,6 @@ struct DashboardView: View {
                 }
                 .zIndex(0)
             }
-            DragDropStageView()
         }
     }
 }

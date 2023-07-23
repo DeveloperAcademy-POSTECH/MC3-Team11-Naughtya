@@ -24,14 +24,20 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         _ item: DragDropItemable,
         rect: CGRect
     ) {
-        if let todo = item as? TodoEntity {
+        switch item {
+        case let todo as TodoEntity:
             todoAbsoluteRectMap[todo] = rect
+        default:
+            break
         }
     }
 
     public func unregisterAbsoluteRect(_ item: DragDropItemable) {
-        if let todo = item as? TodoEntity {
+        switch item {
+        case let todo as TodoEntity:
             todoAbsoluteRectMap.removeValue(forKey: todo)
+        default:
+            break
         }
     }
 
@@ -58,11 +64,15 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         _ item: DragDropItemable,
         touchLocation: CGPoint
     ) {
-        if let todo = item as? TodoEntity,
-           let targetTodo = getTargetTodo(touchLocation: touchLocation) {
-            Task {
-                try await Self.todoUseCase.swapTodos(todo, targetTodo)
+        switch item {
+        case let todo as TodoEntity:
+            if let targetTodo = getTargetTodo(touchLocation: touchLocation) {
+                Task {
+                    try await Self.todoUseCase.swapTodos(todo, targetTodo)
+                }
             }
+        default:
+            break
         }
         dragged = nil
     }

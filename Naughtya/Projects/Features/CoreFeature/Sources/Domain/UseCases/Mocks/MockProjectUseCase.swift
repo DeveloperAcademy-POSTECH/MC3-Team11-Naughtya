@@ -8,17 +8,8 @@
 
 import Foundation
 
-final class MockProjectUseCase: ProjectUseCase {
+struct MockProjectUseCase: ProjectUseCase {
     private static let projectStore: ProjectStore = .shared
-
-    private var projects: [ProjectEntity] {
-        get {
-            Self.projectStore.projects
-        }
-        set {
-            Self.projectStore.projects = newValue
-        }
-    }
 
     func create(
         category: String,
@@ -42,19 +33,18 @@ final class MockProjectUseCase: ProjectUseCase {
             .buildEmptyTodo(
                 project: project,
                 title: "placeholder"
-            ),
-            .buildEmptyTodo(project: project)
+            )
         ]
-        projects.append(project)
+        Self.projectStore.projects.append(project)
         return project
     }
 
     func readList() async throws -> [ProjectEntity] {
-        projects
+        Self.projectStore.projects
     }
 
     func readItem(category: String) async throws -> ProjectEntity {
-        projects.first { $0.category == category }!
+        Self.projectStore.projects.first { $0.category == category }!
     }
 
     func update(
@@ -75,6 +65,6 @@ final class MockProjectUseCase: ProjectUseCase {
     }
 
     private func validateUniqueCategory(_ category: String) -> Bool {
-        projects.first { $0.category == category } == nil
+        Self.projectStore.projects.first { $0.category == category } == nil
     }
 }

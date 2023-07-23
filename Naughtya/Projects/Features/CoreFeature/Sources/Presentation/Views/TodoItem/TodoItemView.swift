@@ -76,19 +76,19 @@ public struct TodoItemView: View {
                 Spacer()
             }
             .onAppear {
-                setupAbsoluteRect(absoluteRect)
+                registerAbsoluteRect(absoluteRect)
             }
             .onChange(of: absoluteRect) {
                 guard !(isBeingDragged || isDummy) else {
                     return
                 }
-                setupAbsoluteRect($0)
+                registerAbsoluteRect($0)
             }
             .onChange(of: isBeingDragged) {
                 guard !$0 else {
                     return
                 }
-                setupAbsoluteRect(absoluteRect)
+                registerAbsoluteRect(absoluteRect)
             }
         }
         .frame(height: 40)
@@ -125,7 +125,7 @@ public struct TodoItemView: View {
         .onHover {
             isHovered = $0
         }
-        .onChange(of: title) { _ in
+        .onSubmit {
             updateTitle()
         }
         .onDisappear {
@@ -148,7 +148,7 @@ public struct TodoItemView: View {
         }
     }
 
-    private func setupAbsoluteRect(_ rect: CGRect) {
+    private func registerAbsoluteRect(_ rect: CGRect) {
         absoluteRect = rect
         dragDropDelegate.registerAbsoluteRect(
             todo.entity,

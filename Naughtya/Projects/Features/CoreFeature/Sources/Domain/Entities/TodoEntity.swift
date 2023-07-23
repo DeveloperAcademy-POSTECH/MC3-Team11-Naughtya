@@ -28,7 +28,7 @@ public class TodoEntity: Codable, Equatable, Identifiable {
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity? = nil,
         title: String = "",
-        createdAt: Date = .now,
+        createdAt: Date = .now, // TODO: 더미데이터도 고려하기
         histories: [TodoHistoryEntity] = [],
         completedAt: Date? = nil
     ) {
