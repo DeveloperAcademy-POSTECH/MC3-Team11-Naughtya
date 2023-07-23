@@ -34,10 +34,18 @@ struct ProjectCardView: View {
         project.isSelected
     }
 
+    var isBookmarked: Bool {
+        project.isBookmarked
+    }
+
     var body: some View {
         VStack {
             HStack {
-                Image(systemName: "star")
+                Image(systemName: isBookmarked ? "star.fill" : "star")
+                    .foregroundColor(isBookmarked ? .yellow : .white)
+                    .onTapGesture {
+                        toggleIsBookmarked()
+                    }
                 Text("\(dDayCalculater())")
                 Spacer()
                 Text("~\(changeDateFormat())")
@@ -68,6 +76,13 @@ struct ProjectCardView: View {
         }
     }
 
+    func toggleIsBookmarked() {
+        Task {
+            try Self.projectUseCase.toggleIsBookmarked(
+                project.entity,
+                isBookmarked: !isBookmarked)
+        }
+    }
     func changeDateFormat() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"

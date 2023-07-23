@@ -19,6 +19,7 @@ struct ProjectSetModalView: View {
     @State private var projectStartDay = Date()
     @State private var projectEndDay = Date()
     var isSelected: Bool = false
+    var isBookmarked: Bool = false
 
     var body: some View {
         VStack {
@@ -57,7 +58,7 @@ struct ProjectSetModalView: View {
             }
         }
         .padding()
-        .frame(width: 484)
+        .frame(width: 421)
     }
     private func appendNewProject() {
         Task {
@@ -66,7 +67,8 @@ struct ProjectSetModalView: View {
                 goals: newProjectGoal,
                 startedAt: projectStartDay,
                 endedAt: projectEndDay,
-                isSelected: isSelected
+                isSelected: isSelected,
+                isBookmarked: isBookmarked
             )
             newProjectCategory = ""
             newProjectGoal = ""

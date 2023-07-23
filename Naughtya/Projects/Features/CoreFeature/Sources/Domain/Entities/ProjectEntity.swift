@@ -15,6 +15,7 @@ public class ProjectEntity: Equatable, Identifiable {
     public internal(set) var endedAt: Date?
     public internal(set) var todos: [TodoEntity] = []
     public internal(set) var isSelected: Bool
+    public internal(set) var isBookmarked: Bool
 
     public init(
         category: String,
@@ -22,7 +23,8 @@ public class ProjectEntity: Equatable, Identifiable {
         startedAt: Date? = nil,
         endedAt: Date? = nil,
         todos: [TodoEntity] = [],
-        isSelected: Bool = false
+        isSelected: Bool = false,
+        isBookmarked: Bool = false
     ) {
         self.category = category
         self.goals = goals
@@ -30,6 +32,7 @@ public class ProjectEntity: Equatable, Identifiable {
         self.endedAt = endedAt
         self.todos = todos
         self.isSelected = isSelected
+        self.isBookmarked = isBookmarked
     }
 
     public var id: String {

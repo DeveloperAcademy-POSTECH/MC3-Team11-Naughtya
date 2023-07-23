@@ -25,7 +25,8 @@ final class MockProjectUseCase: ProjectUseCase {
         goals: String? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil,
-        isSelected: Bool = false
+        isSelected: Bool = false,
+        isBookmarked: Bool = false
     ) throws -> ProjectEntity {
         guard validateNotEmptyCategory(category) else {
             throw DomainError(message: "category 없음")
@@ -38,7 +39,8 @@ final class MockProjectUseCase: ProjectUseCase {
             goals: goals,
             startedAt: startedAt,
             endedAt: endedAt,
-            isSelected: isSelected
+            isSelected: isSelected,
+            isBookmarked: isBookmarked
         )
         project.todos = [
             .buildEmptyTodo(
@@ -78,6 +80,15 @@ final class MockProjectUseCase: ProjectUseCase {
     ) throws -> ProjectEntity {
         defer { Self.projectStore.update() }
         project.isSelected = isSelected
+        return project
+    }
+
+    func toggleIsBookmarked(
+        _ project: ProjectEntity,
+        isBookmarked: Bool
+    ) throws -> ProjectEntity {
+        defer { Self.projectStore.update() }
+        project.isBookmarked = isBookmarked
         return project
     }
 

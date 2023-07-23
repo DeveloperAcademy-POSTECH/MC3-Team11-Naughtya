@@ -12,11 +12,10 @@ public struct ProjectListView: View {
     public let projects: [ProjectModel]
 
     public init(projects: [ProjectModel] = []) {
-        self.projects = projects
+        self.projects = projects.sorted { $0.isBookmarked && !$1.isBookmarked }
     }
 
     @State private var showModal = false
-    @State var isSelected: Bool = false
 
     public var body: some View {
         VStack {
@@ -25,13 +24,16 @@ public struct ProjectListView: View {
                     ProjectCardView(project: project)
                 }
             }
+            Spacer()
             HStack(alignment: .bottom) {
+                Spacer()
                 Button("새 프로젝트 생성") {
                     self.showModal = true
                 }
                 .sheet(isPresented: self.$showModal) {
                     ProjectSetModalView()
                 }
+                Spacer()
             }
         }
     }
