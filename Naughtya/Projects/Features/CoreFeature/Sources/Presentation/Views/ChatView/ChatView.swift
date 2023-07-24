@@ -42,9 +42,6 @@ public struct ChatView: View {
                     .cornerRadius(16)
             }
 
-            if message.role == .assistant {
-
-            }
         }
     }
 
