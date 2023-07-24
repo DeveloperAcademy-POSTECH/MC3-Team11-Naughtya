@@ -26,10 +26,6 @@ public final class DailyTodoListViewModel: ObservableObject {
         dailyTodoList?.dateTitle ?? ""
     }
 
-    public var todos: [TodoModel] {
-        dailyTodoList?.todos ?? []
-    }
-
     public func fetchTodayIfNeeded() {
         guard !isTodayFetched else {
             return

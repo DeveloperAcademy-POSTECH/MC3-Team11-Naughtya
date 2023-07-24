@@ -14,7 +14,7 @@ public struct TodoItemView: View {
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
     public let todo: TodoModel
-    public let isNested: Bool
+    public let isBacklog: Bool
     public let isDummy: Bool
     public let isBlockedToEdit: Bool
     public let dragDropDelegate: DragDropDelegate
@@ -25,13 +25,13 @@ public struct TodoItemView: View {
 
     public init(
         todo: TodoModel,
-        isNested: Bool = false,
+        isBacklog: Bool = false,
         isDummy: Bool = false,
         isBlockedToEdit: Bool = false,
         dragDropDelegate: DragDropDelegate = DragDropManager.shared
     ) {
         self.todo = todo
-        self.isNested = isNested
+        self.isBacklog = isBacklog
         self.isDummy = isDummy
         self.isBlockedToEdit = isBlockedToEdit
         self.dragDropDelegate = dragDropDelegate
@@ -51,7 +51,7 @@ public struct TodoItemView: View {
                         toggleCompleted()
                     }
                     .buttonStyle(.borderless)
-                    if !isNested {
+                    if !isBacklog {
                         Text("[\(todo.category)]")
                             .font(.headline)
                     }
@@ -139,9 +139,7 @@ public struct TodoItemView: View {
     }
 
     private var opacity: CGFloat {
-        if todo.isPlaceholder {
-            return 0
-        } else if isDummy || isBeingDragged {
+        if isDummy || isBeingDragged {
             return 0.5
         } else {
             return 1

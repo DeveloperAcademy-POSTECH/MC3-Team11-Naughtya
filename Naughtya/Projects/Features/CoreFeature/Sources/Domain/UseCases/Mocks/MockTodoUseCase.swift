@@ -33,7 +33,7 @@ struct MockTodoUseCase: TodoUseCase {
         }
         return Self.projectStore.projects
             .flatMap { $0.todos }
-            .filter { $0.title.contains(searchedText) && !$0.isPlaceholder }
+            .filter { $0.title.contains(searchedText) }
     }
 
     func update(
@@ -73,59 +73,71 @@ struct MockTodoUseCase: TodoUseCase {
         todo.completedAt = nil
     }
 
+    func moveToProject(todo: TodoEntity) async throws {
+        defer { updateStores() }
+        try await Self.dailyTodoListUseCase.removeTodoFromDaily(todo)
+        todo.project.todos.remove(todo)
+        todo.project.todos.append(todo)
+    }
+
+    func moveToDaily(
+        todo: TodoEntity,
+        dailyTodoList: DailyTodoListEntity
+    ) async throws {
+        defer { updateStores() }
+        try await Self.dailyTodoListUseCase.addTodoToDaily(
+            todo: todo,
+            dailyTodoList: dailyTodoList
+        )
+        dailyTodoList.todos.remove(todo)
+        dailyTodoList.todos.append(todo)
+    }
+
     func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
         defer { updateStores() }
         switch (lhs.isDaily, rhs.isDaily) {
         case (false, false):
             swapInProject(lhs, rhs)
         case (false, true):
-            moveToDaily(lhs, rhs)
+            try await moveToDaily(lhs, rhs)
         case (true, false):
-            moveToProject(lhs, rhs)
+            try await moveToProject(lhs, rhs)
         case (true, true):
             swapInDaily(lhs, rhs)
         }
     }
 
-    private func swapInProject(_ lhs: TodoEntity, _ rhs: TodoEntity) {
-        if rhs.isPlaceholder {
-            lhs.project.todos.removeAll(where: { $0 === lhs })
-            lhs.project.todos.append(lhs)
-        } else if lhs.project === rhs.project,
-                  let indexInProject = rhs.project.todos.firstIndex(of: rhs) {
-            lhs.project.todos.removeAll(where: { $0 === lhs })
-            lhs.project.todos.insert(lhs, at: indexInProject)
-        }
-    }
-
-    private func moveToDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) {
-        Task {
-            try await Self.dailyTodoListUseCase.addTodoToDaily(
-                todo: lhs,
-                dailyTodoList: rhs.dailyTodoList
-            )
-            swapInDaily(lhs, rhs)
-        }
-    }
-
-    private func moveToProject(_ lhs: TodoEntity, _ rhs: TodoEntity) {
+    private func moveToProject(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
         guard lhs.project === rhs.project else {
             return
         }
-        Task {
-            try await Self.dailyTodoListUseCase.removeTodoFromDaily(lhs)
-            swapInProject(lhs, rhs)
+        try await Self.dailyTodoListUseCase.removeTodoFromDaily(lhs)
+        swapInProject(lhs, rhs)
+    }
+
+    private func moveToDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
+        try await Self.dailyTodoListUseCase.addTodoToDaily(
+            todo: lhs,
+            dailyTodoList: rhs.dailyTodoList
+        )
+        swapInDaily(lhs, rhs)
+    }
+
+    private func swapInProject(_ lhs: TodoEntity, _ rhs: TodoEntity) {
+        guard lhs.project === rhs.project,
+              let indexInProject = rhs.project.todos.firstIndex(of: rhs) else {
+            return
         }
+        lhs.project.todos.remove(lhs)
+        lhs.project.todos.insert(lhs, at: indexInProject)
     }
 
     private func swapInDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) {
-        if rhs.isPlaceholder {
-            lhs.dailyTodoList?.todos.removeAll(where: { $0 === lhs })
-            lhs.dailyTodoList?.todos.append(lhs)
-        } else if let indexInDaily = rhs.dailyTodoList?.todos.firstIndex(of: rhs) {
-            lhs.dailyTodoList?.todos.removeAll(where: { $0 === lhs })
-            lhs.dailyTodoList?.todos.insert(lhs, at: indexInDaily)
+        guard let indexInDaily = rhs.dailyTodoList?.todos.firstIndex(of: rhs) else {
+            return
         }
+        lhs.project.todos.remove(lhs)
+        lhs.dailyTodoList?.todos.insert(lhs, at: indexInDaily)
     }
 
     private func updateStores() {

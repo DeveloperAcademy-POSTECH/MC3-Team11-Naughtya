@@ -18,20 +18,14 @@ struct DashboardView: View {
                 TopBarView()
                     .zIndex(1)
                 HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        List {
-                            ProjectListView(projects: viewModel.projects)
-                        }
+                    List {
+                        ProjectSummaryListView(projects: viewModel.projects)
                     }
-                    VStack(alignment: .leading) {
-                        List {
-                            ProjectTodoListView(projects: viewModel.projects)
-                        }
+                    List {
+                        ProjectTodoListView(projects: viewModel.projects)
                     }
-                    VStack(alignment: .leading) {
-                        List {
-                            DailyTodoListView()
-                        }
+                    List {
+                        DailyTodoListView()
                     }
                 }
                 .zIndex(0)

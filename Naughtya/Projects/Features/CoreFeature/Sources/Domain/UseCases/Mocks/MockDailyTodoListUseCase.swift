@@ -15,12 +15,6 @@ struct MockDailyTodoListUseCase: DailyTodoListUseCase {
     func create(dateString: String) async throws -> DailyTodoListEntity {
         defer { Self.dailyTodoListStore.update() }
         let dailyTodoList = DailyTodoListEntity(dateString: dateString)
-        dailyTodoList.todos = [
-            .buildEmptyTodo(
-                dailyTodoList: dailyTodoList,
-                title: "placeholder"
-            )
-        ]
         Self.dailyTodoListStore.dailyTodoLists.append(dailyTodoList)
         return dailyTodoList
     }
@@ -38,12 +32,13 @@ struct MockDailyTodoListUseCase: DailyTodoListUseCase {
         }
         defer { updateStores() }
         todo.dailyTodoList = dailyTodoList
+        dailyTodoList.todos.remove(todo)
         dailyTodoList.todos.append(todo)
     }
 
     func removeTodoFromDaily(_ todo: TodoEntity) async throws {
         defer { updateStores() }
-        todo.dailyTodoList?.todos.removeAll(where: { $0 === todo })
+        todo.dailyTodoList?.todos.remove(todo)
         todo.dailyTodoList = nil
     }
 

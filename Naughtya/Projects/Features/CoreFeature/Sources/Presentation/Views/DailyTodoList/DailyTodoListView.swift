@@ -23,7 +23,12 @@ public struct DailyTodoListView: View {
                     Spacer()
                 }
             }
-            TodoListView(todos: viewModel.todos)
+            if let dailyTodoList = viewModel.dailyTodoList {
+                TodoListView(
+                    section: dailyTodoList.entity,
+                    todos: dailyTodoList.todos
+                )
+            }
         }
         .onAppear {
             viewModel.fetchTodayIfNeeded()

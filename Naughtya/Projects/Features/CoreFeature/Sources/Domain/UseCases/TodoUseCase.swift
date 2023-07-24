@@ -37,5 +37,12 @@ public protocol TodoUseCase {
     ) async throws
 
     func undoCompleted(_ todo: TodoEntity) async throws
+    func moveToProject(todo: TodoEntity) async throws
+
+    func moveToDaily(
+        todo: TodoEntity,
+        dailyTodoList: DailyTodoListEntity
+    ) async throws
+
     func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws
 }

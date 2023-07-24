@@ -29,12 +29,6 @@ struct MockProjectUseCase: ProjectUseCase {
             startedAt: startedAt,
             endedAt: endedAt
         )
-        project.todos = [
-            .buildEmptyTodo(
-                project: project,
-                title: "placeholder"
-            )
-        ]
         Self.projectStore.projects.append(project)
         return project
     }

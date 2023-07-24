@@ -30,11 +30,11 @@ public struct ProjectModel: Modelable {
     }
 
     public var completedTodosCount: Int {
-        completedTodos.filter { !$0.isPlaceholder }.count
+        completedTodos.count
     }
 
     public var totalTodosCount: Int {
-        todos.filter { !$0.isPlaceholder }.count
+        todos.count
     }
 
     public static func from(entity: ProjectEntity) -> Self {

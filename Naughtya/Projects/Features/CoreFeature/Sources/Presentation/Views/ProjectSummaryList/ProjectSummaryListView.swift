@@ -1,5 +1,5 @@
 //
-//  ProjectListView.swift
+//  ProjectSummaryListView.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/18.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-public struct ProjectListView: View {
+public struct ProjectSummaryListView: View {
     private static let dummyDataGenerator: DummyDataGenerator = .shared
 
     public let projects: [ProjectModel]
@@ -52,8 +52,8 @@ public struct ProjectListView: View {
     }
 }
 
-struct ProjectListView_Previews: PreviewProvider {
+struct ProjectSummaryListView_Previews: PreviewProvider {
     static var previews: some View {
-        ProjectListView()
+        ProjectSummaryListView()
     }
 }
