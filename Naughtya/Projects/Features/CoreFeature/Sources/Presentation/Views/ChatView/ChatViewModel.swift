@@ -10,7 +10,7 @@ import Foundation
 extension ChatView {
     class ViewModel: ObservableObject {
         @Published var messages: [Message] = [Message(id: UUID(), role: .system, content: prompt, createAt: Date())]
-        @Published var currentInput: String = "[ProjectUseCase의 category] TodoUseCase의 title"
+        @Published var currentInput = "[ProjectUseCase의 category] TodoUseCase의 title"
         private let openAIService = OpenAIService()
 
         func sendMessage() {
