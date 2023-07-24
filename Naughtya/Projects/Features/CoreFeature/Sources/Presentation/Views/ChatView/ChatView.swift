@@ -22,31 +22,6 @@ public struct ChatView: View {
             .onAppear {
                 viewModel.sendMessage()
             }
-//            HStack {
-//
-//                TextField("enter a message", text: $viewModel.currentInput) {
-//
-//                }
-//                    .padding()
-//                    .background(.gray.opacity(0.1))
-//                    .cornerRadius(12)
-//                Button {
-//                    viewModel.sendMessage()
-//
-//                } label: {
-//                    Text("Send")
-//                        .padding()
-//                        .background(.black)
-//                        .foregroundColor(.white)
-//                        .cornerRadius(12)
-//                }
-//
-//            }
-//            Button {
-//                dismiss()
-//            } label: {
-//                Text("나가기")
-//            }
 
         }
         .padding()
