@@ -137,7 +137,7 @@ struct MockTodoUseCase: TodoUseCase {
         guard let indexInDaily = rhs.dailyTodoList?.todos.firstIndex(of: rhs) else {
             return
         }
-        lhs.project.todos.remove(lhs)
+        lhs.dailyTodoList?.todos.remove(lhs)
         lhs.dailyTodoList?.todos.insert(lhs, at: indexInDaily)
     }
 

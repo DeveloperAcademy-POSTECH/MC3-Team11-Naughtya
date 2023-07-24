@@ -28,28 +28,32 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         _ item: DragDropItemable,
         rect: CGRect
     ) {
-        switch item {
-        case let project as ProjectEntity:
-            projectAbsoluteRectMap[project] = rect
-        case let dailyTodoList as DailyTodoListEntity:
-            dailyTodoListAbsoluteRectMap[dailyTodoList] = rect
-        case let todo as TodoEntity:
-            todoAbsoluteRectMap[todo] = rect
-        default:
-            break
+        DispatchQueue.global(qos: .userInitiated).sync {
+            switch item {
+            case let project as ProjectEntity:
+                projectAbsoluteRectMap[project] = rect
+            case let dailyTodoList as DailyTodoListEntity:
+                dailyTodoListAbsoluteRectMap[dailyTodoList] = rect
+            case let todo as TodoEntity:
+                todoAbsoluteRectMap[todo] = rect
+            default:
+                break
+            }
         }
     }
 
     public func unregisterAbsoluteRect(_ item: DragDropItemable) {
-        switch item {
-        case let project as ProjectEntity:
-            projectAbsoluteRectMap.removeValue(forKey: project)
-        case let dailyTodoList as DailyTodoListEntity:
-            dailyTodoListAbsoluteRectMap.removeValue(forKey: dailyTodoList)
-        case let todo as TodoEntity:
-            todoAbsoluteRectMap.removeValue(forKey: todo)
-        default:
-            break
+        DispatchQueue.global(qos: .userInitiated).sync {
+            switch item {
+            case let project as ProjectEntity:
+                projectAbsoluteRectMap.removeValue(forKey: project)
+            case let dailyTodoList as DailyTodoListEntity:
+                dailyTodoListAbsoluteRectMap.removeValue(forKey: dailyTodoList)
+            case let todo as TodoEntity:
+                todoAbsoluteRectMap.removeValue(forKey: todo)
+            default:
+                break
+            }
         }
     }
 
