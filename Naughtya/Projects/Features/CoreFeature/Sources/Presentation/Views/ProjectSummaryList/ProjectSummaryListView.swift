@@ -28,7 +28,7 @@ public struct ProjectSummaryListView: View {
                             Text(project.category.uppercased())
                                 .font(.title.weight(.black))
                             Spacer()
-                            Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
+                            Text("\(project.completedTodos.count)/\(project.todos.count)")
                         }
                         if let startedAt = project.startedAt,
                            let endedAt = project.endedAt {

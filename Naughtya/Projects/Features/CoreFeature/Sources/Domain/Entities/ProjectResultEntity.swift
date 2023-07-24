@@ -24,10 +24,39 @@ public class ProjectResultEntity: Codable, Equatable, Identifiable {
         ObjectIdentifier(self)
     }
 
-    public var dailyCompletedTodosCount: Int {
+    public var allTodos: [TodoEntity] {
         project.todos
+    }
+
+    public var completedTodos: [TodoEntity] {
+        allTodos
+            .filter { $0.isCompleted }
+    }
+
+    public var backlogTodos: [TodoEntity] {
+        allTodos
+            .filter { $0.isBacklog }
+    }
+
+    public var dailyCompletedTodos: [TodoEntity] {
+        allTodos
             .filter { $0.isDailyCompleted }
-            .count
+    }
+
+    public var delayedTodos: [TodoEntity] {
+        allTodos
+            .filter { $0.isDelayed }
+    }
+
+    public var deletedTodos: [TodoEntity] {
+        project.deletedTodos
+    }
+
+    public var allTodosSummary: String {
+        allTodos
+            .reduce("") {
+                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title)\n"
+            }
     }
 
     public static func == (lhs: ProjectResultEntity, rhs: ProjectResultEntity) -> Bool {

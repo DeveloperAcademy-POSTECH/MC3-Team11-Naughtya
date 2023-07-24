@@ -23,7 +23,7 @@ public struct ProjectItemView: View {
             HStack {
                 Text(project.category)
                     .font(.headline)
-                Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
+                Text("\(project.completedTodos.count)/\(project.todos.count)")
                 Button("Todo 추가") {
                     appendNewTodo(project: project.entity)
                 }
@@ -31,7 +31,7 @@ public struct ProjectItemView: View {
             }
             TodoListView(
                 section: project.entity,
-                todos: project.coldTodos
+                todos: project.backlogTodos
             )
         }
     }

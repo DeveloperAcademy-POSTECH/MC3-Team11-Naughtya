@@ -22,9 +22,13 @@ public struct ProjectResultListView: View {
                 VStack {
                     Text(projectResult.project.category)
                         .font(.headline)
-                    Text("전체 : \(projectResult.project.totalTodosCount)")
-                    Text("완료 : \(projectResult.project.completedTodosCount)")
-                    Text("안미룸 : \(projectResult.dailyCompletedTodosCount)")
+                    Text("전체 : \(projectResult.allTodos.count)")
+                    Text("완료 : \(projectResult.completedTodos.count)")
+                    Text("미완료 : \(projectResult.backlogTodos.count)")
+                    Text("안미룸 : \(projectResult.dailyCompletedTodos.count)")
+                    Text("미룸 : \(projectResult.delayedTodos.count)")
+                    Text("삭제됨 : \(projectResult.deletedTodos.count)")
+                    Text(projectResult.allTodosSummary)
                 }
             }
         }

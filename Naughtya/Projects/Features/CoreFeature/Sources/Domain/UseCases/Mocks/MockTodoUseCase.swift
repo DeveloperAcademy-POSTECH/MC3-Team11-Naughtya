@@ -56,8 +56,9 @@ struct MockTodoUseCase: TodoUseCase {
 
     func delete(_ todo: TodoEntity) async throws {
         defer { updateStores() }
-        todo.project.todos.removeAll { $0 === todo }
-        todo.dailyTodoList?.todos.removeAll { $0 === todo }
+        todo.project.deletedTodos.append(todo)
+        todo.project.todos.removeAll(where: { $0 === todo })
+        todo.dailyTodoList?.todos.removeAll(where: { $0 === todo })
     }
 
     func complete(

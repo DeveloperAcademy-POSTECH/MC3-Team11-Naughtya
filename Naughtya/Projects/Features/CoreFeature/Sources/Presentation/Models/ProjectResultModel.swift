@@ -11,13 +11,43 @@ import Foundation
 public struct ProjectResultModel: Modelable {
     public let entity: ProjectResultEntity
     public let project: ProjectModel
-    public let dailyCompletedTodosCount: Int
+    public let allTodosSummary: String
+
+    public var allTodos: [TodoModel] {
+        entity.allTodos
+            .map { .from(entity: $0) }
+    }
+
+    public var completedTodos: [TodoModel] {
+        entity.completedTodos
+            .map { .from(entity: $0) }
+    }
+
+    public var backlogTodos: [TodoModel] {
+        entity.backlogTodos
+            .map { .from(entity: $0) }
+    }
+
+    public var dailyCompletedTodos: [TodoModel] {
+        entity.dailyCompletedTodos
+            .map { .from(entity: $0) }
+    }
+
+    public var delayedTodos: [TodoModel] {
+        entity.delayedTodos
+            .map { .from(entity: $0) }
+    }
+
+    public var deletedTodos: [TodoModel] {
+        entity.deletedTodos
+            .map { .from(entity: $0) }
+    }
 
     public static func from(entity: ProjectResultEntity) -> Self {
         ProjectResultModel(
             entity: entity,
             project: .from(entity: entity.project),
-            dailyCompletedTodosCount: entity.dailyCompletedTodosCount
+            allTodosSummary: entity.allTodosSummary
         )
     }
 }

@@ -17,24 +17,12 @@ public struct ProjectModel: Modelable {
     public let todos: [TodoModel]
     public let isEnded: Bool
 
-    public var coldTodos: [TodoModel] {
+    public var backlogTodos: [TodoModel] {
         todos.filter { !$0.isDaily }
-    }
-
-    public var dailyTodos: [TodoModel] {
-        todos.filter { $0.isDaily }
     }
 
     public var completedTodos: [TodoModel] {
         todos.filter { $0.isCompleted }
-    }
-
-    public var completedTodosCount: Int {
-        completedTodos.count
-    }
-
-    public var totalTodosCount: Int {
-        todos.count
     }
 
     public static func from(entity: ProjectEntity) -> Self {

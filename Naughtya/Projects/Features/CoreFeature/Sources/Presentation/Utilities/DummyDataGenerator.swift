@@ -114,7 +114,7 @@ public final class DummyDataGenerator {
            let date = todo.dailyTodoList?.date {
             try await Self.todoUseCase.complete(
                 todo,
-                date: Bool.random() ? date : date.getOneDayAfter()
+                date: date // Bool.random() ? date : date.getOneDayAfter()
             )
         }
     }
