@@ -9,12 +9,14 @@
 import Foundation
 
 public class ProjectEntity: Codable, Equatable, Identifiable {
-    public let category: String
+    public internal(set) var category: String
     public internal(set) var goals: String?
     public internal(set) var startedAt: Date?
     public internal(set) var endedAt: Date?
     public internal(set) var todos: [TodoEntity] = []
     public internal(set) var deletedTodos: [TodoEntity] = []
+    public internal(set) var isSelected: Bool
+    public internal(set) var isBookmarked: Bool
 
     public init(
         category: String,
@@ -22,7 +24,9 @@ public class ProjectEntity: Codable, Equatable, Identifiable {
         startedAt: Date? = nil,
         endedAt: Date? = nil,
         todos: [TodoEntity] = [],
-        deletedTodos: [TodoEntity] = []
+        deletedTodos: [TodoEntity] = [],
+        isSelected: Bool = false,
+        isBookmarked: Bool = false
     ) {
         self.category = category
         self.goals = goals
@@ -30,6 +34,8 @@ public class ProjectEntity: Codable, Equatable, Identifiable {
         self.endedAt = endedAt
         self.todos = todos
         self.deletedTodos = deletedTodos
+        self.isSelected = isSelected
+        self.isBookmarked = isBookmarked
     }
 
     public var id: String {

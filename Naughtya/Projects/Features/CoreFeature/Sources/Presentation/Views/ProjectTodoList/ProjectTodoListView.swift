@@ -17,8 +17,22 @@ public struct ProjectTodoListView: View {
 
     public var body: some View {
         VStack(spacing: 16) {
-            ForEach(projects) { project in
+            ForEach(projects.filter { $0.isSelected }) { project in
                 ProjectItemView(project: project)
+            }
+        }
+    }
+
+    private func buildProjectItem(_ project: ProjectModel) -> some View {
+        VStack(spacing: 8) {
+            HStack {
+                Text(project.category)
+                    .font(.headline)
+                Text("\(project.completedTodos.count)/\(project.todos.count)")
+                Spacer()
+            }
+            if !project.backlogTodos.isEmpty {
+                TodoListView(todos: project.backlogTodos)
             }
         }
     }

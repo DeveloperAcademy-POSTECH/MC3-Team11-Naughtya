@@ -16,6 +16,8 @@ public struct ProjectModel: Modelable {
     public let endedAt: Date?
     public let todos: [TodoModel]
     public let isEnded: Bool
+    public var isSelected: Bool
+    public var isBookmarked: Bool
 
     public var backlogTodos: [TodoModel] {
         todos.filter { !$0.isDaily }
@@ -34,7 +36,9 @@ public struct ProjectModel: Modelable {
             endedAt: entity.endedAt,
             todos: entity.todos
                 .map { .from(entity: $0) },
-            isEnded: entity.isEnded
+            isEnded: entity.isEnded,
+            isSelected: entity.isSelected,
+            isBookmarked: entity.isBookmarked
         )
     }
 }

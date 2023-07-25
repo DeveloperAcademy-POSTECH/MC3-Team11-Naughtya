@@ -22,8 +22,23 @@ public protocol ProjectUseCase {
 
     func update(
         _ project: ProjectEntity,
+        category: String,
         goals: String?,
         startedAt: Date?,
         endedAt: Date?
+    ) async throws -> ProjectEntity
+
+    func delete(
+        _ project: ProjectEntity
+    ) async throws
+
+    func toggleSelected(
+        _ project: ProjectEntity,
+        isSelected: Bool
+    ) async throws -> ProjectEntity
+
+    func toggleIsBookmarked(
+        _ project: ProjectEntity,
+        isBookmarked: Bool
     ) async throws -> ProjectEntity
 }
