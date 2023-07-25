@@ -65,6 +65,7 @@ final class MockProjectUseCase: ProjectUseCase {
         endedAt: Date? = nil
     ) throws -> ProjectEntity {
         defer { Self.projectStore.update() }
+        project.category = category
         project.goals = goals
         project.startedAt = startedAt
         project.endedAt = endedAt

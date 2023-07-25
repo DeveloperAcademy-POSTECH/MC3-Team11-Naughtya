@@ -9,7 +9,7 @@
 import Foundation
 
 public class ProjectEntity: Equatable, Identifiable {
-    public let category: String
+    public internal(set) var category: String
     public internal(set) var goals: String?
     public internal(set) var startedAt: Date?
     public internal(set) var endedAt: Date?
