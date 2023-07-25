@@ -15,9 +15,9 @@ struct DashboardView: View {
     var body: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading) {
-                List {
+//                List {
                     ProjectListView(projects: viewModel.projects)
-                }
+//                }
             }
             VStack(alignment: .leading) {
                 Text("Projects")

@@ -14,12 +14,27 @@ struct ProjectSetModalView: View {
 
     @Environment(\.dismiss) private var dismiss
 
-    @State private var newProjectCategory: String = ""
-    @State private var newProjectGoal: String = ""
+    @State private var newProjectCategory: String
+    @State private var newProjectGoal: String
     @State private var projectStartDay = Date()
     @State private var projectEndDay = Date()
-    var isSelected: Bool = false
-    var isBookmarked: Bool = false
+
+    private let project: ProjectModel?
+
+    init(project: ProjectModel? = nil) {
+        self.project = project
+        if let project = project {
+            self._newProjectCategory = State(initialValue: project.category)
+            self._newProjectGoal = State(initialValue: project.goals ?? "")
+            self._projectStartDay = State(initialValue: project.startedAt ?? Date())
+            self._projectEndDay = State(initialValue: project.endedAt ?? Date())
+        } else {
+            self._newProjectCategory = State(initialValue: "")
+            self._newProjectGoal = State(initialValue: "")
+            self._projectStartDay = State(initialValue: Date())
+            self._projectEndDay = State(initialValue: Date())
+        }
+    }
 
     var body: some View {
         VStack {
@@ -52,13 +67,26 @@ struct ProjectSetModalView: View {
                     }
                 }
             }
-            Button("새 프로젝트 생성하기") {
-                appendNewProject()
-                dismiss()
+            HStack {
+                Spacer()
+                Button("Cancel") {
+                    dismiss()
+                }
+                Button("Save") {
+                    if project == nil {
+                        appendNewProject()
+                    } else {
+                        if let project = project {
+                            update(project.entity)
+                        }
+                    }
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
             }
         }
-        .padding()
-        .frame(width: 421)
+        .padding(20)
+        .frame(minWidth: 300)
     }
     private func appendNewProject() {
         Task {
@@ -66,12 +94,22 @@ struct ProjectSetModalView: View {
                 category: newProjectCategory,
                 goals: newProjectGoal,
                 startedAt: projectStartDay,
-                endedAt: projectEndDay,
-                isSelected: isSelected,
-                isBookmarked: isBookmarked
+                endedAt: projectEndDay
             )
             newProjectCategory = ""
             newProjectGoal = ""
+        }
+    }
+
+    private func update(_ project: ProjectEntity) {
+        Task {
+            try Self.projectUseCase.update(
+                _: project,
+                category: newProjectCategory,
+                goals: newProjectGoal,
+                startedAt: projectStartDay,
+                endedAt: projectEndDay
+            )
         }
     }
 }

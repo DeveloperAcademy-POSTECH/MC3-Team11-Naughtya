@@ -14,9 +14,7 @@ public protocol ProjectUseCase {
         category: String,
         goals: String?,
         startedAt: Date?,
-        endedAt: Date?,
-        isSelected: Bool,
-        isBookmarked: Bool
+        endedAt: Date?
     ) throws -> ProjectEntity
 
     func readList() throws -> [ProjectEntity]
@@ -24,10 +22,15 @@ public protocol ProjectUseCase {
 
     func update(
         _ project: ProjectEntity,
+        category: String,
         goals: String?,
         startedAt: Date?,
         endedAt: Date?
     ) throws -> ProjectEntity
+
+    func delete(
+        _ project: ProjectEntity
+    ) throws
 
     func toggleSelected(
         _ project: ProjectEntity,

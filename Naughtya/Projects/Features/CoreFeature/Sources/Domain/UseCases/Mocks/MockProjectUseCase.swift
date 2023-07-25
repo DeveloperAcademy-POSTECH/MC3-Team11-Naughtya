@@ -24,9 +24,7 @@ final class MockProjectUseCase: ProjectUseCase {
         category: String,
         goals: String? = nil,
         startedAt: Date? = nil,
-        endedAt: Date? = nil,
-        isSelected: Bool = false,
-        isBookmarked: Bool = false
+        endedAt: Date? = nil
     ) throws -> ProjectEntity {
         guard validateNotEmptyCategory(category) else {
             throw DomainError(message: "category 없음")
@@ -38,9 +36,7 @@ final class MockProjectUseCase: ProjectUseCase {
             category: category,
             goals: goals,
             startedAt: startedAt,
-            endedAt: endedAt,
-            isSelected: isSelected,
-            isBookmarked: isBookmarked
+            endedAt: endedAt
         )
         project.todos = [
             .buildEmptyTodo(
@@ -63,6 +59,7 @@ final class MockProjectUseCase: ProjectUseCase {
 
     func update(
         _ project: ProjectEntity,
+        category: String,
         goals: String? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil
@@ -90,6 +87,14 @@ final class MockProjectUseCase: ProjectUseCase {
         defer { Self.projectStore.update() }
         project.isBookmarked = isBookmarked
         return project
+    }
+
+    func delete(_ project: ProjectEntity) throws {
+        defer { Self.projectStore.update() }
+        guard let index = projects.firstIndex(where: { $0.category == project.category }) else {
+            throw DomainError(message: "프로젝트를 찾을 수 없습니다.")
+        }
+        projects.remove(at: index)
     }
 
     private func validateNotEmptyCategory(_ category: String) -> Bool {
