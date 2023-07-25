@@ -68,6 +68,8 @@ struct OpenAIChatResponse: Decodable {
     let choices: [OpenAIChatChoice]
 }
 
-struct OpenAIChatChoice: Decodable {
-    let message: OpenAIChatMessage
+extension OpenAIChatResponse {
+    struct OpenAIChatChoice: Decodable {
+        let message: OpenAIChatMessage
+    }
 }
