@@ -18,13 +18,7 @@ struct MacOSApp: App {
                     .tabItem {
                         Text("홈")
                     }
-                Text("텅")
-                    .font(
-                        .system(
-                            size: 100,
-                            weight: .black
-                        )
-                    )
+                ChatView()
                     .tabItem {
                         Text("완료(성과)")
                     }
