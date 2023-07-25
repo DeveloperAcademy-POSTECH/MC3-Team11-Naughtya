@@ -22,6 +22,10 @@ public final class DashboardViewModel: ObservableObject {
 
     private func setupFetchingData() {
         Self.projectStore.objectWillChange
+            .debounce(
+                for: .milliseconds(10),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
             .receive(on: DispatchQueue.main)
             .sink { _ in
             } receiveValue: { [unowned self] _ in

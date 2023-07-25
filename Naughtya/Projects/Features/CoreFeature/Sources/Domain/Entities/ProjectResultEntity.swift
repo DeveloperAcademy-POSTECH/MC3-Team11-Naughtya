@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class ProjectResultEntity: Codable {
+public class ProjectResultEntity: Codable, Equatable, Identifiable {
     public let project: ProjectEntity
     public internal(set) var performances: [PerformanceEntity]
 
@@ -18,5 +18,48 @@ public class ProjectResultEntity: Codable {
     ) {
         self.project = project
         self.performances = performances
+    }
+
+    public var id: ObjectIdentifier {
+        ObjectIdentifier(self)
+    }
+
+    public var allTodos: [TodoEntity] {
+        project.todos
+    }
+
+    public var completedTodos: [TodoEntity] {
+        allTodos
+            .filter { $0.isCompleted }
+    }
+
+    public var backlogTodos: [TodoEntity] {
+        allTodos
+            .filter { $0.isBacklog }
+    }
+
+    public var dailyCompletedTodos: [TodoEntity] {
+        allTodos
+            .filter { $0.isDailyCompleted }
+    }
+
+    public var delayedTodos: [TodoEntity] {
+        allTodos
+            .filter { $0.isDelayed }
+    }
+
+    public var deletedTodos: [TodoEntity] {
+        project.deletedTodos
+    }
+
+    public var allTodosSummary: String {
+        allTodos
+            .reduce("") {
+                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title)\n"
+            }
+    }
+
+    public static func == (lhs: ProjectResultEntity, rhs: ProjectResultEntity) -> Bool {
+        lhs.project === rhs.project
     }
 }

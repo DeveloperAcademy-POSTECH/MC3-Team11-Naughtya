@@ -12,18 +12,22 @@ public struct TodoModel: Modelable {
     public let entity: TodoEntity
     public let category: String
     public let title: String
-    public let isPlaceholder: Bool
     public let isDaily: Bool
     public let isCompleted: Bool
+    public let isBacklog: Bool
+    public let isDelayed: Bool
+    public let isDailyCompleted: Bool
 
     public static func from(entity: TodoEntity) -> Self {
         TodoModel(
             entity: entity,
             category: entity.project.category,
             title: entity.title,
-            isPlaceholder: entity.isPlaceholder,
             isDaily: entity.isDaily,
-            isCompleted: entity.isCompleted
+            isCompleted: entity.isCompleted,
+            isBacklog: entity.isBacklog,
+            isDelayed: entity.isDelayed,
+            isDailyCompleted: entity.isDailyCompleted
         )
     }
 }

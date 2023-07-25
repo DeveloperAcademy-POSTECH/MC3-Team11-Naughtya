@@ -15,6 +15,7 @@ public final class DailyTodoListViewModel: ObservableObject {
     private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
 
     @Published public var dailyTodoList: DailyTodoListModel?
+    private var isTodayFetched = false
     private var cancellable = Set<AnyCancellable>()
 
     public init() {
@@ -25,47 +26,52 @@ public final class DailyTodoListViewModel: ObservableObject {
         dailyTodoList?.dateTitle ?? ""
     }
 
-    public var todos: [TodoModel] {
-        dailyTodoList?.todos ?? []
-    }
-
-    public func fetchToday() {
-        fetchDailyTodoList(date: .now)
-    }
-
-    public func gotoYesterday() {
-        guard let yesterday = dailyTodoList?.date.getYesterday() else {
+    public func fetchTodayIfNeeded() {
+        guard !isTodayFetched else {
             return
         }
-        fetchDailyTodoList(date: yesterday)
+        isTodayFetched = true
+        let dateString = Date.today.getDateString()
+        fetchDailyTodoList(dateString: dateString)
     }
 
-    public func gotoTomorrow() {
-        guard let tomorrow = dailyTodoList?.date.getTomorrow() else {
+    public func gotoOneDayBefore() {
+        guard let oneDayBefore = dailyTodoList?.date.getOneDayBefore() else {
             return
         }
-        fetchDailyTodoList(date: tomorrow)
+        fetchDailyTodoList(dateString: oneDayBefore.getDateString())
+    }
+
+    public func gotoOneDayAfter() {
+        guard let oneDayAfter = dailyTodoList?.date.getOneDayAfter() else {
+            return
+        }
+        fetchDailyTodoList(dateString: oneDayAfter.getDateString())
     }
 
     private func setupFetchingData() {
         Self.dailyTodoListStore.objectWillChange
+            .debounce(
+                for: .milliseconds(10),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
             .receive(on: DispatchQueue.main)
             .sink { _ in
             } receiveValue: { [unowned self] _ in
-                guard let date = dailyTodoList?.date else {
+                guard let dateString = dailyTodoList?.dateString else {
                     return
                 }
-                fetchDailyTodoList(date: date)
+                fetchDailyTodoList(dateString: dateString)
             }
             .store(in: &cancellable)
     }
 
-    private func fetchDailyTodoList(date: Date) {
+    private func fetchDailyTodoList(dateString: String) {
         Task {
-            if let existing = try Self.dailyTodoListUseCase.readByDate(date) {
+            if let existing = try await Self.dailyTodoListUseCase.readByDate(dateString: dateString) {
                 dailyTodoList = .from(entity: existing)
             } else {
-                let new = try Self.dailyTodoListUseCase.create(date: date)
+                let new = try await Self.dailyTodoListUseCase.create(dateString: dateString)
                 dailyTodoList = .from(entity: new)
             }
         }

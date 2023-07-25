@@ -14,6 +14,7 @@ public class ProjectEntity: Codable, Equatable, Identifiable {
     public internal(set) var startedAt: Date?
     public internal(set) var endedAt: Date?
     public internal(set) var todos: [TodoEntity] = []
+    public internal(set) var deletedTodos: [TodoEntity] = []
     public internal(set) var isSelected: Bool
     public internal(set) var isBookmarked: Bool
 
@@ -23,6 +24,7 @@ public class ProjectEntity: Codable, Equatable, Identifiable {
         startedAt: Date? = nil,
         endedAt: Date? = nil,
         todos: [TodoEntity] = [],
+        deletedTodos: [TodoEntity] = [],
         isSelected: Bool = false,
         isBookmarked: Bool = false
     ) {
@@ -31,12 +33,20 @@ public class ProjectEntity: Codable, Equatable, Identifiable {
         self.startedAt = startedAt
         self.endedAt = endedAt
         self.todos = todos
+        self.deletedTodos = deletedTodos
         self.isSelected = isSelected
         self.isBookmarked = isBookmarked
     }
 
     public var id: String {
         category
+    }
+
+    public var isEnded: Bool {
+        guard let endedAt = endedAt else {
+            return false
+        }
+        return endedAt.timeIntervalSinceNow < Date.now.timeIntervalSinceNow
     }
 
     public static func == (lhs: ProjectEntity, rhs: ProjectEntity) -> Bool {

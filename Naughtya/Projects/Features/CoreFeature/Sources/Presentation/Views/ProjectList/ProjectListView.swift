@@ -34,7 +34,7 @@ public struct ProjectListView: View {
 
                                 Button {
                                     Task {
-                                        try Self.projectUseCase.toggleIsBookmarked(
+                                        try await Self.projectUseCase.toggleIsBookmarked(
                                             project.entity,
                                             isBookmarked: !project.isBookmarked)
                                     }
@@ -46,7 +46,7 @@ public struct ProjectListView: View {
                                 Divider()
                                 Button(role: .destructive) {
                                     Task {
-                                        try Self.projectUseCase.delete(project.entity)
+                                        try await Self.projectUseCase.delete(project.entity)
                                     }
                                 } label: {
                                     Label("삭제", systemImage: "trash")

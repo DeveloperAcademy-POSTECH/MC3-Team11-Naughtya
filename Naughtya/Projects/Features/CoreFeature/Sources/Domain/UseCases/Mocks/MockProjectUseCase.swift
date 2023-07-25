@@ -8,24 +8,15 @@
 
 import Foundation
 
-final class MockProjectUseCase: ProjectUseCase {
+struct MockProjectUseCase: ProjectUseCase {
     private static let projectStore: ProjectStore = .shared
-
-    private var projects: [ProjectEntity] {
-        get {
-            Self.projectStore.projects
-        }
-        set {
-            Self.projectStore.projects = newValue
-        }
-    }
 
     func create(
         category: String,
         goals: String? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil
-    ) throws -> ProjectEntity {
+    ) async throws -> ProjectEntity {
         guard validateNotEmptyCategory(category) else {
             throw DomainError(message: "category 없음")
         }
@@ -38,23 +29,16 @@ final class MockProjectUseCase: ProjectUseCase {
             startedAt: startedAt,
             endedAt: endedAt
         )
-        project.todos = [
-            .buildEmptyTodo(
-                project: project,
-                title: "placeholder"
-            ),
-            .buildEmptyTodo(project: project)
-        ]
-        projects.append(project)
+        Self.projectStore.projects.append(project)
         return project
     }
 
-    func readList() throws -> [ProjectEntity] {
-        projects
+    func readList() async throws -> [ProjectEntity] {
+        Self.projectStore.projects
     }
 
-    func readItem(category: String) throws -> ProjectEntity {
-        projects.first { $0.category == category }!
+    func readItem(category: String) async throws -> ProjectEntity {
+        Self.projectStore.projects.first { $0.category == category }!
     }
 
     func update(
@@ -63,7 +47,7 @@ final class MockProjectUseCase: ProjectUseCase {
         goals: String? = nil,
         startedAt: Date? = nil,
         endedAt: Date? = nil
-    ) throws -> ProjectEntity {
+    ) async throws -> ProjectEntity {
         defer { Self.projectStore.update() }
         project.category = category
         project.goals = goals
@@ -92,10 +76,11 @@ final class MockProjectUseCase: ProjectUseCase {
 
     func delete(_ project: ProjectEntity) throws {
         defer { Self.projectStore.update() }
-        guard let index = projects.firstIndex(where: { $0.category == project.category }) else {
+        guard let index = Self.projectStore.projects
+            .firstIndex(where: { $0.category == project.category }) else {
             throw DomainError(message: "프로젝트를 찾을 수 없습니다.")
         }
-        projects.remove(at: index)
+        Self.projectStore.projects.remove(at: index)
     }
 
     private func validateNotEmptyCategory(_ category: String) -> Bool {
@@ -103,6 +88,6 @@ final class MockProjectUseCase: ProjectUseCase {
     }
 
     private func validateUniqueCategory(_ category: String) -> Bool {
-        projects.first { $0.category == category } == nil
+        Self.projectStore.projects.first { $0.category == category } == nil
     }
 }

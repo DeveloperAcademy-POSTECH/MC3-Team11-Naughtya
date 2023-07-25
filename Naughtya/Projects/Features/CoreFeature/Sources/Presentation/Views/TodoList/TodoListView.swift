@@ -9,33 +9,74 @@
 import SwiftUI
 
 public struct TodoListView: View {
+    public let section: DragDropItemable?
     public let todos: [TodoModel]
-    public let isNested: Bool
+    public let dragDropDelegate: DragDropDelegate
     @ObservedObject private var searchManager = SearchManager.shared
+    @State private var absoluteRect: CGRect!
 
     public init(
+        section: DragDropItemable? = nil,
         todos: [TodoModel] = [],
-        isNested: Bool = false
+        dragDropDelegate: DragDropDelegate = DragDropManager.shared
     ) {
+        self.section = section
         self.todos = todos
-        self.isNested = isNested
+        self.dragDropDelegate = dragDropDelegate
     }
 
     public var body: some View {
         VStack(spacing: 0) {
-            ForEach(todos.sorted { $1.isPlaceholder }) { todo in
+            ForEach(todos) { todo in
                 TodoItemView(
                     todo: todo,
-                    isNested: isNested,
+                    isBacklog: section is ProjectEntity,
                     isBlockedToEdit: searchManager.isSearching
                 )
             }
+            if section != nil {
+                GeometryReader { geometry in
+                    let absoluteRect = geometry.frame(in: .global)
+                    Color.gray.opacity(0.1)
+                        .onAppear {
+                            registerAbsoluteRect(absoluteRect)
+                        }
+                        .onChange(of: absoluteRect) {
+                            registerAbsoluteRect($0)
+                        }
+                }
+                .frame(height: 40)
+            }
         }
+        .onDisappear {
+            unregisterAbsoluteRect()
+        }
+    }
+
+    private func registerAbsoluteRect(_ rect: CGRect) {
+        guard let section = section else {
+            return
+        }
+        absoluteRect = rect
+        dragDropDelegate.registerAbsoluteRect(
+            section,
+            rect: rect
+        )
+    }
+
+    private func unregisterAbsoluteRect() {
+        guard let section = section else {
+            return
+        }
+        dragDropDelegate.unregisterAbsoluteRect(section)
     }
 }
 
 struct TodoListView_Previews: PreviewProvider {
     static var previews: some View {
-        TodoListView(todos: [])
+        TodoListView(
+            section: ProjectEntity.sample,
+            todos: []
+        )
     }
 }

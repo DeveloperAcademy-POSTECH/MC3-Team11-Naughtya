@@ -15,27 +15,16 @@ public struct ProjectModel: Modelable {
     public let startedAt: Date?
     public let endedAt: Date?
     public let todos: [TodoModel]
+    public let isEnded: Bool
     public var isSelected: Bool
     public var isBookmarked: Bool
 
-    public var coldTodos: [TodoModel] {
+    public var backlogTodos: [TodoModel] {
         todos.filter { !$0.isDaily }
-    }
-
-    public var dailyTodos: [TodoModel] {
-        todos.filter { $0.isDaily }
     }
 
     public var completedTodos: [TodoModel] {
         todos.filter { $0.isCompleted }
-    }
-
-    public var completedTodosCount: Int {
-        completedTodos.filter { !$0.isPlaceholder }.count
-    }
-
-    public var totalTodosCount: Int {
-        todos.filter { !$0.isPlaceholder }.count
     }
 
     public static func from(entity: ProjectEntity) -> Self {
@@ -47,6 +36,7 @@ public struct ProjectModel: Modelable {
             endedAt: entity.endedAt,
             todos: entity.todos
                 .map { .from(entity: $0) },
+            isEnded: entity.isEnded,
             isSelected: entity.isSelected,
             isBookmarked: entity.isBookmarked
         )

@@ -15,10 +15,10 @@ public protocol ProjectUseCase {
         goals: String?,
         startedAt: Date?,
         endedAt: Date?
-    ) throws -> ProjectEntity
+    ) async throws -> ProjectEntity
 
-    func readList() throws -> [ProjectEntity]
-    func readItem(category: String) throws -> ProjectEntity
+    func readList() async throws -> [ProjectEntity]
+    func readItem(category: String) async throws -> ProjectEntity
 
     func update(
         _ project: ProjectEntity,
@@ -26,19 +26,19 @@ public protocol ProjectUseCase {
         goals: String?,
         startedAt: Date?,
         endedAt: Date?
-    ) throws -> ProjectEntity
+    ) async throws -> ProjectEntity
 
     func delete(
         _ project: ProjectEntity
-    ) throws
+    ) async throws
 
     func toggleSelected(
         _ project: ProjectEntity,
         isSelected: Bool
-    ) throws -> ProjectEntity
+    ) async throws -> ProjectEntity
 
     func toggleIsBookmarked(
         _ project: ProjectEntity,
         isBookmarked: Bool
-    ) throws -> ProjectEntity
+    ) async throws -> ProjectEntity
 }

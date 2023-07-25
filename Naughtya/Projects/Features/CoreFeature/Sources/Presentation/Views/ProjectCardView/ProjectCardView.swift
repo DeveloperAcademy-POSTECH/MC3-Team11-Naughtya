@@ -35,9 +35,9 @@ struct ProjectCardView: View {
                 Text(project.category)
                     .font(.largeTitle)
                 Spacer()
-                Text("\(project.completedTodosCount)")
+                Text("\(project.completedTodos.count)")
                     .font(.largeTitle)
-                Text("/\(project.totalTodosCount)")
+                Text("/\(project.todos.count)")
             }
         }
         .foregroundColor(.white)
@@ -48,7 +48,7 @@ struct ProjectCardView: View {
         )
         .onTapGesture {
             Task {
-                try Self.projectUseCase.toggleSelected(
+                try await Self.projectUseCase.toggleSelected(
                     project.entity,
                     isSelected: !project.isSelected
                 )
@@ -58,11 +58,12 @@ struct ProjectCardView: View {
 
     func toggleIsBookmarked() {
         Task {
-            try Self.projectUseCase.toggleIsBookmarked(
+            try await Self.projectUseCase.toggleIsBookmarked(
                 project.entity,
                 isBookmarked: !project.isBookmarked)
         }
     }
+
     func changeDateFormat() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"

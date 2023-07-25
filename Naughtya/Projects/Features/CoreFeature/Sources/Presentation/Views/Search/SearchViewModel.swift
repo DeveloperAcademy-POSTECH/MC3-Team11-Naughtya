@@ -30,7 +30,7 @@ public final class SearchViewModel: ObservableObject {
 
     public func fetchSearchedTodos() {
         Task {
-            searchedTodos = try Self.todoUseCase.readList(searchedText: searchedText)
+            searchedTodos = try await Self.todoUseCase.readList(searchedText: searchedText)
                 .map { .from(entity: $0) }
         }
     }
@@ -39,6 +39,10 @@ public final class SearchViewModel: ObservableObject {
         Publishers.CombineLatest(
             Self.projectStore.objectWillChange,
             Self.dailyTodoListStore.objectWillChange
+        )
+        .debounce(
+            for: .milliseconds(10),
+            scheduler: DispatchQueue.global(qos: .userInitiated)
         )
         .receive(on: DispatchQueue.main)
         .sink { _ in

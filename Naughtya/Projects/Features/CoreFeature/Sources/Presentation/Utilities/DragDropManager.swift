@@ -12,9 +12,13 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
     public static let shared: DragDropManager = .init()
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
     @Published public var dragged: DraggedModel?
+    @Published public var projectAbsoluteRectMap = [ProjectEntity: CGRect]()
+    @Published public var dailyTodoListAbsoluteRectMap = [DailyTodoListEntity: CGRect]()
     @Published public var todoAbsoluteRectMap = [TodoEntity: CGRect]()
 
     private init() {
@@ -24,14 +28,32 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         _ item: DragDropItemable,
         rect: CGRect
     ) {
-        if let todo = item as? TodoEntity {
-            todoAbsoluteRectMap[todo] = rect
+        DispatchQueue.global(qos: .userInitiated).sync {
+            switch item {
+            case let project as ProjectEntity:
+                projectAbsoluteRectMap[project] = rect
+            case let dailyTodoList as DailyTodoListEntity:
+                dailyTodoListAbsoluteRectMap[dailyTodoList] = rect
+            case let todo as TodoEntity:
+                todoAbsoluteRectMap[todo] = rect
+            default:
+                break
+            }
         }
     }
 
     public func unregisterAbsoluteRect(_ item: DragDropItemable) {
-        if let todo = item as? TodoEntity {
-            todoAbsoluteRectMap.removeValue(forKey: todo)
+        DispatchQueue.global(qos: .userInitiated).sync {
+            switch item {
+            case let project as ProjectEntity:
+                projectAbsoluteRectMap.removeValue(forKey: project)
+            case let dailyTodoList as DailyTodoListEntity:
+                dailyTodoListAbsoluteRectMap.removeValue(forKey: dailyTodoList)
+            case let todo as TodoEntity:
+                todoAbsoluteRectMap.removeValue(forKey: todo)
+            default:
+                break
+            }
         }
     }
 
@@ -58,19 +80,43 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         _ item: DragDropItemable,
         touchLocation: CGPoint
     ) {
-        if let todo = item as? TodoEntity,
-           let targetTodo = getTargetTodo(touchLocation: touchLocation) {
-            Task {
-                defer { updateStores() }
-                try Self.todoUseCase.swap(todo, targetTodo)
-            }
+        guard let todo = item as? TodoEntity else {
+            return
         }
         dragged = nil
+        Task {
+            if let targetProject = getTargetProject(touchLocation: touchLocation),
+               targetProject === todo.project {
+                try await Self.todoUseCase.moveToProject(todo: todo)
+                return
+            }
+            if let targetDailyTodoList = getTargetDailyTodoList(touchLocation: touchLocation) {
+                try await Self.todoUseCase.moveToDaily(
+                    todo: todo,
+                    dailyTodoList: targetDailyTodoList
+                )
+                return
+            }
+            if let targetTodo = getTargetTodo(touchLocation: touchLocation) {
+                try await Self.todoUseCase.swapTodos(
+                    todo,
+                    targetTodo
+                )
+                return
+            }
+        }
     }
 
-    private func updateStores() {
-        Self.projectStore.update()
-        Self.dailyTodoListStore.update()
+    private func getTargetProject(touchLocation: CGPoint) -> ProjectEntity? {
+        projectAbsoluteRectMap
+            .first(where: { $1.contains(touchLocation) })?
+            .key
+    }
+
+    private func getTargetDailyTodoList(touchLocation: CGPoint) -> DailyTodoListEntity? {
+        dailyTodoListAbsoluteRectMap
+            .first(where: { $1.contains(touchLocation) })?
+            .key
     }
 
     private func getTargetTodo(touchLocation: CGPoint) -> TodoEntity? {

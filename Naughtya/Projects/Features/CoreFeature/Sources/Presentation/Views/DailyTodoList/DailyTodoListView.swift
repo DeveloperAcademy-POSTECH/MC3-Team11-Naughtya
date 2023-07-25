@@ -23,21 +23,26 @@ public struct DailyTodoListView: View {
                     Spacer()
                 }
             }
-            TodoListView(todos: viewModel.todos)
+            if let dailyTodoList = viewModel.dailyTodoList {
+                TodoListView(
+                    section: dailyTodoList.entity,
+                    todos: dailyTodoList.todos
+                )
+            }
         }
         .onAppear {
-            viewModel.fetchToday()
+            viewModel.fetchTodayIfNeeded()
         }
     }
 
     private var dateHeader: some View {
         HStack {
             Button("Prev") {
-                viewModel.gotoYesterday()
+                viewModel.gotoOneDayBefore()
             }
             Text(viewModel.dateTitle)
             Button("Next") {
-                viewModel.gotoTomorrow()
+                viewModel.gotoOneDayAfter()
             }
         }
     }

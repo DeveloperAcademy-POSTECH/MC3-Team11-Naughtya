@@ -11,6 +11,18 @@ import Foundation
 public protocol DragDropItemable: AnyObject {
 }
 
+extension ProjectEntity: Hashable, DragDropItemable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+
+extension DailyTodoListEntity: Hashable, DragDropItemable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+
 extension TodoEntity: Hashable, DragDropItemable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))

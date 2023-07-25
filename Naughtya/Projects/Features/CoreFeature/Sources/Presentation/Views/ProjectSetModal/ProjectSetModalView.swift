@@ -90,7 +90,7 @@ struct ProjectSetModalView: View {
     }
     private func appendNewProject() {
         Task {
-            try Self.projectUseCase.create(
+            try await Self.projectUseCase.create(
                 category: newProjectCategory,
                 goals: newProjectGoal,
                 startedAt: projectStartDay,
@@ -103,7 +103,7 @@ struct ProjectSetModalView: View {
 
     private func update(_ project: ProjectEntity) {
         Task {
-            try Self.projectUseCase.update(
+            try await Self.projectUseCase.update(
                 _: project,
                 category: newProjectCategory,
                 goals: newProjectGoal,

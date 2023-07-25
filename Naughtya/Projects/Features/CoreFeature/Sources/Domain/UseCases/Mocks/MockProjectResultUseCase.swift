@@ -9,7 +9,17 @@
 import Foundation
 
 struct MockProjectResultUseCase: ProjectResultUseCase {
-    func create(project: ProjectEntity) throws -> ProjectResultEntity {
+    private static let projectStore: ProjectStore = .shared
+
+    func create(project: ProjectEntity) async throws -> ProjectResultEntity {
         ProjectResultEntity(project: project)
+    }
+
+    func readList() async throws -> [ProjectResultEntity] {
+        Self.projectStore.projects
+            .filter { $0.isEnded }
+            .map {
+                ProjectResultEntity(project: $0)
+            }
     }
 }

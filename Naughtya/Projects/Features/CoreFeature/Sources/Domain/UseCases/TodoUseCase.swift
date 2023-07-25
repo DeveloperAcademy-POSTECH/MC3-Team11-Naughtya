@@ -13,17 +13,36 @@ public protocol TodoUseCase {
     func create(
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity?
-    ) throws -> TodoEntity
+    ) async throws -> TodoEntity
 
-    func readList(searchedText: String) throws -> [TodoEntity]
+    func readList(searchedText: String) async throws -> [TodoEntity]
 
+    @discardableResult
     func update(
         _ todo: TodoEntity,
         title: String
-    ) throws -> TodoEntity
+    ) async throws -> TodoEntity
 
-    func delete(_ todo: TodoEntity) throws
-    func complete(_ todo: TodoEntity) throws
-    func undoCompleted(_ todo: TodoEntity) throws
-    func swap(_ lhs: TodoEntity, _ rhs: TodoEntity) throws
+    @discardableResult
+    func update(
+        _ todo: TodoEntity,
+        dailyTodoList: DailyTodoListEntity?
+    ) async throws -> TodoEntity
+
+    func delete(_ todo: TodoEntity) async throws
+
+    func complete(
+        _ todo: TodoEntity,
+        date: Date?
+    ) async throws
+
+    func undoCompleted(_ todo: TodoEntity) async throws
+    func moveToProject(todo: TodoEntity) async throws
+
+    func moveToDaily(
+        todo: TodoEntity,
+        dailyTodoList: DailyTodoListEntity
+    ) async throws
+
+    func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws
 }

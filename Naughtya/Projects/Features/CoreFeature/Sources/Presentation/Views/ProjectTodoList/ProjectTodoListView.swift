@@ -9,11 +9,7 @@
 import SwiftUI
 
 public struct ProjectTodoListView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
-
     public let projects: [ProjectModel]
-    @State private var newProjectCategory: String = ""
 
     public init(projects: [ProjectModel] = []) {
         self.projects = projects
@@ -22,17 +18,8 @@ public struct ProjectTodoListView: View {
     public var body: some View {
         VStack(spacing: 16) {
             ForEach(projects.filter { $0.isSelected }) { project in
-                buildProjectItem(project)
+                ProjectItemView(project: project)
             }
-        }
-    }
-
-    private func appendNewTodo(project: ProjectEntity) {
-        Task {
-            try Self.todoUseCase.create(
-                project: project,
-                dailyTodoList: nil
-            )
         }
     }
 
@@ -41,24 +28,18 @@ public struct ProjectTodoListView: View {
             HStack {
                 Text(project.category)
                     .font(.headline)
-                Text("\(project.completedTodosCount)/\(project.totalTodosCount)")
-                Button("Todo 추가") {
-                    appendNewTodo(project: project.entity)
-                }
+                Text("\(project.completedTodos.count)/\(project.todos.count)")
                 Spacer()
             }
-            if !project.coldTodos.isEmpty {
-                TodoListView(
-                    todos: project.coldTodos,
-                    isNested: true
-                )
+            if !project.backlogTodos.isEmpty {
+                TodoListView(todos: project.backlogTodos)
             }
         }
     }
 }
 
-// struct ProjectTodoListView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ProjectTodoListView(projects: [])
-//    }
-// }
+struct ProjectTodoListView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProjectTodoListView()
+    }
+}
