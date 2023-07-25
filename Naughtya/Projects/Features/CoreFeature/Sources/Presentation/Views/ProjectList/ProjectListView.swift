@@ -56,11 +56,9 @@ public struct ProjectListView: View {
                             .sheet(isPresented: self.$showModal) {
                                 ProjectSetModalView(project: project)
                             }
-
                     }
                 }
             }
-
         }
     }
 }

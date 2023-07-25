@@ -10,6 +10,7 @@ import Foundation
 
 struct MockProjectUseCase: ProjectUseCase {
     private static let projectStore: ProjectStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
 
     func create(
         category: String,
@@ -29,6 +30,8 @@ struct MockProjectUseCase: ProjectUseCase {
             startedAt: startedAt,
             endedAt: endedAt
         )
+        let record = try await Self.cloudKitManager.create(project.record)
+        project.recordId = record.id
         Self.projectStore.projects.append(project)
         return project
     }
@@ -59,27 +62,30 @@ struct MockProjectUseCase: ProjectUseCase {
     func toggleSelected(
         _ project: ProjectEntity,
         isSelected: Bool
-    ) throws -> ProjectEntity {
+    ) async throws -> ProjectEntity {
         defer { Self.projectStore.update() }
         project.isSelected = isSelected
+        try await Self.cloudKitManager.update(project.record)
         return project
     }
 
     func toggleIsBookmarked(
         _ project: ProjectEntity,
         isBookmarked: Bool
-    ) throws -> ProjectEntity {
+    ) async throws -> ProjectEntity {
         defer { Self.projectStore.update() }
         project.isBookmarked = isBookmarked
+        try await Self.cloudKitManager.update(project.record)
         return project
     }
 
-    func delete(_ project: ProjectEntity) throws {
+    func delete(_ project: ProjectEntity) async throws {
         defer { Self.projectStore.update() }
         guard let index = Self.projectStore.projects
             .firstIndex(where: { $0.category == project.category }) else {
             throw DomainError(message: "프로젝트를 찾을 수 없습니다.")
         }
+        try await Self.cloudKitManager.delete(project.recordId)
         Self.projectStore.projects.remove(at: index)
     }
 

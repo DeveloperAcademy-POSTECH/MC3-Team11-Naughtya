@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import CloudKit
 
-public class ProjectEntity: Codable, Equatable, Identifiable {
+public class ProjectEntity: Equatable, Identifiable {
+    public internal(set) var recordId: CKRecord.ID?
     public internal(set) var category: String
     public internal(set) var goals: String?
     public internal(set) var startedAt: Date?
@@ -19,6 +21,7 @@ public class ProjectEntity: Codable, Equatable, Identifiable {
     public internal(set) var isBookmarked: Bool
 
     public init(
+        recordId: CKRecord.ID? = nil,
         category: String,
         goals: String? = nil,
         startedAt: Date? = nil,
@@ -28,6 +31,7 @@ public class ProjectEntity: Codable, Equatable, Identifiable {
         isSelected: Bool = false,
         isBookmarked: Bool = false
     ) {
+        self.recordId = recordId
         self.category = category
         self.goals = goals
         self.startedAt = startedAt

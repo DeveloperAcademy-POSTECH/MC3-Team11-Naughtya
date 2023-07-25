@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Modelable: Codable, Equatable, Identifiable {
+public protocol Modelable: Equatable, Identifiable {
     associatedtype Entity: Identifiable
 
     var entity: Entity { get }

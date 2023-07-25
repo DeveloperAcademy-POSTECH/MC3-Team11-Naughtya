@@ -1,5 +1,5 @@
 //
-//  Project+Stub.swift
+//  TodoHistoryEntity+Stub.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -8,6 +8,5 @@
 
 import Foundation
 
-public extension ProjectEntity {
-    static let sample = ProjectEntity(category: "sample")
+public extension TodoHistoryEntity {
 }

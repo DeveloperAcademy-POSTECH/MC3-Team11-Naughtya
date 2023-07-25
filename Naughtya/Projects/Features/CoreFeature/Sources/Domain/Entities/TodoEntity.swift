@@ -7,13 +7,16 @@
 //
 
 import Foundation
+import CloudKit
 
-public class TodoEntity: Codable, Equatable, Identifiable {
+public class TodoEntity: Equatable, Identifiable {
+    public internal(set) var recordId: CKRecord.ID?
+
     /// 프로젝트
     public unowned let project: ProjectEntity
 
     /// 데일리
-    public unowned var dailyTodoList: DailyTodoListEntity? {
+    public internal(set) unowned var dailyTodoList: DailyTodoListEntity? {
         didSet {
             histories.append(historyStamp)
         }
@@ -36,6 +39,7 @@ public class TodoEntity: Codable, Equatable, Identifiable {
     }
 
     public init(
+        recordId: CKRecord.ID? = nil,
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity? = nil,
         title: String = "",
@@ -43,6 +47,7 @@ public class TodoEntity: Codable, Equatable, Identifiable {
         histories: [TodoHistoryEntity] = [],
         completedAt: Date? = nil
     ) {
+        self.recordId = recordId
         self.project = project
         self.dailyTodoList = dailyTodoList
         self.title = title

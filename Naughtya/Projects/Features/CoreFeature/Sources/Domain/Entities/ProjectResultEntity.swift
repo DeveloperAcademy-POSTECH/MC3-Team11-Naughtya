@@ -7,15 +7,19 @@
 //
 
 import Foundation
+import CloudKit
 
-public class ProjectResultEntity: Codable, Equatable, Identifiable {
+public class ProjectResultEntity: Equatable, Identifiable {
+    public internal(set) var recordId: CKRecord.ID?
     public let project: ProjectEntity
     public internal(set) var performances: [PerformanceEntity]
 
     public init(
+        recordId: CKRecord.ID? = nil,
         project: ProjectEntity,
         performances: [PerformanceEntity] = []
     ) {
+        self.recordId = recordId
         self.project = project
         self.performances = performances
     }

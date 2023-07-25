@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import CloudKit
 
-public class DailyTodoListEntity: Codable, Equatable, Identifiable {
+public class DailyTodoListEntity: Equatable, Identifiable {
     private static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko_KR")
@@ -16,13 +17,16 @@ public class DailyTodoListEntity: Codable, Equatable, Identifiable {
         return dateFormatter
     }()
 
+    public internal(set) var recordId: CKRecord.ID?
     public let dateString: String
     public internal(set) var todos: [TodoEntity]
 
     public init(
+        recordId: CKRecord.ID? = nil,
         dateString: String,
         todos: [TodoEntity] = []
     ) {
+        self.recordId = recordId
         self.dateString = dateString
         self.todos = todos
     }

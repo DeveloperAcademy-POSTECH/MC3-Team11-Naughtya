@@ -12,6 +12,7 @@ struct MockTodoUseCase: TodoUseCase {
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
     private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
+    private static let cloudKitManager: CloudKitManager = .shared
 
     func create(
         project: ProjectEntity,
@@ -22,6 +23,8 @@ struct MockTodoUseCase: TodoUseCase {
             project: project,
             dailyTodoList: dailyTodoList
         )
+        let record = try await Self.cloudKitManager.create(todo.record)
+        todo.recordId = record.id
         project.todos.append(todo)
         dailyTodoList?.todos.append(todo)
         return todo
@@ -42,6 +45,7 @@ struct MockTodoUseCase: TodoUseCase {
     ) async throws -> TodoEntity {
         defer { updateStores() }
         todo.title = title
+        try await Self.cloudKitManager.update(todo.record)
         return todo
     }
 
@@ -59,6 +63,7 @@ struct MockTodoUseCase: TodoUseCase {
         todo.project.deletedTodos.append(todo)
         todo.project.todos.removeAll(where: { $0 === todo })
         todo.dailyTodoList?.todos.removeAll(where: { $0 === todo })
+        try await Self.cloudKitManager.delete(todo.recordId)
     }
 
     func complete(
