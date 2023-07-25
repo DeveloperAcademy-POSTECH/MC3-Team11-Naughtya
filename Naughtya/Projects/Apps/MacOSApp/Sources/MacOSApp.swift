@@ -13,9 +13,15 @@ import MacOSCoreFeature
 struct MacOSApp: App {
     var body: some Scene {
         WindowGroup {
-            ZStack {
+            TabView {
                 DashboardView()
-                DragDropStageView()
+                    .tabItem {
+                        Text("홈")
+                    }
+                ChatView()
+                    .tabItem {
+                        Text("완료(성과)")
+                    }
             }
         }
     }

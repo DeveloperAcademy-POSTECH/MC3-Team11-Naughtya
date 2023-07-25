@@ -26,6 +26,12 @@ struct MockTodoUseCase: TodoUseCase {
         return todo
     }
 
+    func readList(searchedText: String) throws -> [TodoEntity] {
+        Self.projectStore.projects
+            .flatMap { $0.todos }
+            .filter { $0.title.contains(searchedText) && !$0.isPlaceholder }
+    }
+
     func update(
         _ todo: TodoEntity,
         title: String

@@ -11,6 +11,7 @@ import SwiftUI
 public struct TodoListView: View {
     public let todos: [TodoModel]
     public let isNested: Bool
+    @ObservedObject private var searchManager = SearchManager.shared
 
     public init(
         todos: [TodoModel] = [],
@@ -25,7 +26,8 @@ public struct TodoListView: View {
             ForEach(todos.sorted { $1.isPlaceholder }) { todo in
                 TodoItemView(
                     todo: todo,
-                    isNested: isNested
+                    isNested: isNested,
+                    isBlockedToEdit: searchManager.isSearching
                 )
             }
         }

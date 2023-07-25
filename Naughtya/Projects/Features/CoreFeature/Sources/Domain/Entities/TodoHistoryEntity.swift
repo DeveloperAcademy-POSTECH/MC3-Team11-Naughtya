@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct TodoHistoryEntity: Equatable {
+public struct TodoHistoryEntity: Codable, Equatable {
     public let isDaily: Bool
     public let isCompleted: Bool
     public let createdAt: Date

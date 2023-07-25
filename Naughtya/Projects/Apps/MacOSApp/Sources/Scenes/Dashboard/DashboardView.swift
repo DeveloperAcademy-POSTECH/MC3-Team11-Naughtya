@@ -28,7 +28,9 @@ struct DashboardView: View {
                 List {
                     DailyTodoListView()
                 }
+                .zIndex(0)
             }
+            DragDropStageView()
         }
     }
 }

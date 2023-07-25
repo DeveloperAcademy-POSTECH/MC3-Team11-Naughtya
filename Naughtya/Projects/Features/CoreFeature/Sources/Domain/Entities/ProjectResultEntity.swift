@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class ProjectResultEntity {
+public class ProjectResultEntity: Codable {
     public let project: ProjectEntity
     public internal(set) var performances: [PerformanceEntity]
 

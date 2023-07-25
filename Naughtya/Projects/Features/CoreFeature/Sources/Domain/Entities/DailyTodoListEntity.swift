@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DailyTodoListEntity: Equatable, Identifiable {
+public class DailyTodoListEntity: Codable, Equatable, Identifiable {
     private static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko_KR")
