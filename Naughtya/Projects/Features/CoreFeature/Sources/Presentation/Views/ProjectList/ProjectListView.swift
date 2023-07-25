@@ -66,6 +66,8 @@ public struct ProjectListView: View {
 }
 
 struct ListHeaderView: View {
+    private static let dummyDataGenerator: DummyDataGenerator = .shared
+
     @State private var showModal = false
     var body: some View {
         HStack {
@@ -80,11 +82,14 @@ struct ListHeaderView: View {
                     .resizable()
                     .frame(width: 15, height: 15)
             }
-            .buttonStyle(.borderless)
             .sheet(isPresented: self.$showModal) {
                 ProjectSetModalView()
             }
-            .tint(.black)
+            Button {
+                Self.dummyDataGenerator.generate()
+            } label: {
+                Text("dummy")
+            }
         }
     }
 }
