@@ -12,37 +12,17 @@ struct ProjectCardView: View {
     private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
     public let project: ProjectModel
 
-    let cornerRadius: CGFloat = 16
-
-    var projectName: String {
-        project.category
-    }
+    private let cornerRadius: CGFloat = 16
 
     var projectEndDay: Date {
         project.endedAt! // TODO: 기획 확정 후 수정
     }
 
-    var completedTodosCount: Int {
-        project.completedTodosCount
-    }
-
-    var totalTodosCount: Int {
-        project.totalTodosCount
-    }
-
-    var isSelected: Bool {
-        project.isSelected
-    }
-
-    var isBookmarked: Bool {
-        project.isBookmarked
-    }
-
     var body: some View {
         VStack {
             HStack {
-                Image(systemName: isBookmarked ? "star.fill" : "star")
-                    .foregroundColor(isBookmarked ? .yellow : .white)
+                Image(systemName: project.isBookmarked ? "star.fill" : "star")
+                    .foregroundColor(project.isBookmarked ? .yellow : .white)
                     .onTapGesture {
                         toggleIsBookmarked()
                     }
@@ -52,25 +32,25 @@ struct ProjectCardView: View {
             }
 
             HStack(spacing: 0.0) {
-                Text(projectName)
+                Text(project.category)
                     .font(.largeTitle)
                 Spacer()
-                Text("\(completedTodosCount)")
+                Text("\(project.completedTodosCount)")
                     .font(.largeTitle)
-                Text("/\(totalTodosCount)")
+                Text("/\(project.totalTodosCount)")
             }
         }
         .foregroundColor(.white)
         .padding(20)
         .background(
             RoundedRectangle(cornerRadius: cornerRadius)
-                .fill(isSelected ? Color.blue : Color.gray)
+                .fill(project.isSelected ? Color.blue : Color.gray)
         )
         .onTapGesture {
             Task {
                 try Self.projectUseCase.toggleSelected(
                     project.entity,
-                    isSelected: !isSelected
+                    isSelected: !project.isSelected
                 )
             }
         }
@@ -80,7 +60,7 @@ struct ProjectCardView: View {
         Task {
             try Self.projectUseCase.toggleIsBookmarked(
                 project.entity,
-                isBookmarked: !isBookmarked)
+                isBookmarked: !project.isBookmarked)
         }
     }
     func changeDateFormat() -> String {
