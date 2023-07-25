@@ -25,4 +25,24 @@ public extension Date {
     func getTomorrow() -> Self {
         addingTimeInterval(Self.oneDayTimeInterval)
     }
+
+    func dDayCalculater(projectEndDay: Date) -> String {
+        let calendar = Calendar.current
+        let currentDate = calendar.startOfDay(for: Date())
+        let projectEndDate = calendar.startOfDay(for: projectEndDay)
+
+        let components = calendar.dateComponents([.day], from: currentDate, to: projectEndDate)
+
+        if let days = components.day {
+            if days == 0 {
+                return "D-day"
+            } else if days > 0 {
+                return "D-\(days)"
+            } else {
+                return "D+\(-days)"
+            }
+        } else {
+            return "날짜 계산 오류"
+        }
+    }
 }
