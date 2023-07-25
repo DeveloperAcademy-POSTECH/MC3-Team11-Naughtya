@@ -18,16 +18,22 @@ extension ChatView {
             messages.append(newMessage)
             currentInput = ""
 
-            openAIService.sendMessage(messages: messages) { [weak self] response in
-                guard let receivedOpenAIMessage = response?.choices.first?.message else {
-                    print("Had no received message")
-                    return
-                }
+            Task {
+                do {
+                    let response = try await openAIService.sendMessage(messages: messages)
+                    guard let receivedOpenAIMessage = response.choices.first?.message else {
+                        print("Had no received message")
+                        return
+                    }
 
-                let receivedMessage = Message(id: UUID(), role: receivedOpenAIMessage.role, content: receivedOpenAIMessage.content, createAt: Date())
+                    let receivedMessage = Message(id: UUID(), role: receivedOpenAIMessage.role, content: receivedOpenAIMessage.content, createAt: Date())
 
-                DispatchQueue.main.async {
-                    self?.messages.append(receivedMessage)
+                    DispatchQueue.main.async {
+                        self.messages.append(receivedMessage)
+                    }
+                } catch {
+                    print("Error: \(error)")
+                    // Handle the error as per your application's requirements
                 }
             }
         }

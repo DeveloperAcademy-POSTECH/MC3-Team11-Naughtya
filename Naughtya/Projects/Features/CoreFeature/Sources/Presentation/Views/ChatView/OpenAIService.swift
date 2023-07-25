@@ -1,15 +1,14 @@
 import Foundation
 
-class OpenAIService {
+struct OpenAIService {
     private let endpointUrl = "https://api.openai.com/v1/chat/completions"
 
-    func sendMessage(messages: [Message], completion: @escaping (OpenAIChatResponse?) -> Void) {
+    func sendMessage(messages: [Message]) async throws -> OpenAIChatResponse {
         let openAIMessages = messages.map { OpenAIChatMessage(role: $0.role, content: $0.content) }
         let body = OpenAIChatBody(model: "gpt-3.5-turbo", messages: openAIMessages, temperature: 1)
 
         guard let url = URL(string: endpointUrl) else {
-            completion(nil)
-            return
+            throw NSError(domain: "InvalidURL", code: 0, userInfo: nil)
         }
 
         var request = URLRequest(url: url)
@@ -17,31 +16,13 @@ class OpenAIService {
         request.setValue("Bearer \(Constants.openAIAPIKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        do {
-            let jsonData = try JSONEncoder().encode(body)
-            request.httpBody = jsonData
-        } catch {
-            completion(nil)
-            return
-        }
+        let jsonData = try JSONEncoder().encode(body)
+        request.httpBody = jsonData
 
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
-                completion(nil)
-                return
-            }
-
-            do {
-                let response = try JSONDecoder().decode(OpenAIChatResponse.self, from: data)
-                completion(response)
-            } catch {
-                completion(nil)
-            }
-        }
-
-        task.resume()
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return try JSONDecoder().decode(OpenAIChatResponse.self, from: data)
     }
+
 }
 
 struct OpenAIChatBody: Encodable {

@@ -25,9 +25,6 @@ public struct ChatView: View {
 
         }
         .padding()
-//        .onAppear{
-//            openAIService.sendMessage(message: "Generate a tagline for an ice cream shop")
-//        }
 
     }
     func messageView(message: Message) -> some View {

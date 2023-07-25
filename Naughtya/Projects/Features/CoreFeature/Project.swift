@@ -13,7 +13,7 @@ let project = Project(
             platform: .macOS,
             product: .framework,
             deploymentTarget: Constants.DeploymentTarget.macOS
-            
+
         ),
         .build(
             name: "IOS" + projectName,
@@ -21,7 +21,6 @@ let project = Project(
             platform: .iOS,
             product: .framework,
             deploymentTarget: Constants.DeploymentTarget.iOS
-            
 
         )
     ]
