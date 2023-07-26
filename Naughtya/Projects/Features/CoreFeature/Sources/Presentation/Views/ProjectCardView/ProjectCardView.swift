@@ -35,17 +35,17 @@ struct ProjectCardView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(project.category)
-                        .font(
-                            Font.custom("SF Pro", size: 18)
-                                .weight(.medium)
-                        )
+                    .font(
+                    Font.custom("Apple SD Gothic Neo", size: 24)
+                    .weight(.medium)
+                    )
                         .foregroundColor(.white)
                     Text("- \(changeDateFormat())")
                         .font(
-                            Font.custom("SF Pro", size: 10)
-                                .weight(.medium)
+                        Font.custom("Apple SD Gothic Neo", size: 12)
+                        .weight(.semibold)
                         )
-                        .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
+                        .foregroundColor(Color.customGray2)
                 }
                 Spacer()
                 VStack {
@@ -68,7 +68,7 @@ struct ProjectCardView: View {
                 }
             }
             .zIndex(0)
-            .frame(height: 56)
+            .frame(height: 68)
             .padding(.leading, 25)
             .padding(.trailing, 15)
             .background(
