@@ -13,28 +13,49 @@ struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
 
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
+
+        NavigationSplitView {
+            ProjectListView(projects: viewModel.projects)
+                .navigationSplitViewColumnWidth(min: 190, ideal: 250, max: 298)
+        } content: {
+                ProjectTodoListView(projects: viewModel.projects)
+                .navigationSplitViewColumnWidth(min: 460, ideal: 520, max: 757)
+                .background(Color(red: 0.12, green: 0.12, blue: 0.12))
+        } detail: {
+                DailyTodoListView()
+            .navigationSplitViewColumnWidth(min: 524, ideal: 550, max: 757)
+            //            CombinedTodoListView()
+            //            HStack {
+            //                List {
+            //                    ProjectTodoListView(projects: viewModel.projects)
+            //                        .frame(minWidth: 460, maxWidth: 607, alignment: .top)
+            //                }
+            //                .background(Color(red: 0.12, green: 0.12, blue: 0.12))
+            //                List {
+            //                    DailyTodoListView()
+            //                        .frame(minWidth: 524, maxWidth: 607, alignment: .top)
+            //                }
+            //            }
+        }
+        .navigationTitle("")
+        .navigationSplitViewStyle(.balanced)
+        .foregroundColor(Color(red: 0.12, green: 0.12, blue: 0.12))
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
                 TopBarView()
-                    .zIndex(1)
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        ProjectListView(projects: viewModel.projects)
+            }
+            ToolbarItemGroup(placement: .navigation) {
+                HStack(spacing: 0) {
+                    Button {
+                        //                ProjectResultListView()
+                    } label: {
+                        Image(systemName: "books.vertical")
                     }
-                    VStack(alignment: .leading) {
-                        Text("Projects")
-                            .font(.title)
-                        List {
-                            ProjectTodoListView(projects: viewModel.projects)
-                        }
-                    }
-                    VStack(alignment: .leading) {
-                        List {
-                            DailyTodoListView()
-                        }
+                    Button {
+                    } label: {
+                        Image(systemName: "list.bullet")
                     }
                 }
-                .zIndex(0)
             }
         }
     }

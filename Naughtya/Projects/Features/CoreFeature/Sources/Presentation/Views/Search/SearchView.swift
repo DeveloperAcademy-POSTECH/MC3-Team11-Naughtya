@@ -18,10 +18,9 @@ public struct SearchView: View {
         TextField(text: $viewModel.searchedText) {
             Text("Search")
         }
-        .textFieldStyle(.plain)
+        .textFieldStyle(.roundedBorder)
         .padding(.horizontal)
         .frame(height: textFieldHeight)
-        .background(.white)
         .overlay(alignment: .top) {
             if !viewModel.searchedTodos.isEmpty {
                 searchedTodoList
