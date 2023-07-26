@@ -60,12 +60,12 @@ extension TodoEntity: RecordConvertable {
     var record: TodoRecord {
         TodoRecord(
             id: recordId,
-            project: project.reference,
+            project: project.value.reference,
             dailyTodoList: nil, // TODO: dailyTodoList?.reference,
-            title: title,
-            createdAt: createdAt,
+            title: title.value,
+            createdAt: createdAt.value,
             histories: [], // TODO: histories.references,
-            completedAt: completedAt
+            completedAt: completedAt.value
         )
     }
 }

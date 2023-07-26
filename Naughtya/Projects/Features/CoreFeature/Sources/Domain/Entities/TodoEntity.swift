@@ -7,36 +7,17 @@
 //
 
 import Foundation
+import Combine
 import CloudKit
 
 public class TodoEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
-
-    /// 프로젝트
-    public internal(set) unowned var project: ProjectEntity
-
-    /// 데일리
-    public internal(set) unowned var dailyTodoList: DailyTodoListEntity? {
-        didSet {
-            histories.append(historyStamp)
-        }
-    }
-
-    /// 제목
-    public internal(set) var title: String
-
-    /// 생성 시간
-    public internal(set) var createdAt: Date
-
-    /// 히스토리
-    public internal(set) var histories: [TodoHistoryEntity]
-
-    /// 완료 시간
-    public internal(set) var completedAt: Date? {
-        didSet {
-            histories.append(historyStamp)
-        }
-    }
+    public let project: CurrentValueSubject<ProjectEntity, Never>
+    public let dailyTodoList: CurrentValueSubject<DailyTodoListEntity?, Never>
+    public let title: CurrentValueSubject<String, Never>
+    public let createdAt: CurrentValueSubject<Date, Never>
+    public let histories: CurrentValueSubject<[TodoHistoryEntity], Never>
+    public let completedAt: CurrentValueSubject<Date?, Never>
 
     public init(
         recordId: CKRecord.ID? = nil,
@@ -48,12 +29,12 @@ public class TodoEntity: Equatable, Identifiable {
         completedAt: Date? = nil
     ) {
         self.recordId = recordId
-        self.project = project
-        self.dailyTodoList = dailyTodoList
-        self.title = title
-        self.createdAt = createdAt
-        self.histories = histories
-        self.completedAt = completedAt
+        self.project = .init(project)
+        self.dailyTodoList = .init(dailyTodoList)
+        self.title = .init(title)
+        self.createdAt = .init(createdAt)
+        self.histories = .init(histories)
+        self.completedAt = .init(completedAt)
     }
 
     /// 고유값
@@ -63,12 +44,12 @@ public class TodoEntity: Equatable, Identifiable {
 
     /// 데일리 여부
     public var isDaily: Bool {
-        dailyTodoList != nil
+        dailyTodoList.value != nil
     }
 
     /// 완료 여부
     public var isCompleted: Bool {
-        completedAt != nil
+        completedAt.value != nil
     }
 
     /// 미완료 여부
@@ -83,8 +64,8 @@ public class TodoEntity: Equatable, Identifiable {
 
     /// 안미룸 여부
     public var isDailyCompleted: Bool {
-        guard let firstMovedToDaily = histories.first(where: { $0.dailyTodoList != nil }),
-              let firstCompleted = histories.last(where: { $0.isCompleted }) else {
+        guard let firstMovedToDaily = histories.value.first(where: { $0.dailyTodoList != nil }),
+              let firstCompleted = histories.value.last(where: { $0.isCompleted }) else {
             return false
         }
         return firstMovedToDaily.createdAt.isSame(firstCompleted.createdAt)
@@ -92,9 +73,9 @@ public class TodoEntity: Equatable, Identifiable {
 
     private var historyStamp: TodoHistoryEntity {
         TodoHistoryEntity(
-            dailyTodoList: dailyTodoList,
+            dailyTodoList: dailyTodoList.value,
             isCompleted: isCompleted,
-            createdAt: completedAt ?? dailyTodoList?.date ?? .now
+            createdAt: completedAt.value ?? dailyTodoList.value?.date ?? .now
         )
     }
 

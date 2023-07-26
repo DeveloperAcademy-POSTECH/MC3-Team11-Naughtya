@@ -100,9 +100,9 @@ public final class CloudKitManager {
                 guard let record = projectIdRecordMap[id] else {
                     return
                 }
-                entity.todos = record.todos
+                entity.todos.value = record.todos
                     .compactMap { todoIdEntityMap[$0.recordID] }
-                entity.deletedTodos = record.deletedTodos
+                entity.deletedTodos.value = record.deletedTodos
                     .compactMap { todoIdEntityMap[$0.recordID] }
             }
 
@@ -113,7 +113,7 @@ public final class CloudKitManager {
                       let project = projectIdEntityMap[projectId] else {
                     return
                 }
-                entity.project = project
+                entity.project.value = project
             }
 
         Self.projectStore.projects = projectRecords

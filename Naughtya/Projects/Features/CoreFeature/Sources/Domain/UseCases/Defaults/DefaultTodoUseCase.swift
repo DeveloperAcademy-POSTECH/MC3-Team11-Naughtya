@@ -25,8 +25,8 @@ struct DefaultTodoUseCase: TodoUseCase {
         )
         let record = try await Self.cloudKitManager.create(todo.record)
         todo.recordId = record.id
-        project.todos.append(todo)
-        dailyTodoList?.todos.append(todo)
+        project.todos.value.append(todo)
+        dailyTodoList?.todos.value.append(todo)
         try await Self.cloudKitManager.update(project.record)
         return todo
     }
@@ -36,8 +36,8 @@ struct DefaultTodoUseCase: TodoUseCase {
             return []
         }
         return Self.projectStore.projects
-            .flatMap { $0.todos }
-            .filter { $0.title.contains(searchedText) }
+            .flatMap { $0.todos.value }
+            .filter { $0.title.value.contains(searchedText) }
     }
 
     func update(
@@ -45,7 +45,7 @@ struct DefaultTodoUseCase: TodoUseCase {
         title: String
     ) async throws -> TodoEntity {
         defer { updateStores() }
-        todo.title = title
+        todo.title.value = title
         try await Self.cloudKitManager.update(todo.record)
         return todo
     }
@@ -55,15 +55,15 @@ struct DefaultTodoUseCase: TodoUseCase {
         dailyTodoList: DailyTodoListEntity?
     ) async throws -> TodoEntity {
         defer { updateStores() }
-        todo.dailyTodoList = dailyTodoList
+        todo.dailyTodoList.value = dailyTodoList
         return todo
     }
 
     func delete(_ todo: TodoEntity) async throws {
         defer { updateStores() }
-        todo.project.deletedTodos.append(todo)
-        todo.project.todos.removeAll(where: { $0 === todo })
-        todo.dailyTodoList?.todos.removeAll(where: { $0 === todo })
+        todo.project.value.deletedTodos.value.append(todo)
+        todo.project.value.todos.value.removeAll(where: { $0 === todo })
+        todo.dailyTodoList.value?.todos.value.removeAll(where: { $0 === todo })
         try await Self.cloudKitManager.delete(todo.recordId)
     }
 
@@ -72,19 +72,19 @@ struct DefaultTodoUseCase: TodoUseCase {
         date: Date?
     ) async throws {
         defer { updateStores() }
-        todo.completedAt = date
+        todo.completedAt.value = date
     }
 
     func undoCompleted(_ todo: TodoEntity) async throws {
         defer { updateStores() }
-        todo.completedAt = nil
+        todo.completedAt.value = nil
     }
 
     func moveToProject(todo: TodoEntity) async throws {
         defer { updateStores() }
         try await Self.dailyTodoListUseCase.removeTodoFromDaily(todo)
-        todo.project.todos.remove(todo)
-        todo.project.todos.append(todo)
+        todo.project.value.todos.value.remove(todo)
+        todo.project.value.todos.value.append(todo)
     }
 
     func moveToDaily(
@@ -96,8 +96,8 @@ struct DefaultTodoUseCase: TodoUseCase {
             todo: todo,
             dailyTodoList: dailyTodoList
         )
-        dailyTodoList.todos.remove(todo)
-        dailyTodoList.todos.append(todo)
+        dailyTodoList.todos.value.remove(todo)
+        dailyTodoList.todos.value.append(todo)
     }
 
     func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
@@ -125,26 +125,26 @@ struct DefaultTodoUseCase: TodoUseCase {
     private func moveToDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
         try await Self.dailyTodoListUseCase.addTodoToDaily(
             todo: lhs,
-            dailyTodoList: rhs.dailyTodoList
+            dailyTodoList: rhs.dailyTodoList.value
         )
         swapInDaily(lhs, rhs)
     }
 
     private func swapInProject(_ lhs: TodoEntity, _ rhs: TodoEntity) {
         guard lhs.project === rhs.project,
-              let indexInProject = rhs.project.todos.firstIndex(of: rhs) else {
+              let indexInProject = rhs.project.value.todos.value.firstIndex(of: rhs) else {
             return
         }
-        lhs.project.todos.remove(lhs)
-        lhs.project.todos.insert(lhs, at: indexInProject)
+        lhs.project.value.todos.value.remove(lhs)
+        lhs.project.value.todos.value.insert(lhs, at: indexInProject)
     }
 
     private func swapInDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) {
-        guard let indexInDaily = rhs.dailyTodoList?.todos.firstIndex(of: rhs) else {
+        guard let indexInDaily = rhs.dailyTodoList.value?.todos.value.firstIndex(of: rhs) else {
             return
         }
-        lhs.dailyTodoList?.todos.remove(lhs)
-        lhs.dailyTodoList?.todos.insert(lhs, at: indexInDaily)
+        lhs.dailyTodoList.value?.todos.value.remove(lhs)
+        lhs.dailyTodoList.value?.todos.value.insert(lhs, at: indexInDaily)
     }
 
     private func updateStores() {

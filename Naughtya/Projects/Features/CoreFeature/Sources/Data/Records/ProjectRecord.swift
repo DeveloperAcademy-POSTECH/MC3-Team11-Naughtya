@@ -68,14 +68,14 @@ extension ProjectEntity: RecordConvertable {
     var record: ProjectRecord {
         ProjectRecord(
             id: recordId,
-            category: category,
-            goals: goals,
-            startedAt: startedAt ?? .init(),
-            endedAt: endedAt ?? .init(),
-            todos: todos.references,
-            deletedTodos: deletedTodos.references,
-            isSelected: isSelected ? 1 : 0,
-            isBookmarked: isBookmarked ? 1 : 0
+            category: category.value,
+            goals: goals.value,
+            startedAt: startedAt.value ?? .init(),
+            endedAt: endedAt.value ?? .init(),
+            todos: todos.value.references,
+            deletedTodos: deletedTodos.value.references,
+            isSelected: isSelected.value ? 1 : 0,
+            isBookmarked: isBookmarked.value ? 1 : 0
         )
     }
 }

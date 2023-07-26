@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import Combine
 import CloudKit
 
 public class ProjectResultEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
     public let project: ProjectEntity
-    public internal(set) var performances: [PerformanceEntity]
+    public let performances: CurrentValueSubject<[PerformanceEntity], Never>
 
     public init(
         recordId: CKRecord.ID? = nil,
@@ -21,7 +22,7 @@ public class ProjectResultEntity: Equatable, Identifiable {
     ) {
         self.recordId = recordId
         self.project = project
-        self.performances = performances
+        self.performances = .init(performances)
     }
 
     public var id: ObjectIdentifier {
@@ -29,7 +30,7 @@ public class ProjectResultEntity: Equatable, Identifiable {
     }
 
     public var allTodos: [TodoEntity] {
-        project.todos
+        project.todos.value
     }
 
     public var completedTodos: [TodoEntity] {
@@ -53,7 +54,7 @@ public class ProjectResultEntity: Equatable, Identifiable {
     }
 
     public var deletedTodos: [TodoEntity] {
-        project.deletedTodos
+        project.deletedTodos.value
     }
 
     public var allTodosSummary: String {

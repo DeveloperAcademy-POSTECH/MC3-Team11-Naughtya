@@ -21,7 +21,7 @@ public struct DailyTodoListModel: Modelable {
             dateString: entity.dateString,
             date: entity.date,
             dateTitle: entity.dateTitle,
-            todos: entity.todos
+            todos: entity.todos.value
                 .map { .from(entity: $0) }
         )
     }

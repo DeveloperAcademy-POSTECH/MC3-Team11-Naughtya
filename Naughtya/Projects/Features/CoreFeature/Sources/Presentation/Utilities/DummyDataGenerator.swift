@@ -74,8 +74,8 @@ public final class DummyDataGenerator {
     }
 
     private func createTodos(project: ProjectEntity) async throws {
-        guard let startDate = project.startedAt?.getDateString(),
-              let endDate = project.endedAt?.getDateString() else {
+        guard let startDate = project.startedAt.value?.getDateString(),
+              let endDate = project.endedAt.value?.getDateString() else {
             return
         }
         var date = Date.parse(startDate)
@@ -111,7 +111,7 @@ public final class DummyDataGenerator {
             )
         }
         if Int.random(in: 0 ..< 5) > 0,
-           let date = todo.dailyTodoList?.date {
+           let date = todo.dailyTodoList.value?.date {
             try await Self.todoUseCase.complete(
                 todo,
                 date: Bool.random() ? date : date.getOneDayAfter()

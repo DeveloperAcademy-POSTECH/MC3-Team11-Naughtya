@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 import CloudKit
 
 public class DailyTodoListEntity: Equatable, Identifiable {
@@ -19,7 +20,7 @@ public class DailyTodoListEntity: Equatable, Identifiable {
 
     public internal(set) var recordId: CKRecord.ID?
     public let dateString: String
-    public internal(set) var todos: [TodoEntity]
+    public let todos: CurrentValueSubject<[TodoEntity], Never>
 
     public init(
         recordId: CKRecord.ID? = nil,
@@ -28,7 +29,7 @@ public class DailyTodoListEntity: Equatable, Identifiable {
     ) {
         self.recordId = recordId
         self.dateString = dateString
-        self.todos = todos
+        self.todos = .init(todos)
     }
 
     public var id: String {

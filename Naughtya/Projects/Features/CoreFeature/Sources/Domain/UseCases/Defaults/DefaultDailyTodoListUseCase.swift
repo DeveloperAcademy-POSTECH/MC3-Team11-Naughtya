@@ -31,15 +31,15 @@ struct DefaultDailyTodoListUseCase: DailyTodoListUseCase {
             return
         }
         defer { updateStores() }
-        todo.dailyTodoList = dailyTodoList
-        dailyTodoList.todos.remove(todo)
-        dailyTodoList.todos.append(todo)
+        todo.dailyTodoList.value = dailyTodoList
+        dailyTodoList.todos.value.remove(todo)
+        dailyTodoList.todos.value.append(todo)
     }
 
     func removeTodoFromDaily(_ todo: TodoEntity) async throws {
         defer { updateStores() }
-        todo.dailyTodoList?.todos.remove(todo)
-        todo.dailyTodoList = nil
+        todo.dailyTodoList.value?.todos.value.remove(todo)
+        todo.dailyTodoList.value = nil
     }
 
     private func updateStores() {

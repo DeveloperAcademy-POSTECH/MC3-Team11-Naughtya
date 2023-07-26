@@ -41,7 +41,7 @@ struct DefaultProjectUseCase: ProjectUseCase {
     }
 
     func readItem(category: String) async throws -> ProjectEntity {
-        Self.projectStore.projects.first { $0.category == category }!
+        Self.projectStore.projects.first { $0.category.value == category }!
     }
 
     func update(
@@ -52,10 +52,10 @@ struct DefaultProjectUseCase: ProjectUseCase {
         endedAt: Date? = nil
     ) async throws -> ProjectEntity {
         defer { Self.projectStore.update() }
-        project.category = category
-        project.goals = goals
-        project.startedAt = startedAt
-        project.endedAt = endedAt
+        project.category.value = category
+        project.goals.value = goals
+        project.startedAt.value = startedAt
+        project.endedAt.value = endedAt
         return project
     }
 
@@ -64,7 +64,7 @@ struct DefaultProjectUseCase: ProjectUseCase {
         isSelected: Bool
     ) async throws -> ProjectEntity {
         defer { Self.projectStore.update() }
-        project.isSelected = isSelected
+        project.isSelected.value = isSelected
         try await Self.cloudKitManager.update(project.record)
         return project
     }
@@ -74,7 +74,7 @@ struct DefaultProjectUseCase: ProjectUseCase {
         isBookmarked: Bool
     ) async throws -> ProjectEntity {
         defer { Self.projectStore.update() }
-        project.isBookmarked = isBookmarked
+        project.isBookmarked.value = isBookmarked
         try await Self.cloudKitManager.update(project.record)
         return project
     }
@@ -82,7 +82,7 @@ struct DefaultProjectUseCase: ProjectUseCase {
     func delete(_ project: ProjectEntity) async throws {
         defer { Self.projectStore.update() }
         guard let index = Self.projectStore.projects
-            .firstIndex(where: { $0.category == project.category }) else {
+            .firstIndex(where: { $0.category.value == project.category.value }) else {
             throw DomainError(message: "프로젝트를 찾을 수 없습니다.")
         }
         try await Self.cloudKitManager.delete(project.recordId)
@@ -94,6 +94,6 @@ struct DefaultProjectUseCase: ProjectUseCase {
     }
 
     private func validateUniqueCategory(_ category: String) -> Bool {
-        Self.projectStore.projects.first { $0.category == category } == nil
+        Self.projectStore.projects.first { $0.category.value == category } == nil
     }
 }
