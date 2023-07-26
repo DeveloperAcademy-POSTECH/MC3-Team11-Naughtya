@@ -23,12 +23,13 @@ struct ProjectCardView: View {
         ZStack(alignment: .topLeading) {
             if project.isBookmarked == true {
                 Image(systemName: "pin.fill")
-                    .frame(width: 7.5, height: 9)
+                    .rotationEffect(.degrees(30))
+                    .font(.system(size: 9))
                     .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
                     .onTapGesture {
                         toggleIsBookmarked()
                     }
-                    .offset(x: 10, y: 5)
+                    .offset(x: 12, y: 16)
                     .zIndex(1)
             }
             HStack {

@@ -9,8 +9,9 @@
 import SwiftUI
 
  // 원하는 컬러 생성
-// extension Color {
-//    static let peach = Color(hex: "#ff8882")
-//    static let ivory = Color(hex: "f8ede3")
-//    static let brown = Color(hex: "897853")  // #을 제거하고 사용해도 됩니다.
-// }
+extension Color {
+    static let textDefault = Color(red: 0.31, green: 0.31, blue: 0.31)
+    static let sideBarColor = Color(red: 0.2, green: 0.2, blue: 0.2)
+    static let pointColor = Color(red: 0, green: 0.48, blue: 1)
+    static let backgroundColor = Color(red: 0.1, green: 0.1, blue: 0.1)
+}

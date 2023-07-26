@@ -47,14 +47,15 @@ struct DashboardView: View {
             ToolbarItemGroup(placement: .navigation) {
                 HStack(spacing: 0) {
                     Button {
+                    } label: {
+                        Image(systemName: "list.bullet")
+                    }
+                    Button {
                         //                ProjectResultListView()
                     } label: {
                         Image(systemName: "books.vertical")
                     }
-                    Button {
-                    } label: {
-                        Image(systemName: "list.bullet")
-                    }
+                    
                 }
             }
         }

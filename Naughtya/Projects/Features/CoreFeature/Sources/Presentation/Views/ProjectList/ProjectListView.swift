@@ -59,8 +59,11 @@ struct ListHeaderView: View {
     var body: some View {
         HStack {
             Text("All My Projects")
-                .font(.title)
-                .foregroundColor(.black)
+              .font(
+                Font.custom("SF Pro", size: 12)
+                  .weight(.bold)
+              )
+              .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
         }
     }
 }

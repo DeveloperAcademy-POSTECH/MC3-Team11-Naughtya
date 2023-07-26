@@ -14,12 +14,12 @@ struct MacOSApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                Color.black
                 DashboardView()
                 //                    ProjectResultListView()
                 DragDropStageView()
             }
             .frame(minWidth: 1174)
+            .preferredColorScheme(.dark)
         }
 
     }
