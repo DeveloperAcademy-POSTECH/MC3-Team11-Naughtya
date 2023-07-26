@@ -11,6 +11,9 @@ import Combine
 import CloudKit
 
 public class ProjectEntity: Equatable, Identifiable {
+    private static let projectStore: ProjectStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
+
     public internal(set) var recordId: CKRecord.ID?
     public let category: CurrentValueSubject<String, Never>
     public let goals: CurrentValueSubject<String?, Never>
@@ -20,6 +23,7 @@ public class ProjectEntity: Equatable, Identifiable {
     public let deletedTodos: CurrentValueSubject<[TodoEntity], Never>
     public let isSelected: CurrentValueSubject<Bool, Never>
     public let isBookmarked: CurrentValueSubject<Bool, Never>
+    private var cancellable = Set<AnyCancellable>()
 
     public init(
         recordId: CKRecord.ID? = nil,
@@ -41,6 +45,13 @@ public class ProjectEntity: Equatable, Identifiable {
         self.deletedTodos = .init(deletedTodos)
         self.isSelected = .init(isSelected)
         self.isBookmarked = .init(isBookmarked)
+        setupUpdatingStore()
+    }
+
+    deinit {
+        Task {
+            try await Self.cloudKitManager.delete(recordId)
+        }
     }
 
     public var id: String {
@@ -52,6 +63,47 @@ public class ProjectEntity: Equatable, Identifiable {
             return false
         }
         return endedAt.timeIntervalSinceNow < Date.now.timeIntervalSinceNow
+    }
+
+    private func setupUpdatingStore() {
+        Publishers
+            .MergeMany(
+                category
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                goals
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                startedAt
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                endedAt
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                todos
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                deletedTodos
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                isSelected
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                isBookmarked
+                    .map { _ in () }
+                    .eraseToAnyPublisher()
+            )
+            .debounce(
+                for: .milliseconds(10),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink { [unowned self] _ in
+                Self.projectStore.update()
+                Task {
+                    try await Self.cloudKitManager.update(record)
+                }
+            }
+            .store(in: &cancellable)
     }
 
     public static func == (lhs: ProjectEntity, rhs: ProjectEntity) -> Bool {

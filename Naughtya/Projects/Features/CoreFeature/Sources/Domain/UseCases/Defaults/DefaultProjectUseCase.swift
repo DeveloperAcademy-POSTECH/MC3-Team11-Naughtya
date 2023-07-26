@@ -51,7 +51,6 @@ struct DefaultProjectUseCase: ProjectUseCase {
         startedAt: Date? = nil,
         endedAt: Date? = nil
     ) async throws -> ProjectEntity {
-        defer { Self.projectStore.update() }
         project.category.value = category
         project.goals.value = goals
         project.startedAt.value = startedAt
@@ -63,9 +62,7 @@ struct DefaultProjectUseCase: ProjectUseCase {
         _ project: ProjectEntity,
         isSelected: Bool
     ) async throws -> ProjectEntity {
-        defer { Self.projectStore.update() }
         project.isSelected.value = isSelected
-        try await Self.cloudKitManager.update(project.record)
         return project
     }
 
@@ -73,19 +70,15 @@ struct DefaultProjectUseCase: ProjectUseCase {
         _ project: ProjectEntity,
         isBookmarked: Bool
     ) async throws -> ProjectEntity {
-        defer { Self.projectStore.update() }
         project.isBookmarked.value = isBookmarked
-        try await Self.cloudKitManager.update(project.record)
         return project
     }
 
     func delete(_ project: ProjectEntity) async throws {
-        defer { Self.projectStore.update() }
         guard let index = Self.projectStore.projects
             .firstIndex(where: { $0.category.value == project.category.value }) else {
             throw DomainError(message: "프로젝트를 찾을 수 없습니다.")
         }
-        try await Self.cloudKitManager.delete(project.recordId)
         Self.projectStore.projects.remove(at: index)
     }
 

@@ -14,6 +14,7 @@ public class ProjectResultEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
     public let project: ProjectEntity
     public let performances: CurrentValueSubject<[PerformanceEntity], Never>
+    private var cancellable = Set<AnyCancellable>()
 
     public init(
         recordId: CKRecord.ID? = nil,
@@ -23,6 +24,7 @@ public class ProjectResultEntity: Equatable, Identifiable {
         self.recordId = recordId
         self.project = project
         self.performances = .init(performances)
+        setupUpdatingStore()
     }
 
     public var id: ObjectIdentifier {
@@ -62,6 +64,10 @@ public class ProjectResultEntity: Equatable, Identifiable {
             .reduce("") {
                 $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title)\n"
             }
+    }
+
+    private func setupUpdatingStore() {
+        // TODO
     }
 
     public static func == (lhs: ProjectResultEntity, rhs: ProjectResultEntity) -> Bool {

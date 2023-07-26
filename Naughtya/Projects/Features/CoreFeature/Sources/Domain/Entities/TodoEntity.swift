@@ -11,6 +11,10 @@ import Combine
 import CloudKit
 
 public class TodoEntity: Equatable, Identifiable {
+    private static let projectStore: ProjectStore = .shared
+    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
+
     public internal(set) var recordId: CKRecord.ID?
     public let project: CurrentValueSubject<ProjectEntity, Never>
     public let dailyTodoList: CurrentValueSubject<DailyTodoListEntity?, Never>
@@ -18,6 +22,7 @@ public class TodoEntity: Equatable, Identifiable {
     public let createdAt: CurrentValueSubject<Date, Never>
     public let histories: CurrentValueSubject<[TodoHistoryEntity], Never>
     public let completedAt: CurrentValueSubject<Date?, Never>
+    private var cancellable = Set<AnyCancellable>()
 
     public init(
         recordId: CKRecord.ID? = nil,
@@ -35,6 +40,13 @@ public class TodoEntity: Equatable, Identifiable {
         self.createdAt = .init(createdAt)
         self.histories = .init(histories)
         self.completedAt = .init(completedAt)
+        setupUpdatingStore()
+    }
+
+    deinit {
+        Task {
+            try await Self.cloudKitManager.delete(recordId)
+        }
     }
 
     /// 고유값
@@ -77,6 +89,42 @@ public class TodoEntity: Equatable, Identifiable {
             isCompleted: isCompleted,
             createdAt: completedAt.value ?? dailyTodoList.value?.date ?? .now
         )
+    }
+
+    private func setupUpdatingStore() {
+        Publishers
+            .MergeMany(
+                project
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                dailyTodoList
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                title
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                createdAt
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                histories
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                completedAt
+                    .map { _ in () }
+                    .eraseToAnyPublisher()
+            )
+            .debounce(
+                for: .milliseconds(10),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink { [unowned self] _ in
+                Self.projectStore.update()
+                Self.dailyTodoListStore.update()
+                Task {
+                    try await Self.cloudKitManager.update(record)
+                }
+            }
+            .store(in: &cancellable)
     }
 
     public static func == (lhs: TodoEntity, rhs: TodoEntity) -> Bool {

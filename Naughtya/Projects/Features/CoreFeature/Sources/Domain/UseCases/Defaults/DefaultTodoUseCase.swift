@@ -10,7 +10,6 @@ import Foundation
 
 struct DefaultTodoUseCase: TodoUseCase {
     private static let projectStore: ProjectStore = .shared
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
     private static let cloudKitManager: CloudKitManager = .shared
 
@@ -18,7 +17,6 @@ struct DefaultTodoUseCase: TodoUseCase {
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity?
     ) async throws -> TodoEntity {
-        defer { updateStores() }
         let todo = TodoEntity(
             project: project,
             dailyTodoList: dailyTodoList
@@ -27,7 +25,6 @@ struct DefaultTodoUseCase: TodoUseCase {
         todo.recordId = record.id
         project.todos.value.append(todo)
         dailyTodoList?.todos.value.append(todo)
-        try await Self.cloudKitManager.update(project.record)
         return todo
     }
 
@@ -44,9 +41,7 @@ struct DefaultTodoUseCase: TodoUseCase {
         _ todo: TodoEntity,
         title: String
     ) async throws -> TodoEntity {
-        defer { updateStores() }
         todo.title.value = title
-        try await Self.cloudKitManager.update(todo.record)
         return todo
     }
 
@@ -54,34 +49,28 @@ struct DefaultTodoUseCase: TodoUseCase {
         _ todo: TodoEntity,
         dailyTodoList: DailyTodoListEntity?
     ) async throws -> TodoEntity {
-        defer { updateStores() }
         todo.dailyTodoList.value = dailyTodoList
         return todo
     }
 
     func delete(_ todo: TodoEntity) async throws {
-        defer { updateStores() }
         todo.project.value.deletedTodos.value.append(todo)
         todo.project.value.todos.value.removeAll(where: { $0 === todo })
         todo.dailyTodoList.value?.todos.value.removeAll(where: { $0 === todo })
-        try await Self.cloudKitManager.delete(todo.recordId)
     }
 
     func complete(
         _ todo: TodoEntity,
         date: Date?
     ) async throws {
-        defer { updateStores() }
         todo.completedAt.value = date
     }
 
     func undoCompleted(_ todo: TodoEntity) async throws {
-        defer { updateStores() }
         todo.completedAt.value = nil
     }
 
     func moveToProject(todo: TodoEntity) async throws {
-        defer { updateStores() }
         try await Self.dailyTodoListUseCase.removeTodoFromDaily(todo)
         todo.project.value.todos.value.remove(todo)
         todo.project.value.todos.value.append(todo)
@@ -91,7 +80,6 @@ struct DefaultTodoUseCase: TodoUseCase {
         todo: TodoEntity,
         dailyTodoList: DailyTodoListEntity
     ) async throws {
-        defer { updateStores() }
         try await Self.dailyTodoListUseCase.addTodoToDaily(
             todo: todo,
             dailyTodoList: dailyTodoList
@@ -101,7 +89,6 @@ struct DefaultTodoUseCase: TodoUseCase {
     }
 
     func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
-        defer { updateStores() }
         switch (lhs.isDaily, rhs.isDaily) {
         case (false, false):
             swapInProject(lhs, rhs)
@@ -145,10 +132,5 @@ struct DefaultTodoUseCase: TodoUseCase {
         }
         lhs.dailyTodoList.value?.todos.value.remove(lhs)
         lhs.dailyTodoList.value?.todos.value.insert(lhs, at: indexInDaily)
-    }
-
-    private func updateStores() {
-        Self.projectStore.update()
-        Self.dailyTodoListStore.update()
     }
 }

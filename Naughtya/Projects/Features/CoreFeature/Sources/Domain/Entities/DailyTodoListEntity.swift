@@ -11,6 +11,8 @@ import Combine
 import CloudKit
 
 public class DailyTodoListEntity: Equatable, Identifiable {
+    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
     private static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko_KR")
@@ -21,6 +23,7 @@ public class DailyTodoListEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
     public let dateString: String
     public let todos: CurrentValueSubject<[TodoEntity], Never>
+    private var cancellable = Set<AnyCancellable>()
 
     public init(
         recordId: CKRecord.ID? = nil,
@@ -30,6 +33,7 @@ public class DailyTodoListEntity: Equatable, Identifiable {
         self.recordId = recordId
         self.dateString = dateString
         self.todos = .init(todos)
+        setupUpdatingStore()
     }
 
     public var id: String {
@@ -42,6 +46,17 @@ public class DailyTodoListEntity: Equatable, Identifiable {
 
     public var dateTitle: String {
         Self.dateFormatter.string(from: date)
+    }
+
+    private func setupUpdatingStore() {
+        todos
+            .sink { [unowned self] _ in
+                Self.dailyTodoListStore.update()
+                Task {
+                    // TODO
+                }
+            }
+            .store(in: &cancellable)
     }
 
     public static func == (lhs: DailyTodoListEntity, rhs: DailyTodoListEntity) -> Bool {
