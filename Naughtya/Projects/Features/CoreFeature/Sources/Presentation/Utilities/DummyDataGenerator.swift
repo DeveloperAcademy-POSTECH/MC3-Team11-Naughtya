@@ -12,9 +12,9 @@ public final class DummyDataGenerator {
     public static let shared: DummyDataGenerator = .init()
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
-    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     private let startDate = "2023-06-01"
     private let middleDate = "2023-07-01"

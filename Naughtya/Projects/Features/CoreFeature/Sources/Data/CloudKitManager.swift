@@ -18,7 +18,7 @@ public final class CloudKitManager {
     }
 
     private var database: CKDatabase {
-        container.database(with: .public)
+        container.database(with: .private)
     }
 
     @discardableResult

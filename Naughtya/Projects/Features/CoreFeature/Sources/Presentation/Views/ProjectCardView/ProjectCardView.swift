@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ProjectCardView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
     public let project: ProjectModel
 
     private let cornerRadius: CGFloat = 16

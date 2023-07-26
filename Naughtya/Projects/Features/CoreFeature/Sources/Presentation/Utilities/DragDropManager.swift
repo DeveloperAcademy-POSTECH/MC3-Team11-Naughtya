@@ -12,9 +12,9 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
     public static let shared: DragDropManager = .init()
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
-    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     @Published public var dragged: DraggedModel?
     @Published public var projectAbsoluteRectMap = [ProjectEntity: CGRect]()

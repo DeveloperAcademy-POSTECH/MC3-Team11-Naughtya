@@ -1,5 +1,5 @@
 //
-//  MockTodoUseCase.swift
+//  DefaultTodoUseCase.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -8,10 +8,10 @@
 
 import Foundation
 
-struct MockTodoUseCase: TodoUseCase {
+struct DefaultTodoUseCase: TodoUseCase {
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
     private static let cloudKitManager: CloudKitManager = .shared
 
     func create(

@@ -9,8 +9,8 @@
 import SwiftUI
 
 public struct ProjectItemView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     public let project: ProjectModel
 

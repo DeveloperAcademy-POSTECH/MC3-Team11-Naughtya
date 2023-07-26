@@ -14,7 +14,7 @@ public final class SearchViewModel: ObservableObject {
     private static let searchManager: SearchManager = .shared
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     @Published public var searchedText: String = ""
     @Published public var searchedTodos: [TodoModel] = []

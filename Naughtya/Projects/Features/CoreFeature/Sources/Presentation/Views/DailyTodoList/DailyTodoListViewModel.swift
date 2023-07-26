@@ -12,7 +12,7 @@ import Combine
 @MainActor
 public final class DailyTodoListViewModel: ObservableObject {
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
 
     @Published public var dailyTodoList: DailyTodoListModel?
     private var isTodayFetched = false

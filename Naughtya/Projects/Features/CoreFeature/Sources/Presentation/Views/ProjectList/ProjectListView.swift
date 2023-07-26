@@ -9,7 +9,7 @@
 import SwiftUI
 
 public struct ProjectListView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
     public let projects: [ProjectModel]
 
     public init(projects: [ProjectModel] = []) {

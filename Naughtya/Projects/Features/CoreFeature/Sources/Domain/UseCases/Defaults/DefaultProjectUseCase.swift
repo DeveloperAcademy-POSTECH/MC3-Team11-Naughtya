@@ -1,5 +1,5 @@
 //
-//  MockProjectUseCase.swift
+//  DefaultProjectUseCase.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MockProjectUseCase: ProjectUseCase {
+struct DefaultProjectUseCase: ProjectUseCase {
     private static let projectStore: ProjectStore = .shared
     private static let cloudKitManager: CloudKitManager = .shared
 

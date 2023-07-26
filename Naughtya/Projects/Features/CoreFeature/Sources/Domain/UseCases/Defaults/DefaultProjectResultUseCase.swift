@@ -1,5 +1,5 @@
 //
-//  MockProjectResultUseCase.swift
+//  DefaultProjectResultUseCase.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MockProjectResultUseCase: ProjectResultUseCase {
+struct DefaultProjectResultUseCase: ProjectResultUseCase {
     private static let projectStore: ProjectStore = .shared
 
     func create(project: ProjectEntity) async throws -> ProjectResultEntity {

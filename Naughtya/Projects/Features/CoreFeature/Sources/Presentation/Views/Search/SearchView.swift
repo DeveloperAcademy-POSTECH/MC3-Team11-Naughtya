@@ -9,7 +9,7 @@
 import SwiftUI
 
 public struct SearchView: View {
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     @StateObject private var viewModel = SearchViewModel()
     private let textFieldHeight: CGFloat = 40

@@ -1,5 +1,5 @@
 //
-//  MockDailyTodoListUseCase.swift
+//  DefaultDailyTodoListUseCase.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/19.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MockDailyTodoListUseCase: DailyTodoListUseCase {
+struct DefaultDailyTodoListUseCase: DailyTodoListUseCase {
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
 
