@@ -10,9 +10,17 @@ import Foundation
 
 struct DefaultDailyTodoListUseCase: DailyTodoListUseCase {
     private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
 
-    func create(dateString: String) async throws -> DailyTodoListEntity {
+    func create(dateString: String) async throws -> DailyTodoListEntity? {
+        guard try await readByDate(dateString: dateString) == nil else {
+            return nil
+        }
         let dailyTodoList = DailyTodoListEntity(dateString: dateString)
+        Task {
+            let record = try await Self.cloudKitManager.create(dailyTodoList.record)
+            dailyTodoList.recordId = record.id
+        }
         Self.dailyTodoListStore.dailyTodoLists.append(dailyTodoList)
         return dailyTodoList
     }

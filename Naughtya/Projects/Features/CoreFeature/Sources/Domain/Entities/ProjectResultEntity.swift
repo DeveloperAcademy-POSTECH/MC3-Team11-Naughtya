@@ -62,7 +62,7 @@ public class ProjectResultEntity: Equatable, Identifiable {
     public var allTodosSummary: String {
         allTodos
             .reduce("") {
-                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title)\n"
+                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title.value)\n"
             }
     }
 

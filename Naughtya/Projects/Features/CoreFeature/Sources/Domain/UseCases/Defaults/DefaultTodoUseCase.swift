@@ -21,8 +21,10 @@ struct DefaultTodoUseCase: TodoUseCase {
             project: project,
             dailyTodoList: dailyTodoList
         )
-        let record = try await Self.cloudKitManager.create(todo.record)
-        todo.recordId = record.id
+        Task {
+            let record = try await Self.cloudKitManager.create(todo.record)
+            todo.recordId = record.id
+        }
         project.todos.value.append(todo)
         dailyTodoList?.todos.value.append(todo)
         return todo
@@ -57,6 +59,7 @@ struct DefaultTodoUseCase: TodoUseCase {
         todo.project.value.deletedTodos.value.append(todo)
         todo.project.value.todos.value.removeAll(where: { $0 === todo })
         todo.dailyTodoList.value?.todos.value.removeAll(where: { $0 === todo })
+        try await Self.cloudKitManager.delete(todo.recordId)
     }
 
     func complete(
@@ -102,7 +105,7 @@ struct DefaultTodoUseCase: TodoUseCase {
     }
 
     private func moveToProject(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
-        guard lhs.project === rhs.project else {
+        guard lhs.project.value === rhs.project.value else {
             return
         }
         try await Self.dailyTodoListUseCase.removeTodoFromDaily(lhs)
@@ -118,7 +121,7 @@ struct DefaultTodoUseCase: TodoUseCase {
     }
 
     private func swapInProject(_ lhs: TodoEntity, _ rhs: TodoEntity) {
-        guard lhs.project === rhs.project,
+        guard lhs.project.value === rhs.project.value,
               let indexInProject = rhs.project.value.todos.value.firstIndex(of: rhs) else {
             return
         }

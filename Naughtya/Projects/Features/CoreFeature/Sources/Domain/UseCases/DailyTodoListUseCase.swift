@@ -10,7 +10,7 @@ import Foundation
 
 public protocol DailyTodoListUseCase {
     @discardableResult
-    func create(dateString: String) async throws -> DailyTodoListEntity
+    func create(dateString: String) async throws -> DailyTodoListEntity?
 
     func readByDate(dateString: String) async throws -> DailyTodoListEntity?
 

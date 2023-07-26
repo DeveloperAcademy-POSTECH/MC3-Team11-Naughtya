@@ -198,6 +198,6 @@ public struct TodoItemView: View {
 
 struct TodoItemView_Previews: PreviewProvider {
     static var previews: some View {
-        TodoItemView(todo: .from(entity: TodoEntity.sample))
+        TodoItemView(todo: .from(entity: .sample))
     }
 }

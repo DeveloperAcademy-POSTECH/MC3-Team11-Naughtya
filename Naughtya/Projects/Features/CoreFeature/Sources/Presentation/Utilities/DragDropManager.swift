@@ -86,7 +86,7 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         dragged = nil
         Task {
             if let targetProject = getTargetProject(touchLocation: touchLocation),
-               targetProject === todo.project {
+               targetProject === todo.project.value {
                 try await Self.todoUseCase.moveToProject(todo: todo)
                 return
             }

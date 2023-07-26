@@ -50,16 +50,29 @@ public class DailyTodoListEntity: Equatable, Identifiable {
 
     private func setupUpdatingStore() {
         todos
-            .sink { [unowned self] _ in
+            .debounce(
+                for: .milliseconds(10),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink { _ in
                 Self.dailyTodoListStore.update()
+            }
+            .store(in: &cancellable)
+
+        todos
+            .debounce(
+                for: .seconds(3),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink { [unowned self] _ in
                 Task {
-                    // TODO
+                    try await Self.cloudKitManager.update(record)
                 }
             }
             .store(in: &cancellable)
     }
 
     public static func == (lhs: DailyTodoListEntity, rhs: DailyTodoListEntity) -> Bool {
-        lhs.dateString == rhs.dateString
+        lhs === rhs
     }
 }

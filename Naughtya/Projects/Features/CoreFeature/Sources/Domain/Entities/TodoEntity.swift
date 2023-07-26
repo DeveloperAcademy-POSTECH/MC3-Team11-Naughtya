@@ -43,12 +43,6 @@ public class TodoEntity: Equatable, Identifiable {
         setupUpdatingStore()
     }
 
-    deinit {
-        Task {
-            try await Self.cloudKitManager.delete(recordId)
-        }
-    }
-
     /// 고유값
     public var id: ObjectIdentifier {
         ObjectIdentifier(self)
@@ -92,7 +86,7 @@ public class TodoEntity: Equatable, Identifiable {
     }
 
     private func setupUpdatingStore() {
-        Publishers
+        let publisher = Publishers
             .MergeMany(
                 project
                     .map { _ in () }
@@ -113,13 +107,24 @@ public class TodoEntity: Equatable, Identifiable {
                     .map { _ in () }
                     .eraseToAnyPublisher()
             )
+
+        publisher
             .debounce(
                 for: .milliseconds(10),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
-            .sink { [unowned self] _ in
+            .sink { _ in
                 Self.projectStore.update()
                 Self.dailyTodoListStore.update()
+            }
+            .store(in: &cancellable)
+
+        publisher
+            .debounce(
+                for: .seconds(3),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink { [unowned self] _ in
                 Task {
                     try await Self.cloudKitManager.update(record)
                 }

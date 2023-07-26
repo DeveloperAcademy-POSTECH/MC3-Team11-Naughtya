@@ -30,9 +30,6 @@ public struct DailyTodoListView: View {
                 )
             }
         }
-        .onAppear {
-            viewModel.fetchTodayIfNeeded()
-        }
     }
 
     private var dateHeader: some View {
@@ -40,7 +37,13 @@ public struct DailyTodoListView: View {
             Button("Prev") {
                 viewModel.gotoOneDayBefore()
             }
-            Text(viewModel.dateTitle)
+            if !viewModel.isTodayFetched {
+                Button("Today") {
+                    viewModel.fetchTodayIfNeeded()
+                }
+            } else {
+                Text(viewModel.dateTitle)
+            }
             Button("Next") {
                 viewModel.gotoOneDayAfter()
             }

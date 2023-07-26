@@ -48,12 +48,6 @@ public class ProjectEntity: Equatable, Identifiable {
         setupUpdatingStore()
     }
 
-    deinit {
-        Task {
-            try await Self.cloudKitManager.delete(recordId)
-        }
-    }
-
     public var id: String {
         category.value
     }
@@ -66,7 +60,7 @@ public class ProjectEntity: Equatable, Identifiable {
     }
 
     private func setupUpdatingStore() {
-        Publishers
+        let publisher = Publishers
             .MergeMany(
                 category
                     .map { _ in () }
@@ -93,12 +87,23 @@ public class ProjectEntity: Equatable, Identifiable {
                     .map { _ in () }
                     .eraseToAnyPublisher()
             )
+
+        publisher
             .debounce(
                 for: .milliseconds(10),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
-            .sink { [unowned self] _ in
+            .sink {
                 Self.projectStore.update()
+            }
+            .store(in: &cancellable)
+
+        publisher
+            .debounce(
+                for: .seconds(3),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink { [unowned self] _ in
                 Task {
                     try await Self.cloudKitManager.update(record)
                 }

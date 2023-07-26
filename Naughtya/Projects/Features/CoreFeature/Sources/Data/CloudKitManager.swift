@@ -12,6 +12,7 @@ import CloudKit
 public final class CloudKitManager {
     public static let shared: CloudKitManager = .init()
     private static let projectStore: ProjectStore = .shared
+    private static let dailyTodoListStore: DailyTodoListStore = .shared
 
     private let container = CKContainer(identifier: "iCloud.Naughtya.TodoList")
 
@@ -87,12 +88,15 @@ public final class CloudKitManager {
         try await database.deleteRecord(withID: id)
     }
 
-    public func syncWithStores() async throws {
+    public func syncWithStores() async throws { // 메서드가 매시브해서 ㅈㅅ
         let projectRecords = try await readList(ProjectRecord.self)
+        let dailyTodoListRecords = try await readList(DailyTodoListRecord.self)
         let todoRecords = try await readList(TodoRecord.self)
         let projectIdRecordMap = getIdRecordMap(records: projectRecords)
+        let dailyTodoListIdRecordMap = getIdRecordMap(records: dailyTodoListRecords)
         let todoIdRecordMap = getIdRecordMap(records: todoRecords)
         let projectIdEntityMap = getIdEntityMap(entities: projectRecords.map { $0.entity })
+        let dailyTodoListIdEntityMap = getIdEntityMap(entities: dailyTodoListRecords.map { $0.entity })
         let todoIdEntityMap = getIdEntityMap(entities: todoRecords.map { $0.entity })
 
         projectIdEntityMap
@@ -106,19 +110,37 @@ public final class CloudKitManager {
                     .compactMap { todoIdEntityMap[$0.recordID] }
             }
 
-        todoIdEntityMap
+        dailyTodoListIdEntityMap
             .forEach { id, entity in
-                guard let record = todoIdRecordMap[id],
-                      let projectId = record.project?.recordID,
-                      let project = projectIdEntityMap[projectId] else {
+                guard let record = dailyTodoListIdRecordMap[id] else {
                     return
                 }
-                entity.project.value = project
+                entity.todos.value = record.todos
+                    .compactMap { todoIdEntityMap[$0.recordID] }
+            }
+
+        todoIdEntityMap
+            .forEach { id, entity in
+                guard let record = todoIdRecordMap[id] else {
+                    return
+                }
+                if let projectId = record.project?.recordID,
+                   let project = projectIdEntityMap[projectId] {
+                    entity.project.value = project
+                }
+                if let dailyTodoListId = record.dailyTodoList?.recordID,
+                   let dailyTodoList = dailyTodoListIdEntityMap[dailyTodoListId] {
+                    entity.dailyTodoList.value = dailyTodoList
+                }
             }
 
         Self.projectStore.projects = projectRecords
             .compactMap { $0.id }
             .compactMap { projectIdEntityMap[$0] }
+
+        Self.dailyTodoListStore.dailyTodoLists = dailyTodoListRecords
+            .compactMap { $0.id }
+            .compactMap { dailyTodoListIdEntityMap[$0] }
     }
 
     private func printLog(_ item: Any) {
