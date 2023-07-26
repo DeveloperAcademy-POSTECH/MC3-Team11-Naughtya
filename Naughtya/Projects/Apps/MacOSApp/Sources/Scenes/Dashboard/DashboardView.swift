@@ -55,7 +55,7 @@ struct DashboardView: View {
                     } label: {
                         Image(systemName: "books.vertical")
                     }
-                    
+
                 }
             }
         }
