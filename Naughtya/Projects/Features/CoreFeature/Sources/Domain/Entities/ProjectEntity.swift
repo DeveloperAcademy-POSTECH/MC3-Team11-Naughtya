@@ -90,7 +90,7 @@ public class ProjectEntity: Equatable, Identifiable {
 
         publisher
             .debounce(
-                for: .milliseconds(10),
+                for: .milliseconds(100),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .sink {

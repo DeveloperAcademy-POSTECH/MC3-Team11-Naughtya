@@ -20,15 +20,15 @@ struct TodoRecord: Recordable {
     let histories: [CKRecord.Reference]
     let completedAt: Date?
 
-    var dictionary: [String: Any] {
-        var dict = [String: Any]()
-        dict["project"] = project
-        dict["dailyTodoList"] = dailyTodoList
-        dict["title"] = title
-        dict["createdAt"] = createdAt
-        dict["histories"] = histories
-        dict["completedAt"] = completedAt
-        return dict
+    var dictionary: [String: Any?] {
+        [
+            "project": project,
+            "dailyTodoList": dailyTodoList,
+            "title": title,
+            "createdAt": createdAt,
+            "histories": histories,
+            "completedAt": completedAt
+        ]
     }
 
     var entity: TodoEntity {

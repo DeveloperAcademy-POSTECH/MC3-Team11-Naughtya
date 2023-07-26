@@ -51,7 +51,7 @@ public class DailyTodoListEntity: Equatable, Identifiable {
     private func setupUpdatingStore() {
         todos
             .debounce(
-                for: .milliseconds(10),
+                for: .milliseconds(100),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .sink { _ in

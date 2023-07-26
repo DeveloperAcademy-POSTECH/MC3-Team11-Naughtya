@@ -23,7 +23,7 @@ public final class DashboardViewModel: ObservableObject {
     private func setupFetchingData() {
         Self.projectStore.objectWillChange
             .debounce(
-                for: .milliseconds(10),
+                for: .milliseconds(100),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .receive(on: DispatchQueue.main)

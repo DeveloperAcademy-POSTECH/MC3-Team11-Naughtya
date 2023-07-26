@@ -25,9 +25,12 @@ public final class CloudKitManager {
 
     @discardableResult
     public func create<T: Recordable>(_ record: T) async throws -> T {
-        let ckRecord = CKRecord(recordType: T.recordType.key)
-        ckRecord.setValuesForKeys(record.dictionary)
         do {
+            let ckRecord = CKRecord(recordType: T.recordType.key)
+            record.dictionary
+                .forEach { key, value in
+                    ckRecord.setValue(value, forKey: key)
+                }
             let savedRecord = try await database.save(ckRecord)
             printLog(savedRecord)
             return T.build(ckRecord: savedRecord)
@@ -41,25 +44,19 @@ public final class CloudKitManager {
         _ recordType: T.Type,
         predicate: NSPredicate = .init(value: true)
     ) async throws -> [T] {
-        try await withCheckedThrowingContinuation { continuation in
+        do {
             let query = CKQuery(
                 recordType: T.recordType.key,
                 predicate: predicate
             )
-            database.fetch(withQuery: query) { [unowned self] result in
-                switch result {
-                case let .success(response):
-                    let matchResults = response.matchResults
-                    printLog(matchResults)
-                    let records = matchResults
-                        .compactMap { try? $0.1.get() }
-                        .map { T.build(ckRecord: $0) }
-                    continuation.resume(returning: records)
-                case let .failure(error):
-                    printLog(error)
-                    continuation.resume(throwing: error)
-                }
-            }
+            let fetchedRecords = try await database.records(matching: query)
+            printLog(fetchedRecords)
+            return fetchedRecords.matchResults
+                .compactMap { try? $0.1.get() }
+                .map { T.build(ckRecord: $0) }
+        } catch {
+            printLog(error)
+            throw error
         }
     }
 
@@ -67,25 +64,45 @@ public final class CloudKitManager {
         _ recordType: T.Type,
         id: CKRecord.ID
     ) async throws -> T {
-        let ckRecord = try await database.record(for: id)
-        let record = T.build(ckRecord: ckRecord)
-        return record
+        do {
+            let fetchedRecord = try await database.record(for: id)
+            printLog(fetchedRecord)
+            return T.build(ckRecord: fetchedRecord)
+        } catch {
+            printLog(error)
+            throw error
+        }
     }
 
     public func update<T: Recordable>(_ record: T) async throws {
-        guard let id = record.id else {
-            return
+        do {
+            guard let id = record.id else {
+                return
+            }
+            let fetchedRecord = try await database.record(for: id)
+            record.dictionary
+                .forEach { key, value in
+                    fetchedRecord.setValue(value, forKey: key)
+                }
+            let savedRecord = try await database.save(fetchedRecord)
+            printLog(savedRecord)
+        } catch {
+            printLog(error)
+            throw error
         }
-        let ckRecord = try await database.record(for: id)
-        ckRecord.setValuesForKeys(record.dictionary)
-        try await database.save(ckRecord)
     }
 
     public func delete(_ id: CKRecord.ID?) async throws {
-        guard let id = id else {
-            return
+        do {
+            guard let id = id else {
+                return
+            }
+            let deletedId = try await database.deleteRecord(withID: id)
+            printLog(deletedId)
+        } catch {
+            printLog(error)
+            throw error
         }
-        try await database.deleteRecord(withID: id)
     }
 
     public func syncWithStores() async throws { // 메서드가 매시브해서 ㅈㅅ
@@ -145,9 +162,9 @@ public final class CloudKitManager {
 
     private func printLog(_ item: Any) {
         if let error = item as? Error {
-            print("🚨 \(error)")
+            print("🚨 @LOG \(error)")
         } else {
-            print("✅ \(item)")
+            print("✅ @LOG \(item)")
         }
     }
 

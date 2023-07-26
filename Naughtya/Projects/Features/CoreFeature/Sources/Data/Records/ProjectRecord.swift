@@ -22,17 +22,17 @@ struct ProjectRecord: Recordable {
     let isSelected: Int
     let isBookmarked: Int
 
-    var dictionary: [String: Any] {
-        var dict = [String: Any]()
-        dict["category"] = category
-        dict["goals"] = goals
-        dict["startedAt"] = startedAt
-        dict["endedAt"] = endedAt
-        dict["todos"] = todos
-        dict["deletedTodos"] = deletedTodos
-        dict["isSelected"] = isSelected
-        dict["isBookmarked"] = isBookmarked
-        return dict
+    var dictionary: [String: Any?] {
+        [
+            "category": category,
+            "goals": goals,
+            "startedAt": startedAt,
+            "endedAt": endedAt,
+            "todos": todos,
+            "deletedTodos": deletedTodos,
+            "isSelected": isSelected,
+            "isBookmarked": isBookmarked
+        ]
     }
 
     var entity: ProjectEntity {

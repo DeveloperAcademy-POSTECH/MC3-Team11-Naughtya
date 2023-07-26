@@ -110,10 +110,10 @@ public class TodoEntity: Equatable, Identifiable {
 
         publisher
             .debounce(
-                for: .milliseconds(10),
+                for: .milliseconds(100),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
-            .sink { _ in
+            .sink {
                 Self.projectStore.update()
                 Self.dailyTodoListStore.update()
             }

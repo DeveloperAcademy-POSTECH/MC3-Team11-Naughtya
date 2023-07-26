@@ -16,11 +16,11 @@ struct DailyTodoListRecord: Recordable {
     let dateString: String
     let todos: [CKRecord.Reference]
 
-    var dictionary: [String: Any] {
-        var dict = [String: Any]()
-        dict["dateString"] = dateString
-        dict["todos"] = todos
-        return dict
+    var dictionary: [String: Any?] {
+        [
+            "dateString": dateString,
+            "todos": todos
+        ]
     }
 
     var entity: DailyTodoListEntity {

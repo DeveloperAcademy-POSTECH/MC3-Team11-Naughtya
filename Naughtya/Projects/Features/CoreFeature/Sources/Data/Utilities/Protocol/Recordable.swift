@@ -13,7 +13,7 @@ public protocol Recordable {
     static var recordType: CloudKitRecordType { get }
 
     var id: CKRecord.ID? { get }
-    var dictionary: [String: Any] { get }
+    var dictionary: [String: Any?] { get }
 
     static func build(ckRecord: CKRecord) -> Self
 }
