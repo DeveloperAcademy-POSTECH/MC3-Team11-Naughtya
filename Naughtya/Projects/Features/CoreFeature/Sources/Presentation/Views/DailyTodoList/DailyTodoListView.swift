@@ -27,11 +27,6 @@ public struct DailyTodoListView: View {
                 }
                 .frame(width: 300, alignment: .topLeading)
             .padding(.horizontal, 20)
-//            .padding(.top, 25)
-//            .padding(.bottom, 10)
-//            .frame(maxWidth: .infinity, alignment: .center)
-//            .background(Color(red: 0.12, green: 0.12, blue: 0.12))
-
             if let dailyTodoList = viewModel.dailyTodoList {
                 TodoListView(
                     section: dailyTodoList.entity,
@@ -42,7 +37,6 @@ public struct DailyTodoListView: View {
         .padding(.horizontal, 20)
         .padding(.top, 18)
         .frame(maxWidth: .infinity, alignment: .topLeading)
-        .background(Color(red: 0.12, green: 0.12, blue: 0.12))
         .onAppear {
             viewModel.fetchTodayIfNeeded()
         }

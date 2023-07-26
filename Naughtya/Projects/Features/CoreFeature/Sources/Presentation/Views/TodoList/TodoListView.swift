@@ -37,7 +37,7 @@ public struct TodoListView: View {
             if section != nil {
                 GeometryReader { geometry in
                     let absoluteRect = geometry.frame(in: .global)
-                    Color.gray.opacity(0.1)
+                    Color.customGray1
                         .onAppear {
                             registerAbsoluteRect(absoluteRect)
                         }
@@ -45,7 +45,7 @@ public struct TodoListView: View {
                             registerAbsoluteRect($0)
                         }
                 }
-                .frame(height: 40)
+                .frame(height: 200)
             }
         }
         .onDisappear {

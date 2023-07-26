@@ -47,20 +47,17 @@ public struct ProjectListView: View {
                           .foregroundColor(.white)
                           .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .padding(.horizontal, 15)
+                    .padding(.horizontal, 20)
                     .padding(.vertical, 6)
                     .frame(maxWidth: .infinity, minHeight: 36, maxHeight: 36, alignment: .center)
                     .background(Color.pointColor)
                     .cornerRadius(10)
                     .shadow(color: Color(red: 0.28, green: 0.27, blue: 1), radius: 0.2, x: 1, y: 1)
-                    .padding(15)
-
                 }
                 .padding(15)
                 .sheet(isPresented: self.$showModal) {
                     ProjectSetModalView()
                 }
-
                 .buttonStyle(.borderless)
                 .onAppear { // MARK: - 테스트 후 삭제(가짜데이터)
                     Task {
