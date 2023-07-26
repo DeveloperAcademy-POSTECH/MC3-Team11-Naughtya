@@ -85,11 +85,6 @@ public struct ProjectListView: View {
     }
 }
 
-        }
-    }
-
-}
-
 struct ListHeaderView: View {
     @State private var showModal = false
     var body: some View {
