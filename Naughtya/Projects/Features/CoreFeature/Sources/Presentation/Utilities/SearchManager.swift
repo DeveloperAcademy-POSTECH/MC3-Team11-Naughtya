@@ -9,7 +9,7 @@
 import Foundation
 
 public final class SearchManager: ObservableObject {
-    public static let shared = SearchManager()
+    public static let shared: SearchManager = .init()
 
     @Published public var isSearching: Bool = false
 

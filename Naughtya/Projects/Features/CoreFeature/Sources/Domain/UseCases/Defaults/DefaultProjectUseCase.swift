@@ -1,5 +1,5 @@
 //
-//  MockProjectUseCase.swift
+//  DefaultProjectUseCase.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -8,8 +8,9 @@
 
 import Foundation
 
-struct MockProjectUseCase: ProjectUseCase {
+struct DefaultProjectUseCase: ProjectUseCase {
     private static let projectStore: ProjectStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
 
     func create(
         category: String,
@@ -29,6 +30,10 @@ struct MockProjectUseCase: ProjectUseCase {
             startedAt: startedAt,
             endedAt: endedAt
         )
+        Task {
+            let record = try? await Self.cloudKitManager.create(project.record)
+            project.recordId = record?.id
+        }
         Self.projectStore.projects.append(project)
         return project
     }
@@ -38,7 +43,7 @@ struct MockProjectUseCase: ProjectUseCase {
     }
 
     func readItem(category: String) async throws -> ProjectEntity {
-        Self.projectStore.projects.first { $0.category == category }!
+        Self.projectStore.projects.first { $0.category.value == category }!
     }
 
     func update(
@@ -48,39 +53,36 @@ struct MockProjectUseCase: ProjectUseCase {
         startedAt: Date? = nil,
         endedAt: Date? = nil
     ) async throws -> ProjectEntity {
-        defer { Self.projectStore.update() }
-        project.category = category
-        project.goals = goals
-        project.startedAt = startedAt
-        project.endedAt = endedAt
+        project.category.value = category
+        project.goals.value = goals
+        project.startedAt.value = startedAt
+        project.endedAt.value = endedAt
         return project
     }
 
     func toggleSelected(
         _ project: ProjectEntity,
         isSelected: Bool
-    ) throws -> ProjectEntity {
-        defer { Self.projectStore.update() }
-        project.isSelected = isSelected
+    ) async throws -> ProjectEntity {
+        project.isSelected.value = isSelected
         return project
     }
 
     func toggleIsBookmarked(
         _ project: ProjectEntity,
         isBookmarked: Bool
-    ) throws -> ProjectEntity {
-        defer { Self.projectStore.update() }
-        project.isBookmarked = isBookmarked
+    ) async throws -> ProjectEntity {
+        project.isBookmarked.value = isBookmarked
         return project
     }
 
-    func delete(_ project: ProjectEntity) throws {
-        defer { Self.projectStore.update() }
+    func delete(_ project: ProjectEntity) async throws {
         guard let index = Self.projectStore.projects
-            .firstIndex(where: { $0.category == project.category }) else {
+            .firstIndex(where: { $0.category.value == project.category.value }) else {
             throw DomainError(message: "프로젝트를 찾을 수 없습니다.")
         }
         Self.projectStore.projects.remove(at: index)
+        try? await Self.cloudKitManager.delete(project.recordId)
     }
 
     private func validateNotEmptyCategory(_ category: String) -> Bool {
@@ -88,6 +90,6 @@ struct MockProjectUseCase: ProjectUseCase {
     }
 
     private func validateUniqueCategory(_ category: String) -> Bool {
-        Self.projectStore.projects.first { $0.category == category } == nil
+        Self.projectStore.projects.first { $0.category.value == category } == nil
     }
 }

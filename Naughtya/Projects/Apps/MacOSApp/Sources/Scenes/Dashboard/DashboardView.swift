@@ -37,6 +37,11 @@ struct DashboardView: View {
                 .zIndex(0)
             }
         }
+        .onAppear {
+            Task {
+                try await CloudKitManager.shared.syncWithStores()
+            }
+        }
     }
 }
 

@@ -12,10 +12,10 @@ import Combine
 @MainActor
 public final class DailyTodoListViewModel: ObservableObject {
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
 
     @Published public var dailyTodoList: DailyTodoListModel?
-    private var isTodayFetched = false
+    @Published public var isTodayFetched = false
     private var cancellable = Set<AnyCancellable>()
 
     public init() {
@@ -39,6 +39,7 @@ public final class DailyTodoListViewModel: ObservableObject {
         guard let oneDayBefore = dailyTodoList?.date.getOneDayBefore() else {
             return
         }
+        dailyTodoList = nil
         fetchDailyTodoList(dateString: oneDayBefore.getDateString())
     }
 
@@ -46,13 +47,14 @@ public final class DailyTodoListViewModel: ObservableObject {
         guard let oneDayAfter = dailyTodoList?.date.getOneDayAfter() else {
             return
         }
+        dailyTodoList = nil
         fetchDailyTodoList(dateString: oneDayAfter.getDateString())
     }
 
     private func setupFetchingData() {
         Self.dailyTodoListStore.objectWillChange
             .debounce(
-                for: .milliseconds(10),
+                for: .milliseconds(100),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .receive(on: DispatchQueue.main)
@@ -70,10 +72,10 @@ public final class DailyTodoListViewModel: ObservableObject {
         Task {
             if let existing = try await Self.dailyTodoListUseCase.readByDate(dateString: dateString) {
                 dailyTodoList = .from(entity: existing)
-            } else {
-                let new = try await Self.dailyTodoListUseCase.create(dateString: dateString)
+            } else if let new = try await Self.dailyTodoListUseCase.create(dateString: dateString) {
                 dailyTodoList = .from(entity: new)
             }
+            Self.dailyTodoListStore.currentDailyTodoList = dailyTodoList?.entity
         }
     }
 }

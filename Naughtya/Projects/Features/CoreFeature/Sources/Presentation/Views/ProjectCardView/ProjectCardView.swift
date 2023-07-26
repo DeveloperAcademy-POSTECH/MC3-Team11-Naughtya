@@ -9,13 +9,13 @@
 import SwiftUI
 
 struct ProjectCardView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
     public let project: ProjectModel
 
     private let cornerRadius: CGFloat = 16
 
-    var projectEndDay: Date {
-        project.endedAt! // TODO: 기획 확정 후 수정
+    var projectEndDay: Date? {
+        project.endedAt
     }
 
     var body: some View {
@@ -26,9 +26,11 @@ struct ProjectCardView: View {
                     .onTapGesture {
                         toggleIsBookmarked()
                     }
-                Text("\(Date().dDayCalculater(projectEndDay: projectEndDay))")
-                Spacer()
-                Text("~\(changeDateFormat())")
+                if let projectEndDay = projectEndDay {
+                    Text("\(Date().dDayCalculater(projectEndDay: projectEndDay))")
+                    Spacer()
+                    Text("~\(changeDateFormat(projectEndDay: projectEndDay))")
+                }
             }
 
             HStack(spacing: 0.0) {
@@ -64,7 +66,7 @@ struct ProjectCardView: View {
         }
     }
 
-    func changeDateFormat() -> String {
+    func changeDateFormat(projectEndDay: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         let formattedDate = dateFormatter.string(from: projectEndDay)
