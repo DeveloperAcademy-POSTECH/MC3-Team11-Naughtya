@@ -22,8 +22,7 @@ public struct ProjectItemView: View {
 
     public var body: some View {
 
-        HStack(alignment: .center) {
-          // Space Between
+        HStack {
             VStack(alignment: .leading, spacing: 18) {
                 Text(project.category)
                     .font(
@@ -48,12 +47,10 @@ public struct ProjectItemView: View {
                             .frame(width: 360, alignment: .leading)
                     }
                 }
-
             }
-            .padding(0)
-            .frame(width: 300, alignment: .topLeading)
+            .padding(.horizontal, 20)
+            .frame(width: 270, alignment: .topLeading)
           Spacer()
-          // Alternative Views and Spacers
             Picker(selection: $selectedSortOption, label: Text("")) {
                 ForEach(0..<sortOptions.count) { index in
                     Text(sortOptions[index])
@@ -61,18 +58,11 @@ public struct ProjectItemView: View {
             }
             .frame(width: 110)
             .pickerStyle(DefaultPickerStyle())
-            .foregroundColor(.blue)
+            .foregroundColor(Color.pointColor)
         }
-        .padding(.horizontal, 40)
+        .padding(.leading, 20)
         .padding(.top, 25)
         .padding(.bottom, 10)
-        .frame(maxWidth: .infinity, alignment: .center)
-        .background(Color(red: 0.13, green: 0.13, blue: 0.13))
-        .overlay(
-          Rectangle()
-            .inset(by: 0.5)
-            .stroke(Color(red: 0.1, green: 0.1, blue: 0.1), lineWidth: 1)
-        )
 
         TodoListView(
             section: project.entity,
@@ -81,7 +71,6 @@ public struct ProjectItemView: View {
         Button("Todo 추가") {
             appendNewTodo(project: project.entity)
         }
-
     }
 
     private func appendNewTodo(project: ProjectEntity) {
