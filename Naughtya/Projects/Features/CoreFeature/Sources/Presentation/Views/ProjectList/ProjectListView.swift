@@ -50,9 +50,8 @@ public struct ProjectListView: View {
                     .padding(.horizontal, 15)
                     .padding(.vertical, 6)
                     .frame(maxWidth: .infinity, minHeight: 36, maxHeight: 36, alignment: .center)
-                    .background(Color(red: 0, green: 0.48, blue: 1))
+                    .background(Color.pointColor)
                     .cornerRadius(10)
-
                     .shadow(color: Color(red: 0.28, green: 0.27, blue: 1), radius: 0.2, x: 1, y: 1)
                     .padding(15)
 

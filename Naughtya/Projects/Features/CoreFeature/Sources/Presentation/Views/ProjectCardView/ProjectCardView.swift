@@ -56,7 +56,7 @@ struct ProjectCardView: View {
                                     .weight(.semibold)
                             )
                             .multilineTextAlignment(.trailing)
-                            .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
+                            .foregroundColor(Color.pointColor)
                         Text("/\(project.todos.count)")
                             .font(
                                 Font.custom("Apple SD Gothic Neo", size: 12)
