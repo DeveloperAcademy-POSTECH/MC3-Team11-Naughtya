@@ -19,39 +19,75 @@ public struct ProjectListView: View {
     @State private var showModal = false
 
     public var body: some View {
-        VStack(spacing: 16) {
-            List {
-                Section(header: ListHeaderView()) {
-                    ForEach(projects) { project in
-                        ProjectCardView(project: project)
+        ZStack {
+            VStack(spacing: 16) {
+                List {
+                    Section(header: ListHeaderView()) {
+                        ForEach(projects) { project in
+                            ProjectCardView(project: project)
+                        }
                     }
                 }
+                .listStyle(.plain)
+
             }
-            .listStyle(.plain)
-            Spacer()
-            Button {
-                self.showModal = true
-            } label: {
-                Image(systemName: "plus")
-                    .resizable()
-                    .frame(width: 15, height: 15)
-            }
-            .buttonStyle(.borderless)
-        }
-        .sheet(isPresented: self.$showModal) {
-            ProjectSetModalView()
-        }
-        .onAppear { // MARK: - 테스트 후 삭제(가짜데이터)
-            Task {
-                try await Self.projectUseCase.create(
-                    category: "MC3",
-                    goals: "mc2",
-                    startedAt: Date(),
-                    endedAt: Date()
+            VStack {
+                Spacer()
+
+                Button(action: {
+                    self.showModal = true
+                }) {
+                    HStack {
+                        Text("+")
+                          .font(Font.custom("SF Pro", size: 20))
+                          .multilineTextAlignment(.center)
+                          .foregroundColor(.white)
+
+                        Text("Add project")
+                          .font(Font.custom("SF Pro", size: 14))
+                          .multilineTextAlignment(.center)
+                          .foregroundColor(.white)
+                    }
+
+                }
+                .padding(20)
+                .buttonStyle(.borderless)
+                .background(
+                    Rectangle()
+                    .foregroundColor(.clear)
+                    .frame(width: 148, height: 42)
+                    .background(Color(red: 0.28, green: 0.27, blue: 1))
+                    .cornerRadius(21)
                 )
+
+                .shadow(color: Color(red: 0.28, green: 0.27, blue: 1), radius: 0.2, x: 1, y: 1)
+                .padding(15)
+                .onTapGesture {
+                    self.showModal = true
+                }
+
+                .sheet(isPresented: self.$showModal) {
+                    ProjectSetModalView()
+                }
+                .onAppear { // MARK: - 테스트 후 삭제(가짜데이터)
+                    Task {
+                        try await Self.projectUseCase.create(
+                            category: "MC3",
+                            goals: "mc2",
+                            startedAt: Date(),
+                            endedAt: Date()
+                        )
+                    }
+                }
+
             }
         }
     }
+}
+
+        }
+    }
+
 }
 
 struct ListHeaderView: View {
