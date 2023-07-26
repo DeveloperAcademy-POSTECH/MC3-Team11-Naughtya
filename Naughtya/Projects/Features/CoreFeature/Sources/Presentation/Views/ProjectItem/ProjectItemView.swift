@@ -19,14 +19,14 @@ public struct ProjectItemView: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            VStack {
-                Text(project.category)
-                    .font(
-                        Font.custom("SF Pro", size: 24)
-                            .weight(.bold)
-                    )
-                    .foregroundColor(.white)
+        VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 6) {
+            Text(project.category)
+                .font(
+                    Font.custom("SF Pro", size: 24)
+                        .weight(.bold)
+                )
+                .foregroundColor(.white)
                 HStack {
                     Rectangle()
                         .foregroundColor(.clear)
@@ -45,6 +45,7 @@ public struct ProjectItemView: View {
                     }
                 }
             }
+            .padding(.horizontal, 20)
             TodoListView(
                 section: project.entity,
                 todos: project.backlogTodos
@@ -54,7 +55,7 @@ public struct ProjectItemView: View {
             }
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.12))
-        .padding(0)
+        .padding(.horizontal, 20)
         .frame(alignment: .topLeading)
     }
 

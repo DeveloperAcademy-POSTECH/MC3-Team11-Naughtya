@@ -16,8 +16,6 @@ public struct DailyTodoListView: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .center) {
-                // Space Between
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Daily To Do")
                         .font(
@@ -27,14 +25,12 @@ public struct DailyTodoListView: View {
                         .foregroundColor(.white)
                     dateHeader
                 }
-                .padding(0)
                 .frame(width: 300, alignment: .topLeading)
-            }
-            .padding(.horizontal, 0)
-            .padding(.top, 25)
-            .padding(.bottom, 10)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .background(Color(red: 0.12, green: 0.12, blue: 0.12))
+            .padding(.horizontal, 20)
+//            .padding(.top, 25)
+//            .padding(.bottom, 10)
+//            .frame(maxWidth: .infinity, alignment: .center)
+//            .background(Color(red: 0.12, green: 0.12, blue: 0.12))
 
             if let dailyTodoList = viewModel.dailyTodoList {
                 TodoListView(
@@ -43,7 +39,7 @@ public struct DailyTodoListView: View {
                 )
             }
         }
-        .padding(.horizontal, 0)
+        .padding(.horizontal, 20)
         .padding(.top, 18)
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background(Color(red: 0.12, green: 0.12, blue: 0.12))

@@ -27,7 +27,6 @@ public struct TodoListView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            List {
                 ForEach(todos) { todo in
                     TodoItemView(
                         todo: todo,
@@ -35,7 +34,6 @@ public struct TodoListView: View {
                         isBlockedToEdit: searchManager.isSearching
                     )
                 }
-            }
             if section != nil {
                 GeometryReader { geometry in
                     let absoluteRect = geometry.frame(in: .global)
