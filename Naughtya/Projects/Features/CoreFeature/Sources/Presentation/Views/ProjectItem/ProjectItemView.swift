@@ -11,6 +11,8 @@ import SwiftUI
 public struct ProjectItemView: View {
     private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
     private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    @State private var selectedSortOption = 0
+    private let sortOptions = ["전체보기", "완료 todo", "미완료 todo"]
 
     public let project: ProjectModel
 
@@ -19,14 +21,28 @@ public struct ProjectItemView: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading) {
-            VStack(alignment: .leading, spacing: 6) {
-            Text(project.category)
-                .font(
-                    Font.custom("SF Pro", size: 24)
-                        .weight(.bold)
-                )
-                .foregroundColor(.white)
+        VStack(alignment: .leading, spacing: 6) {
+            VStack {
+                HStack {
+                    Text(project.category)
+                        .font(
+                            Font.custom("SF Pro", size: 24)
+                                .weight(.bold)
+                        )
+                        .foregroundColor(.white)
+
+                    Spacer()
+
+                    Picker(selection: $selectedSortOption, label: Text("")) {
+                                        ForEach(0..<sortOptions.count) { index in
+                                            Text(sortOptions[index])
+                                        }
+                                    }
+                                    .frame(width: 110)
+                                    .pickerStyle(DefaultPickerStyle()) // 변경된 부분
+                                    .foregroundColor(.blue)
+                                    .padding(.horizontal, 40)
+                }
                 HStack {
                     Rectangle()
                         .foregroundColor(.clear)

@@ -30,41 +30,39 @@ public struct ProjectListView: View {
                 }
                 .listStyle(.plain)
             }
-            VStack {
+            VStack(alignment: .center, spacing: 10) {
                 Spacer()
                 Button(action: {
                     self.showModal = true
                 }) {
-                    HStack {
+                    HStack(alignment: .center, spacing: 5) {
                         Text("+")
                           .font(Font.custom("SF Pro", size: 20))
                           .multilineTextAlignment(.center)
                           .foregroundColor(.white)
 
                         Text("Add project")
+                          .lineLimit(1)
                           .font(Font.custom("SF Pro", size: 14))
-                          .multilineTextAlignment(.center)
                           .foregroundColor(.white)
+                          .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                }
-                .padding(20)
-                .buttonStyle(.borderless)
-                .background(
-                    Rectangle()
-                    .foregroundColor(.clear)
-                    .frame(width: 148, height: 42)
-                    .background(Color(red: 0.28, green: 0.27, blue: 1))
-                    .cornerRadius(21)
-                )
-                .shadow(color: Color(red: 0.28, green: 0.27, blue: 1), radius: 0.2, x: 1, y: 1)
-                .padding(15)
-                .onTapGesture {
-                    self.showModal = true
-                }
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 6)
+                    .frame(maxWidth: .infinity, minHeight: 36, maxHeight: 36, alignment: .center)
+                    .background(Color(red: 0, green: 0.48, blue: 1))
+                    .cornerRadius(10)
 
+                    .shadow(color: Color(red: 0.28, green: 0.27, blue: 1), radius: 0.2, x: 1, y: 1)
+                    .padding(15)
+
+                }
+                .padding(15)
                 .sheet(isPresented: self.$showModal) {
                     ProjectSetModalView()
                 }
+
+                .buttonStyle(.borderless)
                 .onAppear { // MARK: - 테스트 후 삭제(가짜데이터)
                     Task {
                         try await Self.projectUseCase.create(
@@ -77,6 +75,9 @@ public struct ProjectListView: View {
                 }
 
             }
+            .padding(.horizontal, 57)
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
     }
 }
