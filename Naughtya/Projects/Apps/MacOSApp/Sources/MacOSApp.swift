@@ -14,7 +14,6 @@ struct MacOSApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                Color.black
                 DashboardView()
                 //                    ProjectResultListView()
                 DragDropStageView()

@@ -50,9 +50,6 @@ public struct ProjectListView: View {
                     endedAt: Date()
                 )
             }
-        }
-    }
-}
 
 struct ListHeaderView: View {
     @State private var showModal = false
