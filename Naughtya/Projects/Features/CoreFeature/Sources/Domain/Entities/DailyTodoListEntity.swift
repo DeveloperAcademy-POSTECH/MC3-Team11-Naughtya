@@ -66,7 +66,7 @@ public class DailyTodoListEntity: Equatable, Identifiable {
             )
             .sink { [unowned self] _ in
                 Task {
-                    try await Self.cloudKitManager.update(record)
+                    try? await Self.cloudKitManager.update(record)
                 }
             }
             .store(in: &cancellable)

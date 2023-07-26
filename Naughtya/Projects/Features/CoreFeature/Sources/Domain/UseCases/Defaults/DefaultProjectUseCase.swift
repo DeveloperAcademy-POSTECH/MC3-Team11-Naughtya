@@ -31,8 +31,8 @@ struct DefaultProjectUseCase: ProjectUseCase {
             endedAt: endedAt
         )
         Task {
-            let record = try await Self.cloudKitManager.create(project.record)
-            project.recordId = record.id
+            let record = try? await Self.cloudKitManager.create(project.record)
+            project.recordId = record?.id
         }
         Self.projectStore.projects.append(project)
         return project
@@ -82,7 +82,7 @@ struct DefaultProjectUseCase: ProjectUseCase {
             throw DomainError(message: "프로젝트를 찾을 수 없습니다.")
         }
         Self.projectStore.projects.remove(at: index)
-        try await Self.cloudKitManager.delete(project.recordId)
+        try? await Self.cloudKitManager.delete(project.recordId)
     }
 
     private func validateNotEmptyCategory(_ category: String) -> Bool {

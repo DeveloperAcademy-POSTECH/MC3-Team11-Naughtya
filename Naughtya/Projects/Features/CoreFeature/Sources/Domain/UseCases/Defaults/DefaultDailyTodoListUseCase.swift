@@ -18,8 +18,8 @@ struct DefaultDailyTodoListUseCase: DailyTodoListUseCase {
         }
         let dailyTodoList = DailyTodoListEntity(dateString: dateString)
         Task {
-            let record = try await Self.cloudKitManager.create(dailyTodoList.record)
-            dailyTodoList.recordId = record.id
+            let record = try? await Self.cloudKitManager.create(dailyTodoList.record)
+            dailyTodoList.recordId = record?.id
         }
         Self.dailyTodoListStore.dailyTodoLists.append(dailyTodoList)
         return dailyTodoList

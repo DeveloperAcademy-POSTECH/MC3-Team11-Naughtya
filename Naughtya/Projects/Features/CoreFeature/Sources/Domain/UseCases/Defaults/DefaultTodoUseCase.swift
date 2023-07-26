@@ -22,8 +22,8 @@ struct DefaultTodoUseCase: TodoUseCase {
             dailyTodoList: dailyTodoList
         )
         Task {
-            let record = try await Self.cloudKitManager.create(todo.record)
-            todo.recordId = record.id
+            let record = try? await Self.cloudKitManager.create(todo.record)
+            todo.recordId = record?.id
         }
         project.todos.value.append(todo)
         dailyTodoList?.todos.value.append(todo)
@@ -59,7 +59,7 @@ struct DefaultTodoUseCase: TodoUseCase {
         todo.project.value.deletedTodos.value.append(todo)
         todo.project.value.todos.value.removeAll(where: { $0 === todo })
         todo.dailyTodoList.value?.todos.value.removeAll(where: { $0 === todo })
-        try await Self.cloudKitManager.delete(todo.recordId)
+        try? await Self.cloudKitManager.delete(todo.recordId)
     }
 
     func complete(

@@ -14,18 +14,28 @@ public final class CloudKitManager {
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
 
-    private let container = CKContainer(identifier: "iCloud.Naughtya.TodoList")
+    public let isEnabled = false
+
+    private lazy var container: CKContainer? = {
+        guard isEnabled else {
+            return nil
+        }
+        return CKContainer(identifier: "iCloud.Naughtya.TodoList")
+    }()
 
     private init() {
     }
 
     private var database: CKDatabase {
-        container.database(with: .private)
+        container!.database(with: .private)
     }
 
     @discardableResult
     public func create<T: Recordable>(_ record: T) async throws -> T {
         do {
+            guard isEnabled else {
+                throw DataError.cloudKitDisabled
+            }
             let ckRecord = CKRecord(recordType: T.recordType.key)
             record.dictionary
                 .forEach { key, value in
@@ -45,6 +55,9 @@ public final class CloudKitManager {
         predicate: NSPredicate = .init(value: true)
     ) async throws -> [T] {
         do {
+            guard isEnabled else {
+                throw DataError.cloudKitDisabled
+            }
             let query = CKQuery(
                 recordType: T.recordType.key,
                 predicate: predicate
@@ -65,6 +78,9 @@ public final class CloudKitManager {
         id: CKRecord.ID
     ) async throws -> T {
         do {
+            guard isEnabled else {
+                throw DataError.cloudKitDisabled
+            }
             let fetchedRecord = try await database.record(for: id)
             printLog(fetchedRecord)
             return T.build(ckRecord: fetchedRecord)
@@ -76,6 +92,9 @@ public final class CloudKitManager {
 
     public func update<T: Recordable>(_ record: T) async throws {
         do {
+            guard isEnabled else {
+                throw DataError.cloudKitDisabled
+            }
             guard let id = record.id else {
                 return
             }
@@ -94,6 +113,9 @@ public final class CloudKitManager {
 
     public func delete(_ id: CKRecord.ID?) async throws {
         do {
+            guard isEnabled else {
+                throw DataError.cloudKitDisabled
+            }
             guard let id = id else {
                 return
             }
@@ -106,6 +128,10 @@ public final class CloudKitManager {
     }
 
     public func syncWithStores() async throws { // 메서드가 매시브해서 ㅈㅅ
+        guard isEnabled else {
+            throw DataError.cloudKitDisabled
+        }
+
         let projectRecords = try await readList(ProjectRecord.self)
         let dailyTodoListRecords = try await readList(DailyTodoListRecord.self)
         let todoRecords = try await readList(TodoRecord.self)
@@ -161,6 +187,9 @@ public final class CloudKitManager {
     }
 
     private func printLog(_ item: Any) {
+        guard isEnabled else {
+            return
+        }
         if let error = item as? Error {
             print("🚨 @LOG \(error)")
         } else {
