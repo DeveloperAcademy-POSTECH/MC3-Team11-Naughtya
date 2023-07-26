@@ -29,11 +29,9 @@ public struct ProjectListView: View {
                     }
                 }
                 .listStyle(.plain)
-
             }
             VStack {
                 Spacer()
-
                 Button(action: {
                     self.showModal = true
                 }) {
@@ -48,7 +46,6 @@ public struct ProjectListView: View {
                           .multilineTextAlignment(.center)
                           .foregroundColor(.white)
                     }
-
                 }
                 .padding(20)
                 .buttonStyle(.borderless)
@@ -59,7 +56,6 @@ public struct ProjectListView: View {
                     .background(Color(red: 0.28, green: 0.27, blue: 1))
                     .cornerRadius(21)
                 )
-
                 .shadow(color: Color(red: 0.28, green: 0.27, blue: 1), radius: 0.2, x: 1, y: 1)
                 .padding(15)
                 .onTapGesture {
@@ -94,7 +90,7 @@ struct ListHeaderView: View {
                 Font.custom("SF Pro", size: 12)
                   .weight(.bold)
               )
-              .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
+              .foregroundColor(Color.customGray3)
         }
     }
 }
