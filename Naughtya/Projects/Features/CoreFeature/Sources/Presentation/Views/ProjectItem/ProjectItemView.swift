@@ -21,25 +21,16 @@ public struct ProjectItemView: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            VStack(alignment: .listRowSeparatorLeading) {
-                HStack(alignment: .firstTextBaseline) {
-                    Text(project.category)
-                        .font(
-                            Font.custom("SF Pro", size: 24)
-                                .weight(.bold)
-                        )
-                        .foregroundColor(.white)
-                    Spacer()
-                    Picker(selection: $selectedSortOption, label: Text("")) {
-                        ForEach(0..<sortOptions.count) { index in
-                            Text(sortOptions[index])
-                        }
-                    }
-                    .frame(width: 110)
-                    .pickerStyle(DefaultPickerStyle())
-                    .foregroundColor(.blue)
-                }
+
+        HStack(alignment: .center) {
+          // Space Between
+            VStack(alignment: .leading, spacing: 18) {
+                Text(project.category)
+                    .font(
+                        Font.custom("SF Pro", size: 24)
+                            .weight(.bold)
+                    )
+                    .foregroundColor(.white)
                 HStack {
                     Rectangle()
                         .foregroundColor(.clear)
@@ -57,18 +48,40 @@ public struct ProjectItemView: View {
                             .frame(width: 360, alignment: .leading)
                     }
                 }
+
             }
-            .padding(.horizontal, 20)
-            TodoListView(
-                section: project.entity,
-                todos: project.backlogTodos
-            )
-            Button("Todo 추가") {
-                appendNewTodo(project: project.entity)
+            .padding(0)
+            .frame(width: 300, alignment: .topLeading)
+          Spacer()
+          // Alternative Views and Spacers
+            Picker(selection: $selectedSortOption, label: Text("")) {
+                ForEach(0..<sortOptions.count) { index in
+                    Text(sortOptions[index])
+                }
             }
+            .frame(width: 110)
+            .pickerStyle(DefaultPickerStyle())
+            .foregroundColor(.blue)
         }
-        .padding(.horizontal, 20)
-        .frame(alignment: .topLeading)
+        .padding(.horizontal, 40)
+        .padding(.top, 25)
+        .padding(.bottom, 10)
+        .frame(maxWidth: .infinity, alignment: .center)
+        .background(Color(red: 0.13, green: 0.13, blue: 0.13))
+        .overlay(
+          Rectangle()
+            .inset(by: 0.5)
+            .stroke(Color(red: 0.1, green: 0.1, blue: 0.1), lineWidth: 1)
+        )
+
+        TodoListView(
+            section: project.entity,
+            todos: project.backlogTodos
+        )
+        Button("Todo 추가") {
+            appendNewTodo(project: project.entity)
+        }
+
     }
 
     private func appendNewTodo(project: ProjectEntity) {
