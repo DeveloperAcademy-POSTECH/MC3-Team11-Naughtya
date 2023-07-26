@@ -61,6 +61,7 @@ public class ProjectResultEntity: Codable, Equatable, Identifiable {
 
     public var alldelayedTodosSummary: [String] {
         allTodos
+            .filter { $0.isCompleted }
             .filter { $0.isDelayed }
             .map { $0.title }
     }
