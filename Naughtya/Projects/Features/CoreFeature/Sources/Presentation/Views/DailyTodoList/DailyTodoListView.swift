@@ -15,14 +15,27 @@ public struct DailyTodoListView: View {
     }
 
     public var body: some View {
-        VStack {
-            VStack {
-                Text("Daily To do")
-                HStack {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .center) {
+                // Space Between
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Daily To Do")
+                        .font(
+                            Font.custom("SF Pro", size: 24)
+                                .weight(.bold)
+                        )
+                        .foregroundColor(.white)
                     dateHeader
-                    Spacer()
                 }
+                .padding(0)
+                .frame(width: 300, alignment: .topLeading)
             }
+            .padding(.horizontal, 0)
+            .padding(.top, 25)
+            .padding(.bottom, 10)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .background(Color(red: 0.12, green: 0.12, blue: 0.12))
+
             if let dailyTodoList = viewModel.dailyTodoList {
                 TodoListView(
                     section: dailyTodoList.entity,
@@ -30,6 +43,10 @@ public struct DailyTodoListView: View {
                 )
             }
         }
+        .padding(.horizontal, 0)
+        .padding(.top, 18)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .background(Color(red: 0.12, green: 0.12, blue: 0.12))
         .onAppear {
             viewModel.fetchTodayIfNeeded()
         }
@@ -37,13 +54,23 @@ public struct DailyTodoListView: View {
 
     private var dateHeader: some View {
         HStack {
-            Button("Prev") {
+            Button {
                 viewModel.gotoOneDayBefore()
+            } label: {
+                Image(systemName: "arrowtriangle.backward.fill")
+                    .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
             }
+            .buttonStyle(.borderless)
             Text(viewModel.dateTitle)
-            Button("Next") {
+                .font(Font.custom("SF Pro", size: 14))
+                .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
+            Button {
                 viewModel.gotoOneDayAfter()
+            } label: {
+                Image(systemName: "arrowtriangle.right.fill")
+                    .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
             }
+            .buttonStyle(.borderless)
         }
     }
 }

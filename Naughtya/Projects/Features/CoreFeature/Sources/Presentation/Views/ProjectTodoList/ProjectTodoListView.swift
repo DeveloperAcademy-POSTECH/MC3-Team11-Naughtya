@@ -17,9 +17,9 @@ public struct ProjectTodoListView: View {
 
     public var body: some View {
         VStack(spacing: 16) {
-            ForEach(projects.filter { $0.isSelected }) { project in
-                ProjectItemView(project: project)
-            }
+                ForEach(projects.filter { $0.isSelected }) { project in
+                    ProjectItemView(project: project)
+                }
         }
     }
 
@@ -35,6 +35,7 @@ public struct ProjectTodoListView: View {
                 TodoListView(todos: project.backlogTodos)
             }
         }
+        .background(Color(red: 0.12, green: 0.12, blue: 0.12))
     }
 }
 

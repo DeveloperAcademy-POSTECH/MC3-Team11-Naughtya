@@ -13,13 +13,8 @@ public struct TopBarView: View {
     }
 
     public var body: some View {
-        HStack {
-            Spacer()
             SearchView()
-                .frame(width: 400)
-            Spacer()
-        }
-        .frame(height: 60)
+                .frame(width: 222)
     }
 }
 

@@ -24,56 +24,10 @@ public struct ProjectListView: View {
                 Section(header: ListHeaderView()) {
                     ForEach(projects) { project in
                         ProjectCardView(project: project)
-                            .contextMenu {
-                                Button {
-                                    self.showModal = true
-                                } label: {
-                                    Label("Modify", systemImage: "pencil")
-                                        .labelStyle(.titleAndIcon)
-                                }
-
-                                Button {
-                                    Task {
-                                        try await Self.projectUseCase.toggleIsBookmarked(
-                                            project.entity,
-                                            isBookmarked: !project.isBookmarked)
-                                    }
-                                } label: {
-                                    Label("Bookmark", systemImage: "bookmark")
-                                        .labelStyle(.titleAndIcon)
-                                }
-
-                                Divider()
-                                Button(role: .destructive) {
-                                    Task {
-                                        try await Self.projectUseCase.delete(project.entity)
-                                    }
-                                } label: {
-                                    Label("삭제", systemImage: "trash")
-                                        .labelStyle(.titleAndIcon)
-                                }
-                            }
-                            .sheet(isPresented: self.$showModal) {
-                                ProjectSetModalView(project: project)
-                            }
-
                     }
                 }
             }
-
-        }
-    }
-}
-
-struct ListHeaderView: View {
-    private static let dummyDataGenerator: DummyDataGenerator = .shared
-
-    @State private var showModal = false
-    var body: some View {
-        HStack {
-            Text("All My Projects")
-                .font(.largeTitle)
-                .foregroundColor(.black)
+            .listStyle(.plain)
             Spacer()
             Button {
                 self.showModal = true
@@ -83,16 +37,27 @@ struct ListHeaderView: View {
                     .frame(width: 15, height: 15)
             }
             .buttonStyle(.borderless)
-            .sheet(isPresented: self.$showModal) {
-                ProjectSetModalView()
+        }
+        .sheet(isPresented: self.$showModal) {
+            ProjectSetModalView()
+        }
+        .onAppear { // MARK: - 테스트 후 삭제(가짜데이터)
+            Task {
+                try await Self.projectUseCase.create(
+                    category: "MC3",
+                    goals: "mc2",
+                    startedAt: Date(),
+                    endedAt: Date()
+                )
             }
-            .tint(.black)
 
-            Button {
-                Self.dummyDataGenerator.generate()
-            } label: {
-                Text("dummy")
-            }
+struct ListHeaderView: View {
+    @State private var showModal = false
+    var body: some View {
+        HStack {
+            Text("All My Projects")
+                .font(.title)
+                .foregroundColor(.black)
         }
     }
 }

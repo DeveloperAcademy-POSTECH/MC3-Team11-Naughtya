@@ -88,6 +88,7 @@ struct ProjectSetModalView: View {
         .padding(20)
         .frame(minWidth: 300)
     }
+
     private func appendNewProject() {
         Task {
             try await Self.projectUseCase.create(
