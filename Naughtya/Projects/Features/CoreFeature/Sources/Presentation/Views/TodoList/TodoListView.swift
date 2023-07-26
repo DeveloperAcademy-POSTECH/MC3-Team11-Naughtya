@@ -27,12 +27,14 @@ public struct TodoListView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            ForEach(todos) { todo in
-                TodoItemView(
-                    todo: todo,
-                    isBacklog: section is ProjectEntity,
-                    isBlockedToEdit: searchManager.isSearching
-                )
+            List {
+                ForEach(todos) { todo in
+                    TodoItemView(
+                        todo: todo,
+                        isBacklog: section is ProjectEntity,
+                        isBlockedToEdit: searchManager.isSearching
+                    )
+                }
             }
             if section != nil {
                 GeometryReader { geometry in

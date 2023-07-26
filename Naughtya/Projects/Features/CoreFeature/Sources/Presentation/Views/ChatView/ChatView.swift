@@ -4,6 +4,8 @@ public struct ChatView: View {
     @ObservedObject var viewModel = ViewModel()
 //    @Environment(\.dismiss) private var dismiss
 
+    static let store = ProjectStore.shared
+
     public init() {
     }
     public var body: some View {
@@ -20,7 +22,15 @@ public struct ChatView: View {
 
             }
             .onAppear {
+                let results = Self.store.projects
+                    .filter { $0.isSelected }
+                    .map { ProjectResultEntity(project: $0) }
+                guard let result = results.first else {
+                    return
+                }
+                viewModel.updateCurrentInput(with: .from(entity: result))
                 viewModel.sendMessage()
+                // onAppear이 아니라 프로젝트 기간이 끝났을 때 한 번만 생성이 되게끔 수정해야 함
             }
 
         }

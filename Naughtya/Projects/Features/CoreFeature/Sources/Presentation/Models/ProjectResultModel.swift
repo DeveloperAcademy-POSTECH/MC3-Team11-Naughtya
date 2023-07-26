@@ -12,6 +12,8 @@ public struct ProjectResultModel: Modelable {
     public let entity: ProjectResultEntity
     public let project: ProjectModel
     public let allTodosSummary: String
+    public let alldelayedTodosSummary: [String]
+    public let allUnachievedTodosSummary: [String]
 
     public var allTodos: [TodoModel] {
         entity.allTodos
@@ -47,7 +49,9 @@ public struct ProjectResultModel: Modelable {
         ProjectResultModel(
             entity: entity,
             project: .from(entity: entity.project),
-            allTodosSummary: entity.allTodosSummary
+            allTodosSummary: entity.allTodosSummary,
+            alldelayedTodosSummary: entity.alldelayedTodosSummary,
+            allUnachievedTodosSummary: entity.allUnachievedTodosSummary
         )
     }
 }
