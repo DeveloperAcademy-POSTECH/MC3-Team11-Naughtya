@@ -59,6 +59,32 @@ public class ProjectResultEntity: Codable, Equatable, Identifiable {
             }
     }
 
+    public var alldelayedTodosSummary: [String] {
+        allTodos
+            .filter { $0.isDelayed }
+            .map { $0.title }
+    }
+
+    public var allUnachievedTodosSummary: [String] {
+        allTodos
+            .filter { !$0.isCompleted }
+            .map { $0.title }
+    }
+//
+//    public var alldelayedTodosSummary: String {
+//        allTodos
+//            .reduce("") {
+//                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title)\n"
+//            }
+//    }
+//
+//    public var alldeletedTodosSummary: String {
+//        allTodos
+//            .reduce("") {
+//                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title)\n"
+//            }
+//    }
+
     public static func == (lhs: ProjectResultEntity, rhs: ProjectResultEntity) -> Bool {
         lhs.project === rhs.project
     }
