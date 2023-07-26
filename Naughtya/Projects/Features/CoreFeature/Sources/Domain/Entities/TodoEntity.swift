@@ -13,7 +13,7 @@ public class TodoEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
 
     /// 프로젝트
-    public unowned let project: ProjectEntity
+    public internal(set) unowned var project: ProjectEntity
 
     /// 데일리
     public internal(set) unowned var dailyTodoList: DailyTodoListEntity? {

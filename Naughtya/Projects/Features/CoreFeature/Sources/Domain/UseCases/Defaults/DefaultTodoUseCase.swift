@@ -27,6 +27,7 @@ struct DefaultTodoUseCase: TodoUseCase {
         todo.recordId = record.id
         project.todos.append(todo)
         dailyTodoList?.todos.append(todo)
+        try await Self.cloudKitManager.update(project.record)
         return todo
     }
 

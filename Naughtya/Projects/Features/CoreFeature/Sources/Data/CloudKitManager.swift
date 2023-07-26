@@ -10,7 +10,8 @@ import Foundation
 import CloudKit
 
 public final class CloudKitManager {
-    public static let shared = CloudKitManager()
+    public static let shared: CloudKitManager = .init()
+    private static let projectStore: ProjectStore = .shared
 
     private let container = CKContainer(identifier: "iCloud.Naughtya.TodoList")
 
@@ -22,7 +23,7 @@ public final class CloudKitManager {
     }
 
     @discardableResult
-    func create<T: Recordable>(_ record: T) async throws -> T {
+    public func create<T: Recordable>(_ record: T) async throws -> T {
         let ckRecord = CKRecord(recordType: T.recordType.key)
         ckRecord.setValuesForKeys(record.dictionary)
         do {
@@ -35,7 +36,7 @@ public final class CloudKitManager {
         }
     }
 
-    func readList<T: Recordable>(
+    public func readList<T: Recordable>(
         _ recordType: T.Type,
         predicate: NSPredicate = .init(value: true)
     ) async throws -> [T] {
@@ -61,7 +62,7 @@ public final class CloudKitManager {
         }
     }
 
-    func readItem<T: Recordable>(
+    public func readItem<T: Recordable>(
         _ recordType: T.Type,
         id: CKRecord.ID
     ) async throws -> T {
@@ -70,7 +71,7 @@ public final class CloudKitManager {
         return record
     }
 
-    func update<T: Recordable>(_ record: T) async throws {
+    public func update<T: Recordable>(_ record: T) async throws {
         guard let id = record.id else {
             return
         }
@@ -79,11 +80,45 @@ public final class CloudKitManager {
         try await database.save(ckRecord)
     }
 
-    func delete(_ id: CKRecord.ID?) async throws {
+    public func delete(_ id: CKRecord.ID?) async throws {
         guard let id = id else {
             return
         }
         try await database.deleteRecord(withID: id)
+    }
+
+    public func syncWithStores() async throws {
+        let projectRecords = try await readList(ProjectRecord.self)
+        let todoRecords = try await readList(TodoRecord.self)
+        let projectIdRecordMap = getIdRecordMap(records: projectRecords)
+        let todoIdRecordMap = getIdRecordMap(records: todoRecords)
+        let projectIdEntityMap = getIdEntityMap(entities: projectRecords.map { $0.entity })
+        let todoIdEntityMap = getIdEntityMap(entities: todoRecords.map { $0.entity })
+
+        projectIdEntityMap
+            .forEach { id, entity in
+                guard let record = projectIdRecordMap[id] else {
+                    return
+                }
+                entity.todos = record.todos
+                    .compactMap { todoIdEntityMap[$0.recordID] }
+                entity.deletedTodos = record.deletedTodos
+                    .compactMap { todoIdEntityMap[$0.recordID] }
+            }
+
+        todoIdEntityMap
+            .forEach { id, entity in
+                guard let record = todoIdRecordMap[id],
+                      let projectId = record.project?.recordID,
+                      let project = projectIdEntityMap[projectId] else {
+                    return
+                }
+                entity.project = project
+            }
+
+        Self.projectStore.projects = projectRecords
+            .compactMap { $0.id }
+            .compactMap { projectIdEntityMap[$0] }
     }
 
     private func printLog(_ item: Any) {
@@ -92,5 +127,27 @@ public final class CloudKitManager {
         } else {
             print("✅ \(item)")
         }
+    }
+
+    private func getIdRecordMap<T: Recordable>(records: [T]) -> [CKRecord.ID: T] {
+        records
+            .reduce([CKRecord.ID: T]()) {
+                var dict = $0
+                if let id = $1.id {
+                    dict[id] = $1
+                }
+                return dict
+            }
+    }
+
+    private func getIdEntityMap<T: RecordConvertable>(entities: [T]) -> [CKRecord.ID: T] {
+        entities
+            .reduce([CKRecord.ID: T]()) {
+                var dict = $0
+                if let id = $1.recordId {
+                    dict[id] = $1
+                }
+                return dict
+            }
     }
 }

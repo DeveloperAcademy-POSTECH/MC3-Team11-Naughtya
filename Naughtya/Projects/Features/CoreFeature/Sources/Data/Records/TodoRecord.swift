@@ -9,29 +9,18 @@
 import Foundation
 import CloudKit
 
-public struct TodoRecord: Recordable {
-    public static let recordType: CloudKitRecordType = .todo
+struct TodoRecord: Recordable {
+    static let recordType: CloudKitRecordType = .todo
 
-    public let id: CKRecord.ID?
-    public let project: CKRecord.Reference?
-    public let dailyTodoList: CKRecord.Reference?
-    public let title: String
-    public let createdAt: Date
-    public let histories: [String]
-    public let completedAt: Date?
+    let id: CKRecord.ID?
+    let project: CKRecord.Reference?
+    let dailyTodoList: CKRecord.Reference?
+    let title: String
+    let createdAt: Date
+    let histories: [CKRecord.Reference]
+    let completedAt: Date?
 
-    public var entity: TodoEntity {
-        TodoEntity(
-            project: .sample,
-            dailyTodoList: nil,
-            title: title,
-            createdAt: createdAt,
-            histories: [],
-            completedAt: completedAt
-        )
-    }
-
-    public var dictionary: [String: Any] {
+    var dictionary: [String: Any] {
         var dict = [String: Any]()
         dict["project"] = project
         dict["dailyTodoList"] = dailyTodoList
@@ -42,30 +31,40 @@ public struct TodoRecord: Recordable {
         return dict
     }
 
-    public static func build(ckRecord: CKRecord) -> TodoRecord {
+    var entity: TodoEntity {
+        TodoEntity(
+            recordId: id,
+            project: .sample,
+            dailyTodoList: nil,
+            title: title,
+            createdAt: createdAt,
+            histories: [],
+            completedAt: completedAt
+        )
+    }
+
+    static func build(ckRecord: CKRecord) -> TodoRecord {
         TodoRecord(
             id: ckRecord.recordID,
             project: ckRecord["project"] as? CKRecord.Reference,
             dailyTodoList: ckRecord["dailyTodoList"] as? CKRecord.Reference,
             title: ckRecord["title"] as? String ?? .init(),
             createdAt: ckRecord["createdAt"] as? Date ?? .init(),
-            histories: ckRecord["histories"] as? [String] ?? .init(),
+            histories: ckRecord["histories"] as? [CKRecord.Reference] ?? .init(),
             completedAt: ckRecord["completedAt"] as? Date
         )
     }
 }
 
-extension TodoEntity {
+extension TodoEntity: RecordConvertable {
     var record: TodoRecord {
         TodoRecord(
             id: recordId,
-            project: project.recordId
-                .map { CKRecord.Reference(recordID: $0, action: .none) },
-            dailyTodoList: dailyTodoList?.recordId
-                .map { CKRecord.Reference(recordID: $0, action: .none) },
+            project: project.reference,
+            dailyTodoList: nil, // TODO: dailyTodoList?.reference,
             title: title,
             createdAt: createdAt,
-            histories: [],
+            histories: [], // TODO: histories.references,
             completedAt: completedAt
         )
     }

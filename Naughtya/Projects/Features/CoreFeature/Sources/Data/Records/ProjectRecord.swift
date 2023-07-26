@@ -9,34 +9,20 @@
 import Foundation
 import CloudKit
 
-public struct ProjectRecord: Recordable {
-    public static let recordType: CloudKitRecordType = .project
+struct ProjectRecord: Recordable {
+    static let recordType: CloudKitRecordType = .project
 
-    public let id: CKRecord.ID?
-    public let category: String
-    public let goals: String?
-    public let startedAt: Date?
-    public let endedAt: Date?
-    public let todos: [String]
-    public let deletedTodos: [String]
-    public let isSelected: Int
-    public let isBookmarked: Int
+    let id: CKRecord.ID?
+    let category: String
+    let goals: String?
+    let startedAt: Date?
+    let endedAt: Date?
+    let todos: [CKRecord.Reference]
+    let deletedTodos: [CKRecord.Reference]
+    let isSelected: Int
+    let isBookmarked: Int
 
-    public var entity: ProjectEntity {
-        ProjectEntity(
-            recordId: id,
-            category: category,
-            goals: goals,
-            startedAt: startedAt,
-            endedAt: endedAt,
-            todos: [],
-            deletedTodos: [],
-            isSelected: isSelected > 0,
-            isBookmarked: isBookmarked > 0
-        )
-    }
-
-    public var dictionary: [String: Any] {
+    var dictionary: [String: Any] {
         var dict = [String: Any]()
         dict["category"] = category
         dict["goals"] = goals
@@ -49,22 +35,36 @@ public struct ProjectRecord: Recordable {
         return dict
     }
 
-    static public func build(ckRecord: CKRecord) -> ProjectRecord {
+    var entity: ProjectEntity {
+        ProjectEntity(
+            recordId: id,
+            category: category,
+            goals: goals,
+            startedAt: startedAt,
+            endedAt: endedAt,
+            todos: [],
+            deletedTodos: [],
+            isSelected: isSelected != 0,
+            isBookmarked: isSelected != 0
+        )
+    }
+
+    static func build(ckRecord: CKRecord) -> ProjectRecord {
         ProjectRecord(
             id: ckRecord.recordID,
             category: ckRecord["category"] as? String ?? .init(),
             goals: ckRecord["goals"] as? String,
             startedAt: ckRecord["startedAt"] as? Date,
             endedAt: ckRecord["endedAt"] as? Date,
-            todos: ckRecord["todos"] as? [String] ?? .init(),
-            deletedTodos: ckRecord["deletedTodos"] as? [String] ?? .init(),
+            todos: ckRecord["todos"] as? [CKRecord.Reference] ?? .init(),
+            deletedTodos: ckRecord["deletedTodos"] as? [CKRecord.Reference] ?? .init(),
             isSelected: ckRecord["isSelected"] as? Int ?? .init(),
             isBookmarked: ckRecord["isBookmarked"] as? Int ?? .init()
         )
     }
 }
 
-extension ProjectEntity {
+extension ProjectEntity: RecordConvertable {
     var record: ProjectRecord {
         ProjectRecord(
             id: recordId,
@@ -72,8 +72,8 @@ extension ProjectEntity {
             goals: goals,
             startedAt: startedAt ?? .init(),
             endedAt: endedAt ?? .init(),
-            todos: [],
-            deletedTodos: [],
+            todos: todos.references,
+            deletedTodos: deletedTodos.references,
             isSelected: isSelected ? 1 : 0,
             isBookmarked: isBookmarked ? 1 : 0
         )
