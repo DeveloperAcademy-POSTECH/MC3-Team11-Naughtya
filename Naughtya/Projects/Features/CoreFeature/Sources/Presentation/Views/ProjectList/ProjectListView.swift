@@ -49,26 +49,25 @@ public struct ProjectListView: View {
                           .foregroundColor(.white)
                     }
 
-                }
-                .padding(20)
-                .buttonStyle(.borderless)
-                .background(
-                    Rectangle()
-                    .foregroundColor(.clear)
-                    .frame(width: 148, height: 42)
-                    .background(Color(red: 0.28, green: 0.27, blue: 1))
-                    .cornerRadius(21)
-                )
+                    .padding(20)
 
-                .shadow(color: Color(red: 0.28, green: 0.27, blue: 1), radius: 0.2, x: 1, y: 1)
-                .padding(15)
-                .onTapGesture {
-                    self.showModal = true
-                }
+                    .background(
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 148, height: 42)
+                        .background(Color(red: 0.28, green: 0.27, blue: 1))
+                        .cornerRadius(21)
+                    )
 
+                    .shadow(color: Color(red: 0.28, green: 0.27, blue: 1), radius: 0.2, x: 1, y: 1)
+                    .padding(15)
+
+                }
                 .sheet(isPresented: self.$showModal) {
                     ProjectSetModalView()
                 }
+
+                .buttonStyle(.borderless)
                 .onAppear { // MARK: - 테스트 후 삭제(가짜데이터)
                     Task {
                         try await Self.projectUseCase.create(
@@ -83,11 +82,6 @@ public struct ProjectListView: View {
             }
         }
     }
-}
-
-        }
-    }
-
 }
 
 struct ListHeaderView: View {

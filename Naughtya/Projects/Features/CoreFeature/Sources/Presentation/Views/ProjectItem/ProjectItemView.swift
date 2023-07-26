@@ -21,12 +21,16 @@ public struct ProjectItemView: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             VStack {
-                Text(project.category)
-                    .font(
-                        Font.custom("SF Pro", size: 24)
-                            .weight(.bold)
-                    )
-                    .foregroundColor(.white)
+                HStack {
+                    Text(project.category)
+                        .font(
+                            Font.custom("SF Pro", size: 24)
+                                .weight(.bold)
+                        )
+                        .foregroundColor(.white)
+
+                }
+
                 HStack {
                     Rectangle()
                         .foregroundColor(.clear)

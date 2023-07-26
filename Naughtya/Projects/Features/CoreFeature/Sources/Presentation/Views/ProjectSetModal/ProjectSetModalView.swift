@@ -38,7 +38,6 @@ struct ProjectSetModalView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor
             VStack {
                 VStack(alignment: .leading) {
                     Text("프로젝트 제목")
