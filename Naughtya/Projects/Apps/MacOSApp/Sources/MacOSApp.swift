@@ -23,6 +23,14 @@ struct MacOSApp: App {
                         .tabItem {
                             Text("완료(성과)")
                         }
+                    ChatView()
+                        .tabItem {
+                            Text("테스트")
+                        }
+                    TestView()
+                        .tabItem {
+                            Text("테스트2")
+                        }
                 }
                 DragDropStageView()
             }
