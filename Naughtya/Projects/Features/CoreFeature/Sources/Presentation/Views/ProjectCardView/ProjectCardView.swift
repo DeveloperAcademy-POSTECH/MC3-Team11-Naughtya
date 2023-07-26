@@ -25,7 +25,7 @@ struct ProjectCardView: View {
                 Image(systemName: "pin.fill")
                     .rotationEffect(.degrees(30))
                     .font(.system(size: 9))
-                    .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
+                    .foregroundColor(.pointColor)
                     .onTapGesture {
                         toggleIsBookmarked()
                     }
@@ -73,7 +73,7 @@ struct ProjectCardView: View {
             .padding(.trailing, 15)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(project.isSelected ? Color(red: 0.12, green: 0.12, blue: 0.12) : Color(red: 0.16, green: 0.16, blue: 0.16))
+                    .fill(project.isSelected ? Color.customGray4 : Color.customGray5)
             )
             .onTapGesture {
                 Task {
@@ -101,7 +101,7 @@ struct ProjectCardView: View {
                         .labelStyle(.titleAndIcon)
                 }
                 Divider()
-                Button(role: .destructive) {
+                Button {
                     Task {
                         try await Self.projectUseCase.delete(project.entity)
                     }

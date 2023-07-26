@@ -37,7 +37,6 @@ struct ProjectSetModalView: View {
     }
 
     var body: some View {
-        ZStack {
             VStack {
                 VStack(alignment: .leading) {
                     Text("프로젝트 제목")
@@ -81,7 +80,6 @@ struct ProjectSetModalView: View {
                               .foregroundColor(Color(red: 0.69, green: 0.68, blue: 0.68))
                             DatePicker("", selection: $projectStartDay, displayedComponents: [.date])
                                 .datePickerStyle(.field)
-                                .background(Color.backgroundColor)
                         }
                         VStack {
                             Spacer().frame(height: 10)
@@ -93,7 +91,6 @@ struct ProjectSetModalView: View {
                                 .foregroundColor(Color(red: 0.69, green: 0.68, blue: 0.68))
                             DatePicker("", selection: $projectEndDay, displayedComponents: [.date])
                                 .datePickerStyle(.field)
-                                .background(Color.backgroundColor)
                         }
                     }
                 }
@@ -119,7 +116,6 @@ struct ProjectSetModalView: View {
             .padding(20)
         .frame(width: 413, height: 426)
         }
-    }
 
     private func appendNewProject() {
         Task {

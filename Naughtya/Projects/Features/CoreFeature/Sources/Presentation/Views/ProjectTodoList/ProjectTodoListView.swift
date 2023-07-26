@@ -22,21 +22,6 @@ public struct ProjectTodoListView: View {
                 }
         }
     }
-
-    private func buildProjectItem(_ project: ProjectModel) -> some View {
-        VStack(spacing: 8) {
-            HStack {
-                Text(project.category)
-                    .font(.headline)
-                Text("\(project.completedTodos.count)/\(project.todos.count)")
-                Spacer()
-            }
-            if !project.backlogTodos.isEmpty {
-                TodoListView(todos: project.backlogTodos)
-            }
-        }
-        .background(Color(red: 0.12, green: 0.12, blue: 0.12))
-    }
 }
 
 struct ProjectTodoListView_Previews: PreviewProvider {

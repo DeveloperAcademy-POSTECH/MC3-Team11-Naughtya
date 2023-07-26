@@ -29,13 +29,9 @@ public struct ProjectListView: View {
                     }
                 }
                 .listStyle(.plain)
-
             }
             VStack(alignment: .center, spacing: 10) {
                 Spacer()
-
-                // 피그마 기준
-
                 Button(action: {
                     self.showModal = true
                 }) {
@@ -82,7 +78,6 @@ public struct ProjectListView: View {
             .padding(.horizontal, 57)
             .padding(.vertical, 10)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-
         }
     }
 }
@@ -96,7 +91,7 @@ struct ListHeaderView: View {
                 Font.custom("SF Pro", size: 12)
                   .weight(.bold)
               )
-              .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
+              .foregroundColor(Color.customGray3)
         }
     }
 }

@@ -13,33 +13,21 @@ struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
 
     var body: some View {
-
         NavigationSplitView {
             ProjectListView(projects: viewModel.projects)
                 .navigationSplitViewColumnWidth(min: 190, ideal: 250, max: 298)
         } content: {
+            List {
                 ProjectTodoListView(projects: viewModel.projects)
-                .navigationSplitViewColumnWidth(min: 460, ideal: 520, max: 757)
-                .background(Color(red: 0.12, green: 0.12, blue: 0.12))
+            }
+            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         } detail: {
+            List {
                 DailyTodoListView()
-            .navigationSplitViewColumnWidth(min: 524, ideal: 550, max: 757)
-            //            CombinedTodoListView()
-            //            HStack {
-            //                List {
-            //                    ProjectTodoListView(projects: viewModel.projects)
-            //                        .frame(minWidth: 460, maxWidth: 607, alignment: .top)
-            //                }
-            //                .background(Color(red: 0.12, green: 0.12, blue: 0.12))
-            //                List {
-            //                    DailyTodoListView()
-            //                        .frame(minWidth: 524, maxWidth: 607, alignment: .top)
-            //                }
-            //            }
+            }
+            .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
         }
         .navigationTitle("")
-        .navigationSplitViewStyle(.balanced)
-        .foregroundColor(Color(red: 0.12, green: 0.12, blue: 0.12))
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 TopBarView()
@@ -55,7 +43,6 @@ struct DashboardView: View {
                     } label: {
                         Image(systemName: "books.vertical")
                     }
-
                 }
             }
         }

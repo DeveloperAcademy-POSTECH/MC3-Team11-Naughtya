@@ -42,22 +42,18 @@ public struct ProjectItemView: View {
                                     .pickerStyle(DefaultPickerStyle()) // 변경된 부분
                                     .foregroundColor(.blue)
                                     .padding(.horizontal, 40)
-
                 }
-
                 HStack {
                     Rectangle()
                         .foregroundColor(.clear)
                         .frame(width: 22, height: 22)
                         .background(Color(red: 0.85, green: 0.85, blue: 0.85))
-                    if let goals = project.goals {
-                        // project.goals가 nil이 아닌 경우
+                    if let goals = project.goals, !goals.isEmpty {
                         Text(goals)
                             .font(Font.custom("SF Pro", size: 14))
                             .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
                             .frame(width: 360, alignment: .leading)
                     } else {
-                        // project.goals가 nil인 경우
                         Text("(선택) 목표를 입력해 보세요.")
                             .font(Font.custom("SF Pro", size: 14))
                             .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
@@ -65,6 +61,7 @@ public struct ProjectItemView: View {
                     }
                 }
             }
+            .padding(.horizontal, 20)
             TodoListView(
                 section: project.entity,
                 todos: project.backlogTodos
@@ -74,7 +71,7 @@ public struct ProjectItemView: View {
             }
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.12))
-        .padding(0)
+        .padding(.horizontal, 20)
         .frame(alignment: .topLeading)
     }
 
