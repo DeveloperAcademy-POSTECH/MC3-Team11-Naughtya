@@ -45,12 +45,14 @@ struct ProjectCardView: View {
                     .weight(.medium)
                     )
                         .foregroundColor(.white)
-                    Text("- \(changeDateFormat())")
-                        .font(
-                        Font.custom("Apple SD Gothic Neo", size: 12)
-                        .weight(.semibold)
-                        )
-                        .foregroundColor(Color.customGray2)
+                    if let projectEndDay = projectEndDay {
+                        Text("- \(changeDateFormat(projectEndDay: projectEndDay))")
+                            .font(
+                                Font.custom("Apple SD Gothic Neo", size: 12)
+                                    .weight(.semibold)
+                            )
+                            .foregroundColor(Color.customGray2)
+                    }
                 }
                 Spacer()
                 VStack {
