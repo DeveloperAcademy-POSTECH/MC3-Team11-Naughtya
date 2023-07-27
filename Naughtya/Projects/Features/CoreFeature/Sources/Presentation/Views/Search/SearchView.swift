@@ -24,6 +24,9 @@ public struct SearchView: View {
         .onChange(of: viewModel.searchedText) {
             viewModel.searchGlobally(text: $0)
         }
+        .onExitCommand {
+            viewModel.searchedText = ""
+        }
     }
 
     private var searchedTodoList: some View {
