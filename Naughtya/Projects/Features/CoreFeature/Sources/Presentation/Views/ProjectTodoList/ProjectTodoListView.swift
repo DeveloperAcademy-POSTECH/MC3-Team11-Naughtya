@@ -35,6 +35,7 @@ public struct ProjectTodoListView: View {
                 ForEach(projects) { project in
                     ProjectItemView(project: project)
                 }
+
             }
         }
     }
