@@ -23,7 +23,7 @@ public struct ChatView: View {
             }
             .onAppear {
                 let results = Self.store.projects
-                    .filter { $0.isSelected }
+                    .filter { $0.isSelected.value }
                     .map { ProjectResultEntity(project: $0) }
                 guard let result = results.first else {
                     return

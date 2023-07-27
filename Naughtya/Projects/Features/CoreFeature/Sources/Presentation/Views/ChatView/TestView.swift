@@ -9,7 +9,7 @@
 import SwiftUI
 
 public struct TestView: View {
-    private static let projectResultUseCase: ProjectResultUseCase = MockProjectResultUseCase()
+    private static let projectResultUseCase: ProjectResultUseCase = DefaultProjectResultUseCase()
 
     @State private var projectResults: [ProjectResultModel] = []
 

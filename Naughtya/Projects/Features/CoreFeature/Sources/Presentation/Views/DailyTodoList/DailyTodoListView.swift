@@ -61,7 +61,7 @@ public struct DailyTodoListView: View {
                   .font(Font.custom("SF Pro", size: 14))
                   .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
             }
-            Button("Next") {
+            Button {
                 viewModel.gotoOneDayAfter()
             } label: {
                 Image(systemName: "arrowtriangle.right.fill")
