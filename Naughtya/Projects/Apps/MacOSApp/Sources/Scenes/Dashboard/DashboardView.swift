@@ -1,16 +1,9 @@
-//
-//  DashboardView.swift
-//  MacOSApp
-//
-//  Created by byo on 2023/07/18.
-//  Copyright © 2023 Naughtya. All rights reserved.
-//
-
 import SwiftUI
-import MacOSCoreFeature
+ import MacOSCoreFeature
 
-struct DashboardView: View {
+ struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
+    @State private var isSelected = true
 
     var body: some View {
         NavigationSplitView {
@@ -20,8 +13,7 @@ struct DashboardView: View {
             List {
                 ProjectTodoListView(projects: viewModel.selectedProjects)
             }
-            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900).toolbar {
-            }
+            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
 
         } detail: {
             List {
@@ -42,13 +34,18 @@ struct DashboardView: View {
             ToolbarItemGroup(placement: .navigation) {
                 HStack(spacing: 0) {
                     Button {
+                        isSelected = true
                     } label: {
                         Image(systemName: "folder")
+                            .foregroundColor(isSelected ? Color(red: 0, green: 0.48, blue: 1) : Color.gray)
+
                     }
                     Button {
-                        //                ProjectResultListView()
+                        isSelected = false
                     } label: {
-                        Image(systemName: "books.vertical")
+                        Image(systemName: "list.clipboard")
+                            .foregroundColor(isSelected ? Color.gray : Color(red: 0, green: 0.48, blue: 1))
+
                     }
                 }
             }
@@ -63,7 +60,7 @@ struct DashboardView: View {
             }
         }
     }
-}
+ }
 
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {

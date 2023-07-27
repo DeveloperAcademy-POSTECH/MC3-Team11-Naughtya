@@ -42,12 +42,35 @@ public struct TodoListView: View {
                 }
             }
             VStack(spacing: 0) {
-                ForEach(todos) { todo in
-                    TodoItemView(
-                        todo: todo,
-                        isBacklog: section is ProjectEntity,
-                        isBlockedToEdit: isBlockedToEdit
-                    )
+                if section is DailyTodoListEntity,
+                   todos.isEmpty {
+                    HStack(alignment: .center, spacing: 4) {
+                        Text("데일리 투두에 오늘 할일을 드래그 해주세요")
+                          .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                          .multilineTextAlignment(.center)
+                          .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
+                          .frame(width: 277, height: 16, alignment: .center)
+                          .padding(.vertical, 8)
+                          .cornerRadius(5)
+                          .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                              .inset(by: 0.5)
+                              .stroke(Color(red: 0.31, green: 0.31, blue: 0.31), lineWidth: 1)
+                              .frame(width: 600, height: 50)
+                          )
+                    }
+                    .padding()
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+
+                } else {
+                    ForEach(todos) { todo in
+                        TodoItemView(
+                            todo: todo,
+                            isBacklog: section is ProjectEntity,
+                            isBlockedToEdit: isBlockedToEdit
+                        )
+                    }
                 }
             }
             .padding(.bottom, 100)
