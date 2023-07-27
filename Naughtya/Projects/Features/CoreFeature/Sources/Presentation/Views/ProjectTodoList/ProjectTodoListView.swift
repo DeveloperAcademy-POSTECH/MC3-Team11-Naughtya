@@ -21,6 +21,8 @@ public struct ProjectTodoListView: View {
                 Spacer().frame(height: 200)
                 HStack(alignment: .center) {
                     Spacer().frame(width: 70)
+                    Text("아무튼 사진임")
+                    // 나중에 이미지 넣기
                     Text("프로젝트를 선택해주세요!")
                         .font(
                             Font.custom("Apple SD Gothic Neo", size: 24)
