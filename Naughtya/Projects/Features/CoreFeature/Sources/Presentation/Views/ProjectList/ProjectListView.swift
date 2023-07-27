@@ -20,15 +20,44 @@ public struct ProjectListView: View {
 
     public var body: some View {
         ZStack {
-            VStack(spacing: 16) {
-                List {
-                    Section(header: ListHeaderView()) {
-                        ForEach(projects) { project in
-                            ProjectCardView(project: project)
+            if projects.isEmpty {
+
+                VStack {
+                    HStack(alignment: .center) {
+
+                            Text("프로젝트가 없습니다.")
+                              .font(
+                                Font.custom("Apple SD Gothic Neo", size: 12)
+                                  .weight(.semibold)
+                              )
+                              .multilineTextAlignment(.center)
+                              .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
+                    }
+
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 0)
+                    .frame(maxWidth: .infinity, minHeight: 68, maxHeight: 68, alignment: .center)
+                    .cornerRadius(5)
+                    .overlay(
+                      RoundedRectangle(cornerRadius: 5)
+                        .inset(by: 0.5)
+                        .stroke(Color(red: 0.31, green: 0.31, blue: 0.31), lineWidth: 1)
+                    ).padding(20)
+                    Spacer()
+                }
+
+            } else {
+
+                VStack(spacing: 16) {
+                    List {
+                        Section(header: ListHeaderView()) {
+                            ForEach(projects) { project in
+                                ProjectCardView(project: project)
+                            }
                         }
                     }
+                    .listStyle(.plain)
                 }
-                .listStyle(.plain)
             }
             VStack(alignment: .center, spacing: 10) {
                 Spacer()
@@ -38,13 +67,13 @@ public struct ProjectListView: View {
                     HStack(alignment: .center, spacing: 5) {
                         Spacer()
                         Text("+")
-                          .font(Font.custom("SF Pro", size: 20))
-                          .foregroundColor(.white)
+                            .font(Font.custom("SF Pro", size: 20))
+                            .foregroundColor(.white)
 
                         Text("Add project")
-                          .lineLimit(1)
-                          .font(Font.custom("SF Pro", size: 14))
-                          .foregroundColor(.white)
+                            .lineLimit(1)
+                            .font(Font.custom("SF Pro", size: 14))
+                            .foregroundColor(.white)
                         Spacer()
                     }
                     .padding(.horizontal, 10)
@@ -76,7 +105,7 @@ struct ListHeaderView: View {
             Text("All My Projects")
                 .font(
                     Font.custom("SF Pro", size: 12)
-                      .weight(.bold)
+                        .weight(.bold)
                 )
                 .foregroundColor(Color.customGray3)
             Spacer()
