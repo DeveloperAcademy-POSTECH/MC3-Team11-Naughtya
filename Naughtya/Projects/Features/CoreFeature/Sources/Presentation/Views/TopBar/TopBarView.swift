@@ -16,10 +16,8 @@ public struct TopBarView: View {
         HStack {
             Spacer()
             SearchView()
-                .frame(width: 400)
-            Spacer()
+                .frame(width: 222)
         }
-        .frame(height: 60)
     }
 }
 

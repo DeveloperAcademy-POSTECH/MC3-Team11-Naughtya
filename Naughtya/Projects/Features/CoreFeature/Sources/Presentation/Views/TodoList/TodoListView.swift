@@ -27,17 +27,17 @@ public struct TodoListView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            ForEach(todos) { todo in
-                TodoItemView(
-                    todo: todo,
-                    isBacklog: section is ProjectEntity,
-                    isBlockedToEdit: searchManager.isSearching
-                )
-            }
+                ForEach(todos) { todo in
+                    TodoItemView(
+                        todo: todo,
+                        isBacklog: section is ProjectEntity,
+                        isBlockedToEdit: searchManager.isSearching
+                    )
+                }
             if section != nil {
                 GeometryReader { geometry in
                     let absoluteRect = geometry.frame(in: .global)
-                    Color.gray.opacity(0.1)
+                    Color.customGray1
                         .onAppear {
                             registerAbsoluteRect(absoluteRect)
                         }
@@ -45,7 +45,7 @@ public struct TodoListView: View {
                             registerAbsoluteRect($0)
                         }
                 }
-                .frame(height: 40)
+                .frame(height: 200)
             }
         }
         .onDisappear {

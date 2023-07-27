@@ -13,28 +13,49 @@ struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
 
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                TopBarView()
-                    .zIndex(1)
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        ProjectListView(projects: viewModel.projects)
+        NavigationSplitView {
+            ProjectListView(projects: viewModel.projects)
+                .navigationSplitViewColumnWidth(min: 190, ideal: 250, max: 298)
+        } content: {
+            List {
+                ProjectTodoListView(projects: viewModel.projects)
+            }
+            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900).toolbar {
+            }
+
+        } detail: {
+            List {
+                DailyTodoListView()
+            }
+            .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
+        }
+        .navigationTitle("")
+        .toolbar {
+            ToolbarItem(placement: .status) {
+                Button {
+
+                } label: {
+                    Image(systemName: "list.bullet")
+                }
+
+            }
+
+            ToolbarItemGroup(placement: .navigation) {
+                HStack(spacing: 0) {
+                    Button {
+                    } label: {
+                        Image(systemName: "folder")
                     }
-                    VStack(alignment: .leading) {
-                        Text("Projects")
-                            .font(.title)
-                        List {
-                            ProjectTodoListView(projects: viewModel.projects)
-                        }
-                    }
-                    VStack(alignment: .leading) {
-                        List {
-                            DailyTodoListView()
-                        }
+                    Button {
+                        //                ProjectResultListView()
+                    } label: {
+                        Image(systemName: "books.vertical")
                     }
                 }
-                .zIndex(0)
+            }
+
+            ToolbarItemGroup(placement: .primaryAction) {
+                    TopBarView()
             }
         }
         .onAppear {
@@ -45,8 +66,8 @@ struct DashboardView: View {
     }
 }
 
-struct DashboardView_Previews: PreviewProvider {
-    static var previews: some View {
-        DashboardView()
+    struct DashboardView_Previews: PreviewProvider {
+        static var previews: some View {
+            DashboardView()
+        }
     }
-}

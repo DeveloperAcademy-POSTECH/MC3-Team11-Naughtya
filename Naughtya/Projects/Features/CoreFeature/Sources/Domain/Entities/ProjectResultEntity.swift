@@ -66,6 +66,18 @@ public class ProjectResultEntity: Equatable, Identifiable {
             }
     }
 
+    public var alldelayedTodosSummary: [String] {
+        allTodos
+            .filter { $0.isDelayed }
+            .map { $0.title }
+    }
+
+    public var allUnachievedTodosSummary: [String] {
+        allTodos
+            .filter { !$0.isCompleted }
+            .map { $0.title }
+    }
+
     private func setupUpdatingStore() {
         // TODO
     }
