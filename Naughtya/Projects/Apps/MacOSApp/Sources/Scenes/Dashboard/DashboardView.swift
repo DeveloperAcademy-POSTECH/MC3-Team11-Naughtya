@@ -1,15 +1,7 @@
-//
-//  DashboardView.swift
-//  MacOSApp
-//
-//  Created by byo on 2023/07/18.
-//  Copyright © 2023 Naughtya. All rights reserved.
-//
-
 import SwiftUI
-import MacOSCoreFeature
+ import MacOSCoreFeature
 
-struct DashboardView: View {
+ struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
     @State private var selectedTabIndex = 0
     private let tabs = ["folder", "list.clipboard"]
@@ -75,7 +67,7 @@ struct DashboardView: View {
         }
         .pickerStyle(.segmented)
     }
-}
+ }
 
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {
