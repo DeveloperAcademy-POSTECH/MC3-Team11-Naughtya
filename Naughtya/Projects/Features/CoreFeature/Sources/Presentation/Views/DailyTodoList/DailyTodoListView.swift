@@ -27,6 +27,8 @@ public struct DailyTodoListView: View {
                 }
                 .frame(width: 300, alignment: .topLeading)
             .padding(.horizontal, 20)
+            .padding(.top, 20)
+            Spacer().frame(height: 20)
             if let dailyTodoList = viewModel.dailyTodoList {
                 TodoListView(
                     section: dailyTodoList.entity,

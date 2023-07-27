@@ -16,7 +16,9 @@ public struct SearchView: View {
 
     public var body: some View {
         TextField(text: $viewModel.searchedText) {
-            Text("Search")
+            Text("오늘 할 일을 검색해보세요.")
+                .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                .foregroundColor(Color.customGray1)
         }
         .textFieldStyle(.roundedBorder)
         .padding(.horizontal)
