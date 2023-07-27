@@ -96,7 +96,9 @@ public struct TodoItemView: View {
                         }
                         .buttonStyle(.borderless)
                         Spacer()
+
                     }
+                    .frame(height: 35)
                 }
                 Spacer()
             }

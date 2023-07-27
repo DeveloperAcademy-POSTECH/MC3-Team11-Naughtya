@@ -37,7 +37,6 @@ struct DashboardView: View {
                 } label: {
                     Image(systemName: "list.bullet")
                 }
-
             }
 
             ToolbarItemGroup(placement: .navigation) {

@@ -80,7 +80,7 @@ struct ProjectCardView: View {
             .padding(.trailing, 15)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(project.isSelected ? Color.customGray4 : Color.customGray5)
+                    .fill(project.isSelected ? Color.customGray4 : Color.white.opacity(0.001))
             )
             .onTapGesture {
                 Task {
