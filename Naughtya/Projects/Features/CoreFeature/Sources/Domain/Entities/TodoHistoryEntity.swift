@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import CloudKit
 
-public struct TodoHistoryEntity: Codable, Equatable {
+public struct TodoHistoryEntity: Equatable {
+    public internal(set) var recordId: CKRecord.ID?
     public let dailyTodoList: DailyTodoListEntity?
     public let isCompleted: Bool
     public let createdAt: Date

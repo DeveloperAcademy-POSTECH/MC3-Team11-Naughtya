@@ -10,8 +10,8 @@ import SwiftUI
 
 public struct TodoItemView: View {
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     public let todo: TodoModel
     public let isBacklog: Bool
@@ -222,6 +222,6 @@ public struct TodoItemView: View {
 
 struct TodoItemView_Previews: PreviewProvider {
     static var previews: some View {
-        TodoItemView(todo: .from(entity: TodoEntity.sample))
+        TodoItemView(todo: .from(entity: .sample))
     }
 }

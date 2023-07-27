@@ -9,8 +9,8 @@
 import SwiftUI
 
 public struct ProjectItemView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
     @State private var selectedSortOption = 0
     private let sortOptions = ["전체보기", "완료 todo", "미완료 todo"]
 

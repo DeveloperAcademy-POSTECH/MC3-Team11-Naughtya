@@ -21,8 +21,8 @@ public struct TodoModel: Modelable {
     public static func from(entity: TodoEntity) -> Self {
         TodoModel(
             entity: entity,
-            category: entity.project.category,
-            title: entity.title,
+            category: entity.project.value.category.value,
+            title: entity.title.value,
             isDaily: entity.isDaily,
             isCompleted: entity.isCompleted,
             isBacklog: entity.isBacklog,

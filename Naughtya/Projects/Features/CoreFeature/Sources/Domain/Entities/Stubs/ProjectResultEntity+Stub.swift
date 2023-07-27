@@ -1,5 +1,5 @@
 //
-//  ProjectResult+Stub.swift
+//  ProjectResultEntity+Stub.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.

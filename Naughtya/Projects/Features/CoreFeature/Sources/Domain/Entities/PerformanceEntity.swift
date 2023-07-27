@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import CloudKit
 
-public struct PerformanceEntity: Codable, Equatable {
+public struct PerformanceEntity: Equatable {
+    public internal(set) var recordId: CKRecord.ID?
     public let category: PerformanceCategory
     public let title: String
     public let todos: [TodoEntity]

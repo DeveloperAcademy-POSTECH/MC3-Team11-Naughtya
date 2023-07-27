@@ -58,6 +58,11 @@ struct DashboardView: View {
                     TopBarView()
             }
         }
+        .onAppear {
+            Task {
+                try await CloudKitManager.shared.syncWithStores()
+            }
+        }
     }
 }
 

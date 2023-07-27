@@ -9,7 +9,7 @@
 import SwiftUI
 
 public struct ProjectListView: View {
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
     public let projects: [ProjectModel]
 
     public init(projects: [ProjectModel] = []) {
@@ -79,15 +79,23 @@ public struct ProjectListView: View {
 }
 
 struct ListHeaderView: View {
+    private static let dummyDataGenerator: DummyDataGenerator = .shared
+
     @State private var showModal = false
     var body: some View {
         HStack {
             Text("All My Projects")
-              .font(
-                Font.custom("SF Pro", size: 12)
-                  .weight(.bold)
-              )
-              .foregroundColor(Color.customGray3)
+                .font(
+                    Font.custom("SF Pro", size: 12)
+                      .weight(.bold)
+                )
+                .foregroundColor(Color.customGray3)
+            Spacer()
+            Button {
+                Self.dummyDataGenerator.generate()
+            } label: {
+                Text("dummy")
+            }
         }
     }
 }

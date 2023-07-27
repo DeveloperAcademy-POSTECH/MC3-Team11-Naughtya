@@ -12,9 +12,9 @@ public final class DummyDataGenerator {
     public static let shared: DummyDataGenerator = .init()
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
-    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     private let startDate = "2023-06-01"
     private let middleDate = "2023-07-01"
@@ -74,8 +74,8 @@ public final class DummyDataGenerator {
     }
 
     private func createTodos(project: ProjectEntity) async throws {
-        guard let startDate = project.startedAt?.getDateString(),
-              let endDate = project.endedAt?.getDateString() else {
+        guard let startDate = project.startedAt.value?.getDateString(),
+              let endDate = project.endedAt.value?.getDateString() else {
             return
         }
         var date = Date.parse(startDate)
@@ -111,7 +111,7 @@ public final class DummyDataGenerator {
             )
         }
         if Int.random(in: 0 ..< 5) > 0,
-           let date = todo.dailyTodoList?.date {
+           let date = todo.dailyTodoList.value?.date {
             try await Self.todoUseCase.complete(
                 todo,
                 date: Bool.random() ? date : date.getOneDayAfter()

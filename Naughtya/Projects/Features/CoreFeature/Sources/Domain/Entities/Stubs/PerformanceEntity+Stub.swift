@@ -1,5 +1,5 @@
 //
-//  Performance+Stub.swift
+//  PerformanceEntity+Stub.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.

@@ -51,10 +51,17 @@ public struct DailyTodoListView: View {
                     .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
             }
             .buttonStyle(.borderless)
-            Text(viewModel.dateTitle)
-                .font(Font.custom("SF Pro", size: 14))
-                .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
-            Button {
+            if !viewModel.isTodayFetched {
+                Button("Today") {
+                    viewModel.fetchTodayIfNeeded()
+                }
+                .buttonStyle(.borderless)
+            } else {
+                Text(viewModel.dateTitle)
+                  .font(Font.custom("SF Pro", size: 14))
+                  .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
+            }
+            Button("Next") {
                 viewModel.gotoOneDayAfter()
             } label: {
                 Image(systemName: "arrowtriangle.right.fill")

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ProjectSetModalView: View {
 
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
 
     @Environment(\.dismiss) private var dismiss
 

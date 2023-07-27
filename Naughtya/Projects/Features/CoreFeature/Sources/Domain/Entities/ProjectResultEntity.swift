@@ -7,17 +7,24 @@
 //
 
 import Foundation
+import Combine
+import CloudKit
 
-public class ProjectResultEntity: Codable, Equatable, Identifiable {
+public class ProjectResultEntity: Equatable, Identifiable {
+    public internal(set) var recordId: CKRecord.ID?
     public let project: ProjectEntity
-    public internal(set) var performances: [PerformanceEntity]
+    public let performances: CurrentValueSubject<[PerformanceEntity], Never>
+    private var cancellable = Set<AnyCancellable>()
 
     public init(
+        recordId: CKRecord.ID? = nil,
         project: ProjectEntity,
         performances: [PerformanceEntity] = []
     ) {
+        self.recordId = recordId
         self.project = project
-        self.performances = performances
+        self.performances = .init(performances)
+        setupUpdatingStore()
     }
 
     public var id: ObjectIdentifier {
@@ -25,7 +32,7 @@ public class ProjectResultEntity: Codable, Equatable, Identifiable {
     }
 
     public var allTodos: [TodoEntity] {
-        project.todos
+        project.todos.value
     }
 
     public var completedTodos: [TodoEntity] {
@@ -49,13 +56,13 @@ public class ProjectResultEntity: Codable, Equatable, Identifiable {
     }
 
     public var deletedTodos: [TodoEntity] {
-        project.deletedTodos
+        project.deletedTodos.value
     }
 
     public var allTodosSummary: String {
         allTodos
             .reduce("") {
-                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title)\n"
+                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title.value)\n"
             }
     }
 
@@ -70,20 +77,10 @@ public class ProjectResultEntity: Codable, Equatable, Identifiable {
             .filter { !$0.isCompleted }
             .map { $0.title }
     }
-//
-//    public var alldelayedTodosSummary: String {
-//        allTodos
-//            .reduce("") {
-//                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title)\n"
-//            }
-//    }
-//
-//    public var alldeletedTodosSummary: String {
-//        allTodos
-//            .reduce("") {
-//                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title)\n"
-//            }
-//    }
+
+    private func setupUpdatingStore() {
+        // TODO
+    }
 
     public static func == (lhs: ProjectResultEntity, rhs: ProjectResultEntity) -> Bool {
         lhs.project === rhs.project

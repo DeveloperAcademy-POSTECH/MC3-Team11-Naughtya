@@ -7,35 +7,25 @@
 //
 
 import Foundation
+import Combine
+import CloudKit
 
-public class TodoEntity: Codable, Equatable, Identifiable {
-    /// 프로젝트
-    public unowned let project: ProjectEntity
+public class TodoEntity: Equatable, Identifiable {
+    private static let projectStore: ProjectStore = .shared
+    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
 
-    /// 데일리
-    public unowned var dailyTodoList: DailyTodoListEntity? {
-        didSet {
-            histories.append(historyStamp)
-        }
-    }
-
-    /// 제목
-    public internal(set) var title: String
-
-    /// 생성 시간
-    public internal(set) var createdAt: Date
-
-    /// 히스토리
-    public internal(set) var histories: [TodoHistoryEntity]
-
-    /// 완료 시간
-    public internal(set) var completedAt: Date? {
-        didSet {
-            histories.append(historyStamp)
-        }
-    }
+    public internal(set) var recordId: CKRecord.ID?
+    public let project: CurrentValueSubject<ProjectEntity, Never>
+    public let dailyTodoList: CurrentValueSubject<DailyTodoListEntity?, Never>
+    public let title: CurrentValueSubject<String, Never>
+    public let createdAt: CurrentValueSubject<Date, Never>
+    public let histories: CurrentValueSubject<[TodoHistoryEntity], Never>
+    public let completedAt: CurrentValueSubject<Date?, Never>
+    private var cancellable = Set<AnyCancellable>()
 
     public init(
+        recordId: CKRecord.ID? = nil,
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity? = nil,
         title: String = "",
@@ -43,12 +33,14 @@ public class TodoEntity: Codable, Equatable, Identifiable {
         histories: [TodoHistoryEntity] = [],
         completedAt: Date? = nil
     ) {
-        self.project = project
-        self.dailyTodoList = dailyTodoList
-        self.title = title
-        self.createdAt = createdAt
-        self.histories = histories
-        self.completedAt = completedAt
+        self.recordId = recordId
+        self.project = .init(project)
+        self.dailyTodoList = .init(dailyTodoList)
+        self.title = .init(title)
+        self.createdAt = .init(createdAt)
+        self.histories = .init(histories)
+        self.completedAt = .init(completedAt)
+        setupUpdatingStore()
     }
 
     /// 고유값
@@ -58,12 +50,12 @@ public class TodoEntity: Codable, Equatable, Identifiable {
 
     /// 데일리 여부
     public var isDaily: Bool {
-        dailyTodoList != nil
+        dailyTodoList.value != nil
     }
 
     /// 완료 여부
     public var isCompleted: Bool {
-        completedAt != nil
+        completedAt.value != nil
     }
 
     /// 미완료 여부
@@ -78,8 +70,8 @@ public class TodoEntity: Codable, Equatable, Identifiable {
 
     /// 안미룸 여부
     public var isDailyCompleted: Bool {
-        guard let firstMovedToDaily = histories.first(where: { $0.dailyTodoList != nil }),
-              let firstCompleted = histories.last(where: { $0.isCompleted }) else {
+        guard let firstMovedToDaily = histories.value.first(where: { $0.dailyTodoList != nil }),
+              let firstCompleted = histories.value.last(where: { $0.isCompleted }) else {
             return false
         }
         return firstMovedToDaily.createdAt.isSame(firstCompleted.createdAt)
@@ -87,10 +79,57 @@ public class TodoEntity: Codable, Equatable, Identifiable {
 
     private var historyStamp: TodoHistoryEntity {
         TodoHistoryEntity(
-            dailyTodoList: dailyTodoList,
+            dailyTodoList: dailyTodoList.value,
             isCompleted: isCompleted,
-            createdAt: completedAt ?? dailyTodoList?.date ?? .now
+            createdAt: completedAt.value ?? dailyTodoList.value?.date ?? .now
         )
+    }
+
+    private func setupUpdatingStore() {
+        let publisher = Publishers
+            .MergeMany(
+                project
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                dailyTodoList
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                title
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                createdAt
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                histories
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
+                completedAt
+                    .map { _ in () }
+                    .eraseToAnyPublisher()
+            )
+
+        publisher
+            .debounce(
+                for: .milliseconds(100),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink {
+                Self.projectStore.update()
+                Self.dailyTodoListStore.update()
+            }
+            .store(in: &cancellable)
+
+        publisher
+            .debounce(
+                for: .seconds(3),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink { [unowned self] _ in
+                Task {
+                    try? await Self.cloudKitManager.update(record)
+                }
+            }
+            .store(in: &cancellable)
     }
 
     public static func == (lhs: TodoEntity, rhs: TodoEntity) -> Bool {
