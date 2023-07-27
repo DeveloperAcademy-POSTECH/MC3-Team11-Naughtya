@@ -17,7 +17,7 @@ public struct ProjectTodoListView: View {
 
     public var body: some View {
         VStack(spacing: 16) {
-            if projects.allSatisfy { !$0.isSelected } {
+            if projects.isEmpty {
                 Spacer().frame(height: 200)
                 HStack(alignment: .center) {
                     Spacer().frame(width: 70)
@@ -30,7 +30,7 @@ public struct ProjectTodoListView: View {
                         .foregroundColor(Color.pointColor)
                 }
             } else {
-                ForEach(projects.filter { $0.isSelected }) { project in
+                ForEach(projects) { project in
                     ProjectItemView(project: project)
                 }
             }

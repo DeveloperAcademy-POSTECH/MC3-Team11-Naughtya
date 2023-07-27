@@ -18,7 +18,7 @@ struct DashboardView: View {
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
         } content: {
             List {
-                ProjectTodoListView(projects: viewModel.projects)
+                ProjectTodoListView(projects: viewModel.selectedProjects)
             }
             .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900).toolbar {
             }
@@ -54,7 +54,7 @@ struct DashboardView: View {
             }
 
             ToolbarItemGroup(placement: .primaryAction) {
-                    TopBarView()
+                TopBarView()
             }
         }
         .onAppear {
@@ -65,8 +65,8 @@ struct DashboardView: View {
     }
 }
 
-    struct DashboardView_Previews: PreviewProvider {
-        static var previews: some View {
-            DashboardView()
-        }
+struct DashboardView_Previews: PreviewProvider {
+    static var previews: some View {
+        DashboardView()
     }
+}

@@ -85,6 +85,13 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         }
         dragged = nil
         Task {
+            if let targetTodo = getTargetTodo(touchLocation: touchLocation) {
+                try await Self.todoUseCase.swapTodos(
+                    todo,
+                    targetTodo
+                )
+                return
+            }
             if let targetProject = getTargetProject(touchLocation: touchLocation),
                targetProject === todo.project.value {
                 try await Self.todoUseCase.moveToProject(todo: todo)
@@ -94,13 +101,6 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
                 try await Self.todoUseCase.moveToDaily(
                     todo: todo,
                     dailyTodoList: targetDailyTodoList
-                )
-                return
-            }
-            if let targetTodo = getTargetTodo(touchLocation: touchLocation) {
-                try await Self.todoUseCase.swapTodos(
-                    todo,
-                    targetTodo
                 )
                 return
             }

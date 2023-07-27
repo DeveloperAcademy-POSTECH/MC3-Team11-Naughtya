@@ -21,14 +21,11 @@ public struct SearchView: View {
         .textFieldStyle(.roundedBorder)
         .padding(.horizontal)
         .frame(height: textFieldHeight)
-        .overlay(alignment: .top) {
-            if !viewModel.searchedTodos.isEmpty {
-                searchedTodoList
-            }
+        .onChange(of: viewModel.searchedText) {
+            viewModel.searchGlobally(text: $0)
         }
-        .onChange(of: viewModel.searchedText) { _ in
-            viewModel.updateSearchingState()
-            viewModel.fetchSearchedTodos()
+        .onExitCommand {
+            viewModel.searchedText = ""
         }
     }
 
