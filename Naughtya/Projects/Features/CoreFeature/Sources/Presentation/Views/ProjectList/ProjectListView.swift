@@ -13,7 +13,7 @@ public struct ProjectListView: View {
     public let projects: [ProjectModel]
 
     public init(projects: [ProjectModel] = []) {
-        self.projects = projects.sorted { $0.isBookmarked && !$1.isBookmarked }
+        self.projects = projects
     }
 
     @State private var showModal = false
