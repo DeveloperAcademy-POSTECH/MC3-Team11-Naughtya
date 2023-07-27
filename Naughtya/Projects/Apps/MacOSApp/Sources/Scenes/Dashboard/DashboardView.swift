@@ -20,7 +20,9 @@ struct DashboardView: View {
             List {
                 ProjectTodoListView(projects: viewModel.projects)
             }
-            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
+            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900).toolbar {
+            }
+
         } detail: {
             List {
                 DailyTodoListView()
@@ -29,14 +31,20 @@ struct DashboardView: View {
         }
         .navigationTitle("")
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                TopBarView()
+            ToolbarItem(placement: .status) {
+                Button {
+
+                } label: {
+                    Image(systemName: "list.bullet")
+                }
+
             }
+
             ToolbarItemGroup(placement: .navigation) {
                 HStack(spacing: 0) {
                     Button {
                     } label: {
-                        Image(systemName: "list.bullet")
+                        Image(systemName: "folder")
                     }
                     Button {
                         //                ProjectResultListView()
@@ -45,12 +53,16 @@ struct DashboardView: View {
                     }
                 }
             }
+
+            ToolbarItemGroup(placement: .primaryAction) {
+                    TopBarView()
+            }
         }
     }
 }
 
-struct DashboardView_Previews: PreviewProvider {
-    static var previews: some View {
-        DashboardView()
+    struct DashboardView_Previews: PreviewProvider {
+        static var previews: some View {
+            DashboardView()
+        }
     }
-}

@@ -52,14 +52,14 @@ struct ProjectCardView: View {
                     HStack(alignment: .firstTextBaseline, spacing: 0.0) {
                         Text("\(project.completedTodos.count)")
                             .font(
-                                Font.custom("Apple SD Gothic Neo", size: 18)
+                                Font.custom("Apple SD Gothic Neo", size: 24)
                                     .weight(.semibold)
                             )
                             .multilineTextAlignment(.trailing)
                             .foregroundColor(Color.pointColor)
                         Text("/\(project.todos.count)")
                             .font(
-                                Font.custom("Apple SD Gothic Neo", size: 12)
+                                Font.custom("Apple SD Gothic Neo", size: 16)
                                     .weight(.regular)
                             )
                             .multilineTextAlignment(.trailing)

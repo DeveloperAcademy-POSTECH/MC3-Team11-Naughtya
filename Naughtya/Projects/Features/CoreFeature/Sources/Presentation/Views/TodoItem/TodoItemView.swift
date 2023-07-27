@@ -66,20 +66,33 @@ public struct TodoItemView: View {
                                         .weight(.bold)
                                 )
                         }
-                        Spacer().frame(width: 4)
                         ZStack {
-                            TextField(text: $title) {
-                                placeholder
+                            if todo.isCompleted {
+                                Text("\(todo.title)")
+                                    .strikethrough()
+                                    .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                                    .textFieldStyle(.plain)
+
+                                    .foregroundColor(Color.customGray3)
+                            } else {
+                                TextField(text: $title) {
+                                    placeholder
+                                }
+                                .padding(.leading, -8)
+                                .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                                .textFieldStyle(.plain)
                             }
-                            .font(Font.custom("Apple SD Gothic Neo", size: 16))
-                            .textFieldStyle(.plain)
                         }
-                        Button("🔄") {
+                        Button {
                             toggleDaily()
+                        } label: {
+                            Text(todo.isCompleted ? "" : "🔄")
                         }
                         .buttonStyle(.borderless)
-                        Button("🚮") {
+                        Button {
                             delete()
+                        } label: {
+                            Text(todo.isCompleted ? "" : "🚮")
                         }
                         .buttonStyle(.borderless)
                         Spacer()

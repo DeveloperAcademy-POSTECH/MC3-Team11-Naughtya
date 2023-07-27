@@ -17,9 +17,23 @@ public struct ProjectTodoListView: View {
 
     public var body: some View {
         VStack(spacing: 16) {
+            if projects.allSatisfy { !$0.isSelected } {
+                Spacer().frame(height: 200)
+                HStack(alignment: .center) {
+                    Spacer().frame(width: 70)
+                    Text("프로젝트를 선택해주세요!")
+                        .font(
+                            Font.custom("Apple SD Gothic Neo", size: 24)
+                                .weight(.semibold)
+                        )
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(Color.pointColor)
+                }
+            } else {
                 ForEach(projects.filter { $0.isSelected }) { project in
                     ProjectItemView(project: project)
                 }
+            }
         }
     }
 }
