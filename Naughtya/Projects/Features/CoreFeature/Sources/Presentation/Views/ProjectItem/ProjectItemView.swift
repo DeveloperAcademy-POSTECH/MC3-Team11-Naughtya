@@ -67,6 +67,9 @@ public struct ProjectItemView: View {
             todos: todos,
             isBlockedToEdit: searchManager.isSearching
         )
+        Button("Todo 추가") {
+            appendNewTodo(project: project.entity)
+        }
     }
 
     private var todos: [TodoModel] {
