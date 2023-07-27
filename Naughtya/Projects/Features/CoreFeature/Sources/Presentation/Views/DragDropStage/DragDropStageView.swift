@@ -11,7 +11,10 @@ import SwiftUI
 public struct DragDropStageView: View {
     @StateObject private var dragDropManager = DragDropManager.shared
 
-    public init() {
+    private let topPadding: CGFloat
+
+    public init(topPadding: CGFloat = 0) {
+        self.topPadding = topPadding
     }
 
     public var body: some View {
@@ -25,7 +28,7 @@ public struct DragDropStageView: View {
                     )
                     .offset(
                         x: dragged.location.x,
-                        y: dragged.location.y - dragged.size.height / 2
+                        y: dragged.location.y - dragged.size.height / 2 - topPadding / 2
                     )
                     .frame(
                         width: dragged.size.width,
