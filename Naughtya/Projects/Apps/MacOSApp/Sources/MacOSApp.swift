@@ -20,6 +20,5 @@ struct MacOSApp: App {
             .frame(minWidth: 1174, minHeight: 756)
             .preferredColorScheme(.dark)
         }
-
     }
 }

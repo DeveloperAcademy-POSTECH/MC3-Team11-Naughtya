@@ -14,8 +14,8 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationSplitView {
-            ProjectListView(projects: viewModel.sortedProjects)
-                .navigationSplitViewColumnWidth(min: 190, ideal: 250, max: 298)
+            ProjectListView(projects: viewModel.projects)
+                .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
         } content: {
             List {
                 ProjectTodoListView(projects: viewModel.selectedProjects)
@@ -37,7 +37,6 @@ struct DashboardView: View {
                 } label: {
                     Image(systemName: "list.bullet")
                 }
-
             }
 
             ToolbarItemGroup(placement: .navigation) {
