@@ -15,13 +15,13 @@ public struct ProjectItemView: View {
     private let sortOptions = ["전체보기", "완료 todo", "미완료 todo"]
 
     public let project: ProjectModel
+    @ObservedObject private var searchManager = SearchManager.shared
 
     public init(project: ProjectModel) {
         self.project = project
     }
 
     public var body: some View {
-
         HStack {
             VStack(alignment: .leading, spacing: 18) {
                 Text(project.category)
@@ -50,7 +50,7 @@ public struct ProjectItemView: View {
             }
             .padding(.horizontal, 20)
             .frame(width: 270, alignment: .topLeading)
-          Spacer()
+            Spacer()
             Picker(selection: $selectedSortOption, label: Text("")) {
                 ForEach(0..<sortOptions.count) { index in
                     Text(sortOptions[index])
@@ -66,11 +66,21 @@ public struct ProjectItemView: View {
 
         TodoListView(
             section: project.entity,
-            todos: project.backlogTodos
+            todos: todos,
+            isBlockedToEdit: searchManager.isSearching
         )
         Button("Todo 추가") {
             appendNewTodo(project: project.entity)
         }
+    }
+
+    private var todos: [TodoModel] {
+        var todos = project.backlogTodos
+        if searchManager.isSearching {
+            todos = todos
+                .filter { $0.title.contains(searchManager.searchedText) }
+        }
+        return todos
     }
 
     private func appendNewTodo(project: ProjectEntity) {
