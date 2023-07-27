@@ -42,7 +42,8 @@ public struct TodoListView: View {
                 }
             }
             VStack(spacing: 0) {
-                if todos.isEmpty {
+                if section is DailyTodoListEntity,
+                   todos.isEmpty {
                     HStack(alignment: .center, spacing: 4) {
                         Text("데일리 투두에 오늘 할일을 드래그 해주세요")
                           .font(Font.custom("Apple SD Gothic Neo", size: 16))
@@ -67,7 +68,7 @@ public struct TodoListView: View {
                         TodoItemView(
                             todo: todo,
                             isBacklog: section is ProjectEntity,
-                            isBlockedToEdit: searchManager.isSearching
+                            isBlockedToEdit: isBlockedToEdit
                         )
                     }
                 }
