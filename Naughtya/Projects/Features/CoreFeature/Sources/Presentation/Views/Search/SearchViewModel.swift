@@ -11,7 +11,7 @@ import Combine
 
 @MainActor
 public final class SearchViewModel: ObservableObject {
-    private static let searchManager: SearchManager = .shared
+    private static let filterManager: FilterManager = .shared
 
     @Published public var searchedText: String = ""
 
@@ -19,7 +19,7 @@ public final class SearchViewModel: ObservableObject {
     }
 
     public func searchGlobally(text: String) {
-        Self.searchManager.searchedText = text
+        Self.filterManager.searchedText = text
     }
 
     // MARK: - Deprecated

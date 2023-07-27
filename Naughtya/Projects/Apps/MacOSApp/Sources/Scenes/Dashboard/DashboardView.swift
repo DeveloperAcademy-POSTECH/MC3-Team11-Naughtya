@@ -48,7 +48,7 @@ struct DashboardView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                filterButton
+                FilterButton()
             }
         }
     }
@@ -74,13 +74,6 @@ struct DashboardView: View {
             }
         }
         .pickerStyle(.segmented)
-    }
-
-    private var filterButton: some View {
-        Button {
-        } label: {
-            Image(systemName: "slider.horizontal.3")
-        }
     }
 }
 

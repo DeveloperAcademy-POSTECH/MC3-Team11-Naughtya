@@ -11,11 +11,9 @@ import SwiftUI
 public struct ProjectItemView: View {
     private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
     private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
-    @State private var selectedSortOption = 0
-    private let sortOptions = ["전체보기", "완료 todo", "미완료 todo"]
 
     public let project: ProjectModel
-    @ObservedObject private var searchManager = SearchManager.shared
+    @ObservedObject private var filterManager = FilterManager.shared
 
     public init(project: ProjectModel) {
         self.project = project
@@ -51,14 +49,6 @@ public struct ProjectItemView: View {
             .padding(.horizontal, 20)
             .frame(width: 270, alignment: .topLeading)
             Spacer()
-            Picker(selection: $selectedSortOption, label: Text("")) {
-                ForEach(0..<sortOptions.count) { index in
-                    Text(sortOptions[index])
-                }
-            }
-            .frame(width: 110)
-            .pickerStyle(DefaultPickerStyle())
-            .foregroundColor(Color.pointColor)
         }
         .padding(.leading, 20)
         .padding(.top, 25)
@@ -67,7 +57,7 @@ public struct ProjectItemView: View {
         TodoListView(
             section: project.entity,
             todos: todos,
-            isBlockedToEdit: searchManager.isSearching
+            isBlockedToEdit: filterManager.isSearching
         )
         Button("Todo 추가") {
             appendNewTodo(project: project.entity)
@@ -75,10 +65,22 @@ public struct ProjectItemView: View {
     }
 
     private var todos: [TodoModel] {
-        var todos = project.backlogTodos
-        if searchManager.isSearching {
+        var todos = project.todos
+        if let filter = filterManager.filter {
+            switch filter {
+            case .uncompleted:
+                todos = todos
+                    .filter { !$0.isCompleted }
+            case .completed:
+                todos = todos
+                    .filter { $0.isCompleted }
+            default:
+                break
+            }
+        }
+        if filterManager.isSearching {
             todos = todos
-                .filter { $0.title.contains(searchManager.searchedText) }
+                .filter { $0.title.contains(filterManager.searchedText) }
         }
         return todos
     }

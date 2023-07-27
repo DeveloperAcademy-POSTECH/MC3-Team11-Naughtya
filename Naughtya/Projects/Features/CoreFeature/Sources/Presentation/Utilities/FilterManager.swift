@@ -1,5 +1,5 @@
 //
-//  SearchManager.swift
+//  FilterManager.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/20.
@@ -8,9 +8,10 @@
 
 import Foundation
 
-public final class SearchManager: ObservableObject {
-    public static let shared: SearchManager = .init()
+public final class FilterManager: ObservableObject {
+    public static let shared: FilterManager = .init()
 
+    @Published public var filter: FilterType?
     @Published public var searchedText: String = ""
 
     private init() {
