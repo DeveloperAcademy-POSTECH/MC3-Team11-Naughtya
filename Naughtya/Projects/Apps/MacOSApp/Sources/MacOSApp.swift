@@ -15,12 +15,10 @@ struct MacOSApp: App {
         WindowGroup {
             ZStack {
                 DashboardView()
-                //                    ProjectResultListView()
-                DragDropStageView()
+                DragDropStageView(topPadding: 52)
             }
             .frame(minWidth: 1174, minHeight: 756)
             .preferredColorScheme(.dark)
         }
-
     }
 }

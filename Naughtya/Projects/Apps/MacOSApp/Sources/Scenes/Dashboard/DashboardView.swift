@@ -8,10 +8,10 @@ import SwiftUI
     var body: some View {
         NavigationSplitView {
             ProjectListView(projects: viewModel.projects)
-                .navigationSplitViewColumnWidth(min: 190, ideal: 250, max: 298)
+                .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
         } content: {
             List {
-                ProjectTodoListView(projects: viewModel.projects)
+                ProjectTodoListView(projects: viewModel.selectedProjects)
             }
             .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
 
@@ -29,7 +29,6 @@ import SwiftUI
                 } label: {
                     Image(systemName: "list.bullet")
                 }
-
             }
 
             ToolbarItemGroup(placement: .navigation) {
@@ -52,7 +51,7 @@ import SwiftUI
             }
 
             ToolbarItemGroup(placement: .primaryAction) {
-                    TopBarView()
+                TopBarView()
             }
         }
         .onAppear {
@@ -63,8 +62,8 @@ import SwiftUI
     }
  }
 
-    struct DashboardView_Previews: PreviewProvider {
-        static var previews: some View {
-            DashboardView()
-        }
+struct DashboardView_Previews: PreviewProvider {
+    static var previews: some View {
+        DashboardView()
     }
+}

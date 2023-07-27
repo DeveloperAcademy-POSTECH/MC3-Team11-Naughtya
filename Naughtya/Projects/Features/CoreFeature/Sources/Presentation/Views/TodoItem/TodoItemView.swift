@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 public struct TodoItemView: View {
     private static let dailyTodoListStore: DailyTodoListStore = .shared
@@ -18,6 +19,7 @@ public struct TodoItemView: View {
     public let isDummy: Bool
     public let isBlockedToEdit: Bool
     public let dragDropDelegate: DragDropDelegate
+    private let titlePublisher: PassthroughSubject<String, Never> = .init()
     @State private var title: String
     @State private var absoluteRect: CGRect!
     @State private var isHovered = false
@@ -49,7 +51,7 @@ public struct TodoItemView: View {
                     }
                     HStack(alignment: .center) {
                         Text("🖱️")
-                            .opacity(isHovered ? 1 : 0)
+                            .opacity(isHovered ? 1 : 0.01)
                             .animation(.easeOut, value: isHovered)
                         Button(action: {
                             toggleCompleted()
@@ -81,6 +83,21 @@ public struct TodoItemView: View {
                                 .padding(.leading, -8)
                                 .font(Font.custom("Apple SD Gothic Neo", size: 16))
                                 .textFieldStyle(.plain)
+                                .onChange(of: title) {
+                                    titlePublisher.send($0)
+                                }
+                                .onReceive(
+                                    titlePublisher
+                                        .debounce(
+                                            for: .milliseconds(100),
+                                            scheduler: DispatchQueue.global(qos: .userInteractive)
+                                        )
+                                ) { _ in
+                                    updateTitle()
+                                }
+                                .onSubmit {
+                                    updateTitle()
+                                }
                             }
                         }
                         Button {
@@ -96,7 +113,9 @@ public struct TodoItemView: View {
                         }
                         .buttonStyle(.borderless)
                         Spacer()
+
                     }
+                    .frame(height: 35)
                 }
                 Spacer()
             }
@@ -148,9 +167,6 @@ public struct TodoItemView: View {
         )
         .onHover {
             isHovered = $0
-        }
-        .onSubmit {
-            updateTitle()
         }
         .onDisappear {
             dragDropDelegate.unregisterAbsoluteRect(todo.entity)

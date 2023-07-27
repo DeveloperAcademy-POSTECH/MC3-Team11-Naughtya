@@ -13,7 +13,7 @@ public struct ProjectListView: View {
     public let projects: [ProjectModel]
 
     public init(projects: [ProjectModel] = []) {
-        self.projects = projects.sorted { $0.isBookmarked && !$1.isBookmarked }
+        self.projects = projects
     }
 
     @State private var showModal = false
@@ -59,17 +59,6 @@ public struct ProjectListView: View {
                     ProjectSetModalView()
                 }
                 .buttonStyle(.borderless)
-                .onAppear { // MARK: - 테스트 후 삭제(가짜데이터)
-                    Task {
-                        try await Self.projectUseCase.create(
-                            category: "MC3",
-                            goals: "mc2",
-                            startedAt: Date(),
-                            endedAt: Date()
-                        )
-                    }
-                }
-
             }
             .padding(.horizontal, 57)
             .padding(.vertical, 10)
