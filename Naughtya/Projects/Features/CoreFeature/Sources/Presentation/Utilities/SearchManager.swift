@@ -11,8 +11,12 @@ import Foundation
 public final class SearchManager: ObservableObject {
     public static let shared: SearchManager = .init()
 
-    @Published public var isSearching: Bool = false
+    @Published public var searchedText: String = ""
 
     private init() {
+    }
+
+    public var isSearching: Bool {
+        !searchedText.isEmpty
     }
 }

@@ -11,33 +11,28 @@ import SwiftUI
 public struct TodoListView: View {
     public let section: DragDropItemable?
     public let todos: [TodoModel]
+    public let isBlockedToEdit: Bool
     public let dragDropDelegate: DragDropDelegate
-    @ObservedObject private var searchManager = SearchManager.shared
     @State private var absoluteRect: CGRect!
 
     public init(
         section: DragDropItemable? = nil,
         todos: [TodoModel] = [],
+        isBlockedToEdit: Bool = false,
         dragDropDelegate: DragDropDelegate = DragDropManager.shared
     ) {
         self.section = section
         self.todos = todos
+        self.isBlockedToEdit = isBlockedToEdit
         self.dragDropDelegate = dragDropDelegate
     }
 
     public var body: some View {
-        VStack(spacing: 0) {
-                ForEach(todos) { todo in
-                    TodoItemView(
-                        todo: todo,
-                        isBacklog: section is ProjectEntity,
-                        isBlockedToEdit: searchManager.isSearching
-                    )
-                }
+        ZStack {
             if section != nil {
                 GeometryReader { geometry in
                     let absoluteRect = geometry.frame(in: .global)
-                    Color.customGray1
+                    Color.black.opacity(0.01)
                         .onAppear {
                             registerAbsoluteRect(absoluteRect)
                         }
@@ -45,8 +40,17 @@ public struct TodoListView: View {
                             registerAbsoluteRect($0)
                         }
                 }
-                .frame(height: 200)
             }
+            VStack(spacing: 0) {
+                ForEach(todos) { todo in
+                    TodoItemView(
+                        todo: todo,
+                        isBacklog: section is ProjectEntity,
+                        isBlockedToEdit: isBlockedToEdit
+                    )
+                }
+            }
+            .padding(.bottom, 100)
         }
         .onDisappear {
             unregisterAbsoluteRect()
