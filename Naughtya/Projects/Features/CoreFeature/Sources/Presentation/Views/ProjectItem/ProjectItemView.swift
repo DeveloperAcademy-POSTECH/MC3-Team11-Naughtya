@@ -50,7 +50,6 @@ public struct ProjectItemView: View {
             }
             .padding(.horizontal, 20)
             .frame(width: 270, alignment: .topLeading)
-            Spacer()
             Picker(selection: $selectedSortOption, label: Text("")) {
                 ForEach(0..<sortOptions.count) { index in
                     Text(sortOptions[index])
@@ -61,17 +60,13 @@ public struct ProjectItemView: View {
             .foregroundColor(Color.pointColor)
         }
         .padding(.leading, 20)
-        .padding(.top, 25)
+        .padding(.top, 15)
         .padding(.bottom, 10)
-
         TodoListView(
             section: project.entity,
             todos: todos,
             isBlockedToEdit: searchManager.isSearching
         )
-        Button("Todo 추가") {
-            appendNewTodo(project: project.entity)
-        }
     }
 
     private var todos: [TodoModel] {
