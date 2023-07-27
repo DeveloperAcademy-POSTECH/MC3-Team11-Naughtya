@@ -11,56 +11,75 @@ import MacOSCoreFeature
 
 struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
+    @State private var selectedTabIndex = 0
+    private let tabs = ["folder", "list.clipboard"]
 
     var body: some View {
         NavigationSplitView {
-            ProjectListView(projects: viewModel.sortedProjects)
+            projectListView
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
         } content: {
-            List {
-                ProjectTodoListView(projects: viewModel.selectedProjects)
-            }
-            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900).toolbar {
-            }
-
+            projectTodoListView
+                .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         } detail: {
-            List {
-                DailyTodoListView()
-            }
-            .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
+            dailyTodoListView
+                .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
         }
         .navigationTitle("")
         .toolbar {
-            ToolbarItem(placement: .status) {
-                Button {
-
-                } label: {
-                    Image(systemName: "list.bullet")
-                }
-            }
-
-            ToolbarItemGroup(placement: .navigation) {
-                HStack(spacing: 0) {
-                    Button {
-                    } label: {
-                        Image(systemName: "folder")
-                    }
-                    Button {
-                        //                ProjectResultListView()
-                    } label: {
-                        Image(systemName: "books.vertical")
-                    }
-                }
-            }
-
-            ToolbarItemGroup(placement: .primaryAction) {
-                TopBarView()
+            ToolbarItem(placement: .navigation) {
+                tabPicker
             }
         }
         .onAppear {
             Task {
                 try await CloudKitManager.shared.syncWithStores()
             }
+        }
+    }
+
+    private var projectListView: some View {
+        ProjectListView(projects: viewModel.sortedProjects)
+    }
+
+    private var projectTodoListView: some View {
+        List {
+            ProjectTodoListView(projects: viewModel.selectedProjects)
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                filterButton
+            }
+        }
+    }
+
+    private var dailyTodoListView: some View {
+        List {
+            DailyTodoListView()
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Spacer()
+            }
+            ToolbarItem(placement: .primaryAction) {
+                SearchView()
+            }
+        }
+    }
+
+    private var tabPicker: some View {
+        Picker(selection: $selectedTabIndex, label: Text("")) {
+            ForEach(tabs, id: \.self) { tab in
+                Image(systemName: tab)
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+
+    private var filterButton: some View {
+        Button {
+        } label: {
+            Image(systemName: "slider.horizontal.3")
         }
     }
 }
