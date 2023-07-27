@@ -51,7 +51,7 @@ public struct TodoItemView: View {
                     }
                     HStack(alignment: .center) {
                         Text("🖱️")
-                            .opacity(isHovered ? 1 : 0)
+                            .opacity(isHovered ? 1 : 0.01)
                             .animation(.easeOut, value: isHovered)
                         Button(action: {
                             toggleCompleted()

@@ -28,18 +28,11 @@ public struct TodoListView: View {
     }
 
     public var body: some View {
-        VStack(spacing: 0) {
-            ForEach(todos) { todo in
-                TodoItemView(
-                    todo: todo,
-                    isBacklog: section is ProjectEntity,
-                    isBlockedToEdit: isBlockedToEdit
-                )
-            }
+        ZStack {
             if section != nil {
                 GeometryReader { geometry in
                     let absoluteRect = geometry.frame(in: .global)
-                    Color.customGray1
+                    Color.black.opacity(0.01)
                         .onAppear {
                             registerAbsoluteRect(absoluteRect)
                         }
@@ -47,8 +40,17 @@ public struct TodoListView: View {
                             registerAbsoluteRect($0)
                         }
                 }
-                .frame(height: 200)
             }
+            VStack(spacing: 0) {
+                ForEach(todos) { todo in
+                    TodoItemView(
+                        todo: todo,
+                        isBacklog: section is ProjectEntity,
+                        isBlockedToEdit: isBlockedToEdit
+                    )
+                }
+            }
+            .padding(.bottom, 100)
         }
         .onDisappear {
             unregisterAbsoluteRect()
