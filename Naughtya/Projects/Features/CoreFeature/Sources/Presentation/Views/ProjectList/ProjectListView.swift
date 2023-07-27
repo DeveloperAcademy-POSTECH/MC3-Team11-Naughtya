@@ -36,18 +36,18 @@ public struct ProjectListView: View {
                     self.showModal = true
                 }) {
                     HStack(alignment: .center, spacing: 5) {
+                        Spacer()
                         Text("+")
                           .font(Font.custom("SF Pro", size: 20))
-                          .multilineTextAlignment(.center)
                           .foregroundColor(.white)
 
                         Text("Add project")
                           .lineLimit(1)
                           .font(Font.custom("SF Pro", size: 14))
                           .foregroundColor(.white)
-                          .frame(maxWidth: .infinity, alignment: .leading)
+                        Spacer()
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 10)
                     .padding(.vertical, 6)
                     .frame(maxWidth: .infinity, minHeight: 36, maxHeight: 36, alignment: .center)
                     .background(Color.pointColor)
