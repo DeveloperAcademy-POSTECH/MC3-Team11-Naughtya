@@ -14,7 +14,7 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationSplitView {
-            ProjectListView(projects: viewModel.projects)
+            ProjectListView(projects: viewModel.sortedProjects)
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
         } content: {
             List {

@@ -31,11 +31,6 @@ struct ProjectCardView: View {
                     }
                     .offset(x: 12, y: 16)
                     .zIndex(1)
-                if let projectEndDay = projectEndDay {
-                    Text("\(Date().dDayCalculater(projectEndDay: projectEndDay))")
-                    Spacer()
-                    Text("~\(changeDateFormat(projectEndDay: projectEndDay))")
-                }
             }
             HStack {
                 VStack(alignment: .leading) {
