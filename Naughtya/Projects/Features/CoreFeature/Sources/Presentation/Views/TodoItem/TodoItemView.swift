@@ -76,39 +76,12 @@ public struct TodoItemView: View {
         }
         .frame(height: 47)
         .opacity(isDummy || isBeingDragged ? 0.5 : 1)
-        .gesture(
-            DragGesture()
-                .onChanged {
-                    let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
-                    if !isBeingDragged {
-                        dragDropDelegate.startToDrag(
-                            todo.entity,
-                            size: absoluteRect.size,
-                            itemLocation: itemLocation
-                        )
-                    } else {
-                        dragDropDelegate.drag(
-                            todo.entity,
-                            itemLocation: itemLocation
-                        )
-                    }
-                    isBeingDragged = true
-                }
-                .onEnded {
-                    dragDropDelegate.drop(
-                        todo.entity,
-                        touchLocation: absoluteRect.origin + $0.location
-                    )
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        isBeingDragged = false
-                    }
-                }
-        )
+        .gesture(dragGesture)
         .onHover {
             isHovered = $0
         }
         .onDisappear {
-            dragDropDelegate.unregisterAbsoluteRect(todo.entity)
+            dragDropDelegate.unregisterAbsoluteRect(dragDropableHash)
         }
     }
 
@@ -212,10 +185,46 @@ public struct TodoItemView: View {
         }
     }
 
+    private var dragGesture: some Gesture {
+        DragGesture()
+            .onChanged {
+                let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
+                if !isBeingDragged {
+                    dragDropDelegate.startToDrag(
+                        todo.entity,
+                        size: absoluteRect.size,
+                        itemLocation: itemLocation
+                    )
+                } else {
+                    dragDropDelegate.drag(
+                        todo.entity,
+                        itemLocation: itemLocation
+                    )
+                }
+                isBeingDragged = true
+            }
+            .onEnded {
+                dragDropDelegate.drop(
+                    todo.entity,
+                    touchLocation: absoluteRect.origin + $0.location
+                )
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isBeingDragged = false
+                }
+            }
+    }
+
+    private var dragDropableHash: DragDropableHash {
+        DragDropableHash(
+            item: todo.entity,
+            priority: 0
+        )
+    }
+
     private func registerAbsoluteRect(_ rect: CGRect) {
         absoluteRect = rect
         dragDropDelegate.registerAbsoluteRect(
-            todo.entity,
+            dragDropableHash,
             rect: rect
         )
     }

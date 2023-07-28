@@ -1,5 +1,5 @@
 //
-//  pr.swift
+//  ProjectListView.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/18.
@@ -22,18 +22,22 @@ public struct ProjectListView: View {
     public var body: some View {
         ZStack {
             Color.customGray5
-            VStack(spacing: 10) {
+            VStack(spacing: 15) {
                 headerView
-                List {
-                    if projects.isEmpty {
-                        emptyView
-                    } else {
-                        ForEach(projects) { project in
-                            ProjectCardView(project: project)
+                if projects.isEmpty {
+                    emptyView
+                } else {
+                    ScrollView {
+                        VStack(spacing: 10) {
+                            ForEach(projects) { project in
+                                ProjectCardView(project: project)
+                            }
                         }
                     }
                 }
+                Spacer()
             }
+            .padding(.horizontal, 10)
             addButton
         }
     }
@@ -50,7 +54,7 @@ public struct ProjectListView: View {
                 Text("dummy")
             }
         }
-        .padding(.horizontal, 15)
+        .padding(.horizontal, 5)
         .padding(.top, 10)
     }
 

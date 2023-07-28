@@ -16,7 +16,7 @@ public struct FilterButton: View {
 
     public var body: some View {
         MenuButton(label: Image(systemName: "slider.horizontal.3")) {
-            ForEach(FilterType.allCases, id: \.self) { filter in
+            ForEach(FilterCategory.allCases, id: \.self) { filter in
                 Button(filter.title) {
                     filterManager.filter = filter
                 }

@@ -21,7 +21,7 @@ public struct DragDropStageView: View {
         ZStack(alignment: .topLeading) {
             emptyView
             if let dragged = dragDropManager.dragged {
-                Group {
+                VStack {
                     switch dragged.item {
                     case let project as ProjectEntity:
                         ProjectCardView(

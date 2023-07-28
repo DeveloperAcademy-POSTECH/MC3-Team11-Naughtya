@@ -81,22 +81,32 @@ public struct TodoListView: View {
         }
     }
 
+    private var dragDropableHash: DragDropableHash? {
+        guard let item = section else {
+            return nil
+        }
+        return DragDropableHash(
+            item: item,
+            priority: 2
+        )
+    }
+
     private func registerAbsoluteRect(_ rect: CGRect) {
-        guard let section = section else {
+        guard let hash = dragDropableHash else {
             return
         }
         absoluteRect = rect
         dragDropDelegate.registerAbsoluteRect(
-            section,
+            hash,
             rect: rect
         )
     }
 
     private func unregisterAbsoluteRect() {
-        guard let section = section else {
+        guard let hash = dragDropableHash else {
             return
         }
-        dragDropDelegate.unregisterAbsoluteRect(section)
+        dragDropDelegate.unregisterAbsoluteRect(hash)
     }
 }
 

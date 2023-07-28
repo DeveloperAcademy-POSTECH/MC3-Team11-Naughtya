@@ -51,7 +51,7 @@ struct ProjectCardView: View {
                 registerAbsoluteRect(absoluteRect)
             }
             .onChange(of: absoluteRect) {
-                guard !isBeingDragged else {
+                guard !(isBeingDragged || isDummy) else {
                     return
                 }
                 registerAbsoluteRect($0)
@@ -65,60 +65,9 @@ struct ProjectCardView: View {
         }
         .frame(height: 68)
         .opacity(isDummy || isBeingDragged ? 0.5 : 1)
-        .gesture(
-            DragGesture()
-                .onChanged {
-                    let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
-                    if !isBeingDragged {
-                        dragDropDelegate.startToDrag(
-                            project.entity,
-                            size: absoluteRect.size,
-                            itemLocation: itemLocation
-                        )
-                    } else {
-                        dragDropDelegate.drag(
-                            project.entity,
-                            itemLocation: itemLocation
-                        )
-                    }
-                    isBeingDragged = true
-                }
-                .onEnded {
-                    dragDropDelegate.drop(
-                        project.entity,
-                        touchLocation: absoluteRect.origin + $0.location
-                    )
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        isBeingDragged = false
-                    }
-                }
-        )
+        .gesture(dragGesture)
         .contextMenu {
-            Button {
-                showModal = true
-            } label: {
-                Label("Modify", systemImage: "pencil")
-                    .labelStyle(.titleAndIcon)
-            }
-            Button {
-                Task {
-                    try await Self.projectUseCase.toggleIsBookmarked(
-                        project.entity,
-                        isBookmarked: !project.isBookmarked)
-                }
-            } label: {
-                Label("Bookmark", systemImage: "bookmark")
-                    .labelStyle(.titleAndIcon)
-            }
-            Divider()
-            Button {
-                Task {
-                    try await Self.projectUseCase.delete(project.entity)
-                }
-            } label: {
-                Label("삭제", systemImage: "trash")
-                    .labelStyle(.titleAndIcon)
-            }
+            contextMenu
         }
         .onTapGesture {
             Task {
@@ -129,7 +78,7 @@ struct ProjectCardView: View {
             }
         }
         .onDisappear {
-            dragDropDelegate.unregisterAbsoluteRect(project.entity)
+            dragDropDelegate.unregisterAbsoluteRect(dragDropableHash)
         }
         .sheet(isPresented: $showModal) {
             ProjectSetModalView(project: project)
@@ -173,10 +122,77 @@ struct ProjectCardView: View {
             .zIndex(1)
     }
 
+    private var dragGesture: some Gesture {
+        DragGesture()
+            .onChanged {
+                let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
+                if !isBeingDragged {
+                    dragDropDelegate.startToDrag(
+                        project.entity,
+                        size: absoluteRect.size,
+                        itemLocation: itemLocation
+                    )
+                } else {
+                    dragDropDelegate.drag(
+                        project.entity,
+                        itemLocation: itemLocation
+                    )
+                }
+                isBeingDragged = true
+            }
+            .onEnded {
+                dragDropDelegate.drop(
+                    project.entity,
+                    touchLocation: absoluteRect.origin + $0.location
+                )
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isBeingDragged = false
+                }
+            }
+    }
+
+    private var contextMenu: some View {
+        VStack {
+            Button {
+                showModal = true
+            } label: {
+                Label("Modify", systemImage: "pencil")
+                    .labelStyle(.titleAndIcon)
+            }
+            Button {
+                Task {
+                    try await Self.projectUseCase.toggleIsBookmarked(
+                        project.entity,
+                        isBookmarked: !project.isBookmarked
+                    )
+                }
+            } label: {
+                Label("Bookmark", systemImage: "bookmark")
+                    .labelStyle(.titleAndIcon)
+            }
+            Divider()
+            Button {
+                Task {
+                    try await Self.projectUseCase.delete(project.entity)
+                }
+            } label: {
+                Label("삭제", systemImage: "trash")
+                    .labelStyle(.titleAndIcon)
+            }
+        }
+    }
+
+    private var dragDropableHash: DragDropableHash {
+        DragDropableHash(
+            item: project.entity,
+            priority: 1
+        )
+    }
+
     private func registerAbsoluteRect(_ rect: CGRect) {
         absoluteRect = rect
         dragDropDelegate.registerAbsoluteRect(
-            project.entity,
+            dragDropableHash,
             rect: rect
         )
     }

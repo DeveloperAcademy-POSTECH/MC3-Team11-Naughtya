@@ -17,43 +17,23 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
     private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     @Published public var dragged: DraggedModel?
-    @Published public var projectAbsoluteRectMap = [ProjectEntity: CGRect]()
-    @Published public var dailyTodoListAbsoluteRectMap = [DailyTodoListEntity: CGRect]()
-    @Published public var todoAbsoluteRectMap = [TodoEntity: CGRect]()
+    @Published private var absoluteRectMap = [DragDropableHash: CGRect]()
 
     private init() {
     }
 
     public func registerAbsoluteRect(
-        _ item: DragDropItemable,
+        _ hash: DragDropableHash,
         rect: CGRect
     ) {
         DispatchQueue.global(qos: .userInitiated).sync {
-            switch item {
-            case let project as ProjectEntity:
-                projectAbsoluteRectMap[project] = rect
-            case let dailyTodoList as DailyTodoListEntity:
-                dailyTodoListAbsoluteRectMap[dailyTodoList] = rect
-            case let todo as TodoEntity:
-                todoAbsoluteRectMap[todo] = rect
-            default:
-                break
-            }
+            absoluteRectMap[hash] = rect
         }
     }
 
-    public func unregisterAbsoluteRect(_ item: DragDropItemable) {
+    public func unregisterAbsoluteRect(_ hash: DragDropableHash) {
         DispatchQueue.global(qos: .userInitiated).sync {
-            switch item {
-            case let project as ProjectEntity:
-                projectAbsoluteRectMap.removeValue(forKey: project)
-            case let dailyTodoList as DailyTodoListEntity:
-                dailyTodoListAbsoluteRectMap.removeValue(forKey: dailyTodoList)
-            case let todo as TodoEntity:
-                todoAbsoluteRectMap.removeValue(forKey: todo)
-            default:
-                break
-            }
+            absoluteRectMap.removeValue(forKey: hash)
         }
     }
 
@@ -103,12 +83,17 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         _ project: ProjectEntity,
         touchLocation: CGPoint
     ) async throws {
-        if let targetProject = getTargetProject(touchLocation: touchLocation) {
+        guard let target = getTarget(touchLocation: touchLocation) else {
+            return
+        }
+        switch target {
+        case let targetProject as ProjectEntity:
             try await Self.projectUseCase.swapProjects(
                 project,
                 targetProject
             )
-            return
+        default:
+            break
         }
     }
 
@@ -116,42 +101,33 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         _ todo: TodoEntity,
         touchLocation: CGPoint
     ) async throws {
-        if let targetTodo = getTargetTodo(touchLocation: touchLocation) {
-            try await Self.todoUseCase.swapTodos(
-                todo,
-                targetTodo
-            )
+        guard let target = getTarget(touchLocation: touchLocation) else {
             return
         }
-        if let targetProject = getTargetProject(touchLocation: touchLocation),
-           targetProject === todo.project.value {
-            try await Self.todoUseCase.moveToProject(todo: todo)
-            return
-        }
-        if let targetDailyTodoList = getTargetDailyTodoList(touchLocation: touchLocation) {
+        switch target {
+        case let targetProject as ProjectEntity:
+            if todo.project.value === targetProject {
+                try await Self.todoUseCase.moveToProject(todo: todo)
+            }
+        case let targetDailyTodoList as DailyTodoListEntity:
             try await Self.todoUseCase.moveToDaily(
                 todo: todo,
                 dailyTodoList: targetDailyTodoList
             )
-            return
+        case let targetTodo as TodoEntity:
+            try await Self.todoUseCase.swapTodos(
+                todo,
+                targetTodo
+            )
+        default:
+            break
         }
     }
 
-    private func getTargetProject(touchLocation: CGPoint) -> ProjectEntity? {
-        projectAbsoluteRectMap
+    private func getTarget(touchLocation: CGPoint) -> DragDropItemable? {
+        absoluteRectMap
+            .sorted { $0.key.priority < $1.key.priority }
             .first(where: { $1.contains(touchLocation) })?
-            .key
-    }
-
-    private func getTargetDailyTodoList(touchLocation: CGPoint) -> DailyTodoListEntity? {
-        dailyTodoListAbsoluteRectMap
-            .first(where: { $1.contains(touchLocation) })?
-            .key
-    }
-
-    private func getTargetTodo(touchLocation: CGPoint) -> TodoEntity? {
-        todoAbsoluteRectMap
-            .first(where: { $1.contains(touchLocation) })?
-            .key
+            .key.item
     }
 }
