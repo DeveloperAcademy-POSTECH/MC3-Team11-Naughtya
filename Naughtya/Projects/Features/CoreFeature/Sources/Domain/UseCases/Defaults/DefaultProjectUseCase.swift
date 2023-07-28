@@ -10,6 +10,7 @@ import Foundation
 
 struct DefaultProjectUseCase: ProjectUseCase {
     private static let projectStore: ProjectStore = .shared
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
     private static let cloudKitManager: CloudKitManager = .shared
 
     func create(
@@ -79,7 +80,10 @@ struct DefaultProjectUseCase: ProjectUseCase {
     func delete(_ project: ProjectEntity) async throws {
         guard let index = Self.projectStore.projects
             .firstIndex(where: { $0.category.value == project.category.value }) else {
-            throw DomainError(message: "프로젝트를 찾을 수 없습니다.")
+            return
+        }
+        for todo in project.todos.value {
+            try await Self.todoUseCase.delete(todo)
         }
         Self.projectStore.projects.remove(at: index)
         try? await Self.cloudKitManager.delete(project.recordId)
