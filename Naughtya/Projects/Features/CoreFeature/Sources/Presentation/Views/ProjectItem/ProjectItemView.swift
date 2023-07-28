@@ -88,7 +88,7 @@ public struct ProjectItemView: View {
     }
 
     private var todos: [TodoModel] {
-        var todos = project.todos
+        var todos = project.backlogTodos
         if let filter = filterManager.filter {
             switch filter {
             case .uncompleted:
