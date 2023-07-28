@@ -3,55 +3,24 @@ import SwiftUI
 
  struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
-    @State private var isSelected = true
+    @State private var selectedTabIndex = 0
+    private let tabs = ["folder", "list.clipboard"]
 
     var body: some View {
         NavigationSplitView {
-            ProjectListView(projects: viewModel.projects)
+            projectListView
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
         } content: {
-            List {
-                ProjectTodoListView(projects: viewModel.selectedProjects)
-            }
-            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
-
+            projectTodoListView
+                .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         } detail: {
-            List {
-                DailyTodoListView()
-            }
-            .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
+            dailyTodoListView
+                .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
         }
         .navigationTitle("")
         .toolbar {
-            ToolbarItem(placement: .status) {
-                Button {
-
-                } label: {
-                    Image(systemName: "list.bullet")
-                }
-            }
-
-            ToolbarItemGroup(placement: .navigation) {
-                HStack(spacing: 0) {
-                    Button {
-                        isSelected = true
-                    } label: {
-                        Image(systemName: "folder")
-                            .foregroundColor(isSelected ? Color(red: 0, green: 0.48, blue: 1) : Color.gray)
-
-                    }
-                    Button {
-                        isSelected = false
-                    } label: {
-                        Image(systemName: "list.clipboard")
-                            .foregroundColor(isSelected ? Color.gray : Color(red: 0, green: 0.48, blue: 1))
-
-                    }
-                }
-            }
-
-            ToolbarItemGroup(placement: .primaryAction) {
-                TopBarView()
+            ToolbarItem(placement: .navigation) {
+                tabPicker
             }
         }
         .onAppear {
@@ -59,6 +28,44 @@ import SwiftUI
                 try await CloudKitManager.shared.syncWithStores()
             }
         }
+    }
+
+    private var projectListView: some View {
+        ProjectListView(projects: viewModel.sortedProjects)
+    }
+
+    private var projectTodoListView: some View {
+        List {
+            ProjectTodoListView(projects: viewModel.selectedProjects)
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                FilterButton()
+            }
+        }
+    }
+
+    private var dailyTodoListView: some View {
+        List {
+            DailyTodoListView()
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Spacer()
+            }
+            ToolbarItem(placement: .primaryAction) {
+                SearchView()
+            }
+        }
+    }
+
+    private var tabPicker: some View {
+        Picker(selection: $selectedTabIndex, label: Text("")) {
+            ForEach(tabs, id: \.self) { tab in
+                Image(systemName: tab)
+            }
+        }
+        .pickerStyle(.segmented)
     }
  }
 
