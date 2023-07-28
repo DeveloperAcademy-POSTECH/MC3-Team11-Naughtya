@@ -32,6 +32,11 @@ public protocol ProjectUseCase {
         _ project: ProjectEntity
     ) async throws
 
+    func swapProjects(
+        _ lhs: ProjectEntity,
+        _ rhs: ProjectEntity
+    ) async throws
+
     func toggleSelected(
         _ project: ProjectEntity,
         isSelected: Bool

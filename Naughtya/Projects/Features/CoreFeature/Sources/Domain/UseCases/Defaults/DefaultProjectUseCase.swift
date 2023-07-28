@@ -85,6 +85,18 @@ struct DefaultProjectUseCase: ProjectUseCase {
         try? await Self.cloudKitManager.delete(project.recordId)
     }
 
+    func swapProjects(
+        _ lhs: ProjectEntity,
+        _ rhs: ProjectEntity
+    ) {
+        guard let index = Self.projectStore.projects
+            .firstIndex(where: { $0 === rhs }) else {
+            return
+        }
+        Self.projectStore.projects.remove(lhs)
+        Self.projectStore.projects.insert(lhs, at: index)
+    }
+
     private func validateNotEmptyCategory(_ category: String) -> Bool {
         !category.isEmpty
     }

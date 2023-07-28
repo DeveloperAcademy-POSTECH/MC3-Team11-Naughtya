@@ -44,5 +44,8 @@ public protocol TodoUseCase {
         dailyTodoList: DailyTodoListEntity
     ) async throws
 
-    func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws
+    func swapTodos(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) async throws
 }

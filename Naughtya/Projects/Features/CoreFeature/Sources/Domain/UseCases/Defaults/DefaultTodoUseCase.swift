@@ -91,7 +91,10 @@ struct DefaultTodoUseCase: TodoUseCase {
         dailyTodoList.todos.value.append(todo)
     }
 
-    func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
+    func swapTodos(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) async throws {
         switch (lhs.isDaily, rhs.isDaily) {
         case (false, false):
             swapInProject(lhs, rhs)
@@ -104,7 +107,10 @@ struct DefaultTodoUseCase: TodoUseCase {
         }
     }
 
-    private func moveToProject(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
+    private func moveToProject(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) async throws {
         guard lhs.project.value === rhs.project.value else {
             return
         }
@@ -112,7 +118,10 @@ struct DefaultTodoUseCase: TodoUseCase {
         swapInProject(lhs, rhs)
     }
 
-    private func moveToDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
+    private func moveToDaily(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) async throws {
         try await Self.dailyTodoListUseCase.addTodoToDaily(
             todo: lhs,
             dailyTodoList: rhs.dailyTodoList.value
@@ -120,7 +129,10 @@ struct DefaultTodoUseCase: TodoUseCase {
         swapInDaily(lhs, rhs)
     }
 
-    private func swapInProject(_ lhs: TodoEntity, _ rhs: TodoEntity) {
+    private func swapInProject(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) {
         guard lhs.project.value === rhs.project.value,
               let indexInProject = rhs.project.value.todos.value.firstIndex(of: rhs) else {
             return
@@ -129,7 +141,10 @@ struct DefaultTodoUseCase: TodoUseCase {
         lhs.project.value.todos.value.insert(lhs, at: indexInProject)
     }
 
-    private func swapInDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) {
+    private func swapInDaily(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) {
         guard let indexInDaily = rhs.dailyTodoList.value?.todos.value.firstIndex(of: rhs) else {
             return
         }

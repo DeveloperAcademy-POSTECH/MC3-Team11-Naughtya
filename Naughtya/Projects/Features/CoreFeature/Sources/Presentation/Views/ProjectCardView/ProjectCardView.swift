@@ -11,35 +11,88 @@ import SwiftUI
 struct ProjectCardView: View {
     private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
 
-    public let project: ProjectModel
+    let project: ProjectModel
+    let isDummy: Bool
+    let dragDropDelegate: DragDropDelegate
+    @State private var absoluteRect: CGRect!
+    @State private var isBeingDragged = false
     @State private var showModal = false
 
+    init(project: ProjectModel,
+         isDummy: Bool = false,
+         dragDropDelegate: DragDropDelegate = DragDropManager.shared) {
+        self.project = project
+        self.isDummy = isDummy
+        self.dragDropDelegate = dragDropDelegate
+    }
+
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            HStack {
-                contentView
-                Spacer()
-                todosCountView
-            }
-            .frame(height: 68)
-            .padding(.leading, 25)
-            .padding(.trailing, 15)
-            .background(
+        GeometryReader { geometry in
+            let absoluteRect = geometry.frame(in: .global)
+            ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 5)
-                    .fill(project.isSelected ? Color.customGray4 : Color.white.opacity(0.001))
-            )
-            if project.isBookmarked {
-                bookmarkIndicator
+                    .fill(project.isSelected ? Color.customGray4 : Color.customGray5)
+                VStack {
+                    Spacer()
+                    HStack {
+                        contentView
+                        Spacer()
+                        todosCountView
+                    }
+                    .padding(.leading, 25)
+                    .padding(.trailing, 15)
+                    Spacer()
+                }
+                if project.isBookmarked {
+                    bookmarkIndicator
+                }
+            }
+            .onAppear {
+                registerAbsoluteRect(absoluteRect)
+            }
+            .onChange(of: absoluteRect) {
+                guard !isBeingDragged else {
+                    return
+                }
+                registerAbsoluteRect($0)
+            }
+            .onChange(of: isBeingDragged) {
+                guard !$0 else {
+                    return
+                }
+                registerAbsoluteRect(absoluteRect)
             }
         }
-        .onTapGesture {
-            Task {
-                try await Self.projectUseCase.toggleSelected(
-                    project.entity,
-                    isSelected: !project.isSelected
-                )
-            }
-        }
+        .frame(height: 68)
+        .opacity(isDummy || isBeingDragged ? 0.5 : 1)
+        .gesture(
+            DragGesture()
+                .onChanged {
+                    let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
+                    if !isBeingDragged {
+                        dragDropDelegate.startToDrag(
+                            project.entity,
+                            size: absoluteRect.size,
+                            itemLocation: itemLocation
+                        )
+                    } else {
+                        dragDropDelegate.drag(
+                            project.entity,
+                            itemLocation: itemLocation
+                        )
+                    }
+                    isBeingDragged = true
+                }
+                .onEnded {
+                    dragDropDelegate.drop(
+                        project.entity,
+                        touchLocation: absoluteRect.origin + $0.location
+                    )
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        isBeingDragged = false
+                    }
+                }
+        )
         .contextMenu {
             Button {
                 showModal = true
@@ -67,6 +120,17 @@ struct ProjectCardView: View {
                     .labelStyle(.titleAndIcon)
             }
         }
+        .onTapGesture {
+            Task {
+                try await Self.projectUseCase.toggleSelected(
+                    project.entity,
+                    isSelected: !project.isSelected
+                )
+            }
+        }
+        .onDisappear {
+            dragDropDelegate.unregisterAbsoluteRect(project.entity)
+        }
         .sheet(isPresented: $showModal) {
             ProjectSetModalView(project: project)
         }
@@ -80,7 +144,7 @@ struct ProjectCardView: View {
             if let projectEndDay = project.endedAt {
                 Text("- \(changeDateFormat(projectEndDay: projectEndDay))")
                     .font(Font.custom("SF Pro", size: 12).weight(.semibold))
-                    .foregroundColor(Color.customGray2)
+                    .foregroundColor(.customGray2)
             }
         }
     }
@@ -89,7 +153,7 @@ struct ProjectCardView: View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text("\(project.completedTodos.count)")
                 .font(Font.custom("SF Pro", size: 24).weight(.semibold))
-                .foregroundColor(Color.pointColor)
+                .foregroundColor(.pointColor)
             Text("/\(project.todos.count)")
                 .font(Font.custom("SF Pro", size: 16).weight(.regular))
                 .foregroundColor(.white)
@@ -109,7 +173,15 @@ struct ProjectCardView: View {
             .zIndex(1)
     }
 
-    func toggleIsBookmarked() {
+    private func registerAbsoluteRect(_ rect: CGRect) {
+        absoluteRect = rect
+        dragDropDelegate.registerAbsoluteRect(
+            project.entity,
+            rect: rect
+        )
+    }
+
+    private func toggleIsBookmarked() {
         Task {
             try await Self.projectUseCase.toggleIsBookmarked(
                 project.entity,
@@ -117,7 +189,7 @@ struct ProjectCardView: View {
         }
     }
 
-    func changeDateFormat(projectEndDay: Date) -> String {
+    private func changeDateFormat(projectEndDay: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         let formattedDate = dateFormatter.string(from: projectEndDay)

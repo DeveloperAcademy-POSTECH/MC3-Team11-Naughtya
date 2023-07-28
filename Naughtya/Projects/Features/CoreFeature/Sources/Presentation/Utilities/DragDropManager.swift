@@ -80,30 +80,60 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         _ item: DragDropItemable,
         touchLocation: CGPoint
     ) {
-        guard let todo = item as? TodoEntity else {
-            return
-        }
         dragged = nil
         Task {
-            if let targetTodo = getTargetTodo(touchLocation: touchLocation) {
-                try await Self.todoUseCase.swapTodos(
+            switch item {
+            case let project as ProjectEntity:
+                try await dropForProject(
+                    project,
+                    touchLocation: touchLocation
+                )
+            case let todo as TodoEntity:
+                try await dropForTodo(
                     todo,
-                    targetTodo
+                    touchLocation: touchLocation
                 )
-                return
+            default:
+                break
             }
-            if let targetProject = getTargetProject(touchLocation: touchLocation),
-               targetProject === todo.project.value {
-                try await Self.todoUseCase.moveToProject(todo: todo)
-                return
-            }
-            if let targetDailyTodoList = getTargetDailyTodoList(touchLocation: touchLocation) {
-                try await Self.todoUseCase.moveToDaily(
-                    todo: todo,
-                    dailyTodoList: targetDailyTodoList
-                )
-                return
-            }
+        }
+    }
+
+    private func dropForProject(
+        _ project: ProjectEntity,
+        touchLocation: CGPoint
+    ) async throws {
+        if let targetProject = getTargetProject(touchLocation: touchLocation) {
+            try await Self.projectUseCase.swapProjects(
+                project,
+                targetProject
+            )
+            return
+        }
+    }
+
+    private func dropForTodo(
+        _ todo: TodoEntity,
+        touchLocation: CGPoint
+    ) async throws {
+        if let targetTodo = getTargetTodo(touchLocation: touchLocation) {
+            try await Self.todoUseCase.swapTodos(
+                todo,
+                targetTodo
+            )
+            return
+        }
+        if let targetProject = getTargetProject(touchLocation: touchLocation),
+           targetProject === todo.project.value {
+            try await Self.todoUseCase.moveToProject(todo: todo)
+            return
+        }
+        if let targetDailyTodoList = getTargetDailyTodoList(touchLocation: touchLocation) {
+            try await Self.todoUseCase.moveToDaily(
+                todo: todo,
+                dailyTodoList: targetDailyTodoList
+            )
+            return
         }
     }
 
