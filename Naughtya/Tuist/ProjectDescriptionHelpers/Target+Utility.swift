@@ -23,6 +23,7 @@ extension Target {
             bundleId: "\(organizationName).\(name)",
             deploymentTarget: deploymentTarget,
             sources: "Sources/**",
+            resources: ["Resources/**"],
             scripts: [.swiftlint],
             dependencies: dependencies
         )

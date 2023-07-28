@@ -50,7 +50,9 @@ public struct TodoItemView: View {
                         Color.customGray5
                     }
                     HStack(alignment: .center) {
-                        Text("🖱️")
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(Color.customGray4)
+                            .frame(width: 10, height: 20)
                             .opacity(isHovered ? 1 : 0.01)
                             .animation(.easeOut, value: isHovered)
                         Button(action: {

@@ -120,6 +120,7 @@ struct ListHeaderView: View {
             } label: {
                 Text("dummy")
             }
+            .opacity(0.001)
         }
     }
 }
