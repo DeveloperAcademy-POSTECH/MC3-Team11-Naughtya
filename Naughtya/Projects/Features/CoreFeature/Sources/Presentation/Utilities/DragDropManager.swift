@@ -12,9 +12,9 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
     public static let shared: DragDropManager = .init()
     private static let projectStore: ProjectStore = .shared
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let projectUseCase: ProjectUseCase = MockProjectUseCase()
-    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     @Published public var dragged: DraggedModel?
     @Published public var projectAbsoluteRectMap = [ProjectEntity: CGRect]()
@@ -85,8 +85,15 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
         }
         dragged = nil
         Task {
+            if let targetTodo = getTargetTodo(touchLocation: touchLocation) {
+                try await Self.todoUseCase.swapTodos(
+                    todo,
+                    targetTodo
+                )
+                return
+            }
             if let targetProject = getTargetProject(touchLocation: touchLocation),
-               targetProject === todo.project {
+               targetProject === todo.project.value {
                 try await Self.todoUseCase.moveToProject(todo: todo)
                 return
             }
@@ -94,13 +101,6 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
                 try await Self.todoUseCase.moveToDaily(
                     todo: todo,
                     dailyTodoList: targetDailyTodoList
-                )
-                return
-            }
-            if let targetTodo = getTargetTodo(touchLocation: touchLocation) {
-                try await Self.todoUseCase.swapTodos(
-                    todo,
-                    targetTodo
                 )
                 return
             }

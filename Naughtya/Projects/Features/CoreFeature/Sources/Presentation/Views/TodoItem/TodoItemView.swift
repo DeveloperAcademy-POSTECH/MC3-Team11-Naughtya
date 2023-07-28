@@ -7,17 +7,19 @@
 //
 
 import SwiftUI
+import Combine
 
 public struct TodoItemView: View {
     private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let dailyTodoListUseCase: DailyTodoListUseCase = MockDailyTodoListUseCase()
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     public let todo: TodoModel
     public let isBacklog: Bool
     public let isDummy: Bool
     public let isBlockedToEdit: Bool
     public let dragDropDelegate: DragDropDelegate
+    private let titlePublisher: PassthroughSubject<String, Never> = .init()
     @State private var title: String
     @State private var absoluteRect: CGRect!
     @State private var isHovered = false
@@ -43,35 +45,77 @@ public struct TodoItemView: View {
             let absoluteRect = geometry.frame(in: .global)
             VStack {
                 Spacer()
-                HStack(alignment: .center) {
-                    Text("🖱️")
-                        .opacity(isHovered ? 1 : 0)
-                        .animation(.easeOut, value: isHovered)
-                    Button(todo.isCompleted ? "✅" : "◻️") {
-                        toggleCompleted()
+                ZStack {
+                    if isHovered {
+                        Color.customGray5
                     }
-                    .buttonStyle(.borderless)
-                    if !isBacklog {
-                        Text("[\(todo.category)]")
-                            .font(.headline)
-                    }
-                    ZStack {
-                        TextField(text: $title) {
-                            placeholder
+                    HStack(alignment: .center) {
+                        Text("🖱️")
+                            .opacity(isHovered ? 1 : 0.01)
+                            .animation(.easeOut, value: isHovered)
+                        Button(action: {
+                            toggleCompleted()
+                        }, label: {
+                            Image(systemName: todo.isCompleted ? "checkmark.square" : "square")
+                                .foregroundColor(todo.isCompleted ? Color.customGray3 : Color.pointColor)
+                                .font(.system(size: 22))
+                        })
+                        .buttonStyle(.borderless)
+                        if !isBacklog {
+                            Text("[\(todo.category)]")
+                                .font(
+                                    Font.custom("Apple SD Gothic Neo", size: 16)
+                                        .weight(.bold)
+                                )
                         }
-                        .textFieldStyle(.plain)
-                        Color.white
-                            .opacity(isBlockedToEdit ? 0.01 : 0)
+                        ZStack {
+                            if todo.isCompleted {
+                                Text("\(todo.title)")
+                                    .strikethrough()
+                                    .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                                    .textFieldStyle(.plain)
+
+                                    .foregroundColor(Color.customGray3)
+                            } else {
+                                TextField(text: $title) {
+                                    placeholder
+                                }
+                                .padding(.leading, -8)
+                                .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                                .textFieldStyle(.plain)
+                                .onChange(of: title) {
+                                    titlePublisher.send($0)
+                                }
+                                .onReceive(
+                                    titlePublisher
+                                        .debounce(
+                                            for: .milliseconds(100),
+                                            scheduler: DispatchQueue.global(qos: .userInteractive)
+                                        )
+                                ) { _ in
+                                    updateTitle()
+                                }
+                                .onSubmit {
+                                    updateTitle()
+                                }
+                            }
+                        }
+                        Button {
+                            toggleDaily()
+                        } label: {
+                            Text(todo.isCompleted ? "" : "🔄")
+                        }
+                        .buttonStyle(.borderless)
+                        Button {
+                            delete()
+                        } label: {
+                            Text(todo.isCompleted ? "" : "🚮")
+                        }
+                        .buttonStyle(.borderless)
+                        Spacer()
+
                     }
-                    Button("🔄") {
-                        toggleDaily()
-                    }
-                    .buttonStyle(.borderless)
-                    Button("🚮") {
-                        delete()
-                    }
-                    .buttonStyle(.borderless)
-                    Spacer()
+                    .frame(height: 35)
                 }
                 Spacer()
             }
@@ -92,7 +136,6 @@ public struct TodoItemView: View {
             }
         }
         .frame(height: 40)
-        .background(.white)
         .opacity(opacity)
         .gesture(
             DragGesture()
@@ -125,9 +168,6 @@ public struct TodoItemView: View {
         .onHover {
             isHovered = $0
         }
-        .onSubmit {
-            updateTitle()
-        }
         .onDisappear {
             dragDropDelegate.unregisterAbsoluteRect(todo.entity)
         }
@@ -135,7 +175,7 @@ public struct TodoItemView: View {
 
     private var placeholder: some View {
         Text("Todo")
-            .foregroundColor(.gray)
+            .foregroundColor(Color.customGray3)
     }
 
     private var opacity: CGFloat {
@@ -198,6 +238,6 @@ public struct TodoItemView: View {
 
 struct TodoItemView_Previews: PreviewProvider {
     static var previews: some View {
-        TodoItemView(todo: .from(entity: TodoEntity.sample))
+        TodoItemView(todo: .from(entity: .sample))
     }
 }

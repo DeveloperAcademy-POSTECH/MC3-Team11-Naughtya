@@ -1,44 +1,66 @@
-//
-//  DashboardView.swift
-//  MacOSApp
-//
-//  Created by byo on 2023/07/18.
-//  Copyright © 2023 Naughtya. All rights reserved.
-//
-
 import SwiftUI
-import MacOSCoreFeature
+ import MacOSCoreFeature
 
-struct DashboardView: View {
+ struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
+    @State private var isSelected = true
 
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                TopBarView()
-                    .zIndex(1)
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        ProjectListView(projects: viewModel.projects)
+        NavigationSplitView {
+            ProjectListView(projects: viewModel.projects)
+                .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
+        } content: {
+            List {
+                ProjectTodoListView(projects: viewModel.selectedProjects)
+            }
+            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
+
+        } detail: {
+            List {
+                DailyTodoListView()
+            }
+            .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
+        }
+        .navigationTitle("")
+        .toolbar {
+            ToolbarItem(placement: .status) {
+                Button {
+
+                } label: {
+                    Image(systemName: "list.bullet")
+                }
+            }
+
+            ToolbarItemGroup(placement: .navigation) {
+                HStack(spacing: 0) {
+                    Button {
+                        isSelected = true
+                    } label: {
+                        Image(systemName: "folder")
+                            .foregroundColor(isSelected ? Color(red: 0, green: 0.48, blue: 1) : Color.gray)
+
                     }
-                    VStack(alignment: .leading) {
-                        Text("Projects")
-                            .font(.title)
-                        List {
-                            ProjectTodoListView(projects: viewModel.projects)
-                        }
-                    }
-                    VStack(alignment: .leading) {
-                        List {
-                            DailyTodoListView()
-                        }
+                    Button {
+                        isSelected = false
+                    } label: {
+                        Image(systemName: "list.clipboard")
+                            .foregroundColor(isSelected ? Color.gray : Color(red: 0, green: 0.48, blue: 1))
+
                     }
                 }
-                .zIndex(0)
+            }
+
+            ToolbarItemGroup(placement: .primaryAction) {
+                TopBarView()
+            }
+        }
+        .onAppear {
+            Task {
+                try await CloudKitManager.shared.syncWithStores()
             }
         }
     }
-}
+ }
 
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {

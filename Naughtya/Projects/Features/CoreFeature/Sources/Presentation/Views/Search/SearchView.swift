@@ -9,27 +9,25 @@
 import SwiftUI
 
 public struct SearchView: View {
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     @StateObject private var viewModel = SearchViewModel()
     private let textFieldHeight: CGFloat = 40
 
     public var body: some View {
         TextField(text: $viewModel.searchedText) {
-            Text("Search")
+            Text("오늘 할 일을 검색해보세요.")
+                .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                .foregroundColor(Color.customGray1)
         }
-        .textFieldStyle(.plain)
+        .textFieldStyle(.roundedBorder)
         .padding(.horizontal)
         .frame(height: textFieldHeight)
-        .background(.white)
-        .overlay(alignment: .top) {
-            if !viewModel.searchedTodos.isEmpty {
-                searchedTodoList
-            }
+        .onChange(of: viewModel.searchedText) {
+            viewModel.searchGlobally(text: $0)
         }
-        .onChange(of: viewModel.searchedText) { _ in
-            viewModel.updateSearchingState()
-            viewModel.fetchSearchedTodos()
+        .onExitCommand {
+            viewModel.searchedText = ""
         }
     }
 

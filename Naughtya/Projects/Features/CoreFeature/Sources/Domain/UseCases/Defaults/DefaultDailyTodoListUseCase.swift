@@ -1,5 +1,5 @@
 //
-//  MockDailyTodoListUseCase.swift
+//  DefaultDailyTodoListUseCase.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/19.
@@ -8,13 +8,19 @@
 
 import Foundation
 
-struct MockDailyTodoListUseCase: DailyTodoListUseCase {
-    private static let projectStore: ProjectStore = .shared
+struct DefaultDailyTodoListUseCase: DailyTodoListUseCase {
     private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
 
-    func create(dateString: String) async throws -> DailyTodoListEntity {
-        defer { Self.dailyTodoListStore.update() }
+    func create(dateString: String) async throws -> DailyTodoListEntity? {
+        guard try await readByDate(dateString: dateString) == nil else {
+            return nil
+        }
         let dailyTodoList = DailyTodoListEntity(dateString: dateString)
+        Task {
+            let record = try? await Self.cloudKitManager.create(dailyTodoList.record)
+            dailyTodoList.recordId = record?.id
+        }
         Self.dailyTodoListStore.dailyTodoLists.append(dailyTodoList)
         return dailyTodoList
     }
@@ -30,20 +36,13 @@ struct MockDailyTodoListUseCase: DailyTodoListUseCase {
         guard let dailyTodoList = dailyTodoList else {
             return
         }
-        defer { updateStores() }
-        todo.dailyTodoList = dailyTodoList
-        dailyTodoList.todos.remove(todo)
-        dailyTodoList.todos.append(todo)
+        todo.dailyTodoList.value = dailyTodoList
+        dailyTodoList.todos.value.remove(todo)
+        dailyTodoList.todos.value.append(todo)
     }
 
     func removeTodoFromDaily(_ todo: TodoEntity) async throws {
-        defer { updateStores() }
-        todo.dailyTodoList?.todos.remove(todo)
-        todo.dailyTodoList = nil
-    }
-
-    private func updateStores() {
-        Self.projectStore.update()
-        Self.dailyTodoListStore.update()
+        todo.dailyTodoList.value?.todos.value.remove(todo)
+        todo.dailyTodoList.value = nil
     }
 }

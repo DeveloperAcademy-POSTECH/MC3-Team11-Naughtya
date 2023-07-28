@@ -12,21 +12,24 @@ import Combine
 @MainActor
 public final class SearchViewModel: ObservableObject {
     private static let searchManager: SearchManager = .shared
-    private static let projectStore: ProjectStore = .shared
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
-    private static let todoUseCase: TodoUseCase = MockTodoUseCase()
 
     @Published public var searchedText: String = ""
-    @Published public var searchedTodos: [TodoModel] = []
-    private var cancellable = Set<AnyCancellable>()
 
     public init() {
-        setupFetchingData()
     }
 
-    public func updateSearchingState() {
-        Self.searchManager.isSearching = !searchedText.isEmpty
+    public func searchGlobally(text: String) {
+        Self.searchManager.searchedText = text
     }
+
+    // MARK: - Deprecated
+
+    private static let projectStore: ProjectStore = .shared
+    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
+
+    @Published public var searchedTodos: [TodoModel] = []
+    private var cancellable = Set<AnyCancellable>()
 
     public func fetchSearchedTodos() {
         Task {
@@ -41,7 +44,7 @@ public final class SearchViewModel: ObservableObject {
             Self.dailyTodoListStore.objectWillChange
         )
         .debounce(
-            for: .milliseconds(10),
+            for: .milliseconds(100),
             scheduler: DispatchQueue.global(qos: .userInitiated)
         )
         .receive(on: DispatchQueue.main)

@@ -14,18 +14,11 @@ struct MacOSApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                TabView {
-                    DashboardView()
-                        .tabItem {
-                            Text("홈")
-                        }
-                    ProjectResultListView()
-                        .tabItem {
-                            Text("완료(성과)")
-                        }
-                }
-                DragDropStageView()
+                DashboardView()
+                DragDropStageView(topPadding: 52)
             }
+            .frame(minWidth: 1174, minHeight: 756)
+            .preferredColorScheme(.dark)
         }
     }
 }

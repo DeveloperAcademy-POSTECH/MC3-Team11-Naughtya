@@ -20,10 +20,20 @@ public final class DashboardViewModel: ObservableObject {
         setupFetchingData()
     }
 
+    public var sortedProjects: [ProjectModel] {
+        projects
+            .sorted { $0.isBookmarked && !$1.isBookmarked }
+    }
+
+    public var selectedProjects: [ProjectModel] {
+        sortedProjects
+            .filter { $0.isSelected }
+    }
+
     private func setupFetchingData() {
         Self.projectStore.objectWillChange
             .debounce(
-                for: .milliseconds(10),
+                for: .milliseconds(100),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .receive(on: DispatchQueue.main)

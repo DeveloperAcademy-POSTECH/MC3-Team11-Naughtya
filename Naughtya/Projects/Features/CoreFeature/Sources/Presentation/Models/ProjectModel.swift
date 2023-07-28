@@ -30,15 +30,15 @@ public struct ProjectModel: Modelable {
     public static func from(entity: ProjectEntity) -> Self {
         ProjectModel(
             entity: entity,
-            category: entity.category,
-            goals: entity.goals,
-            startedAt: entity.startedAt,
-            endedAt: entity.endedAt,
-            todos: entity.todos
+            category: entity.category.value,
+            goals: entity.goals.value,
+            startedAt: entity.startedAt.value,
+            endedAt: entity.endedAt.value,
+            todos: entity.todos.value
                 .map { .from(entity: $0) },
             isEnded: entity.isEnded,
-            isSelected: entity.isSelected,
-            isBookmarked: entity.isBookmarked
+            isSelected: entity.isSelected.value,
+            isBookmarked: entity.isBookmarked.value
         )
     }
 }
