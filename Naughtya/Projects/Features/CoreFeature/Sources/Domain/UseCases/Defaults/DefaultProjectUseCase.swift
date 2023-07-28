@@ -29,13 +29,18 @@ struct DefaultProjectUseCase: ProjectUseCase {
             category: category,
             goals: goals,
             startedAt: startedAt,
-            endedAt: endedAt
+            endedAt: endedAt,
+            isSelected: true
         )
         Task {
             let record = try? await Self.cloudKitManager.create(project.record)
             project.recordId = record?.id
         }
         Self.projectStore.projects.append(project)
+        try await Self.todoUseCase.create(
+            project: project,
+            dailyTodoList: nil
+        )
         return project
     }
 

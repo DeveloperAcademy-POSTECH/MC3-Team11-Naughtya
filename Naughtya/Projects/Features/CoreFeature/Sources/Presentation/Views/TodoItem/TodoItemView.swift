@@ -28,6 +28,7 @@ public struct TodoItemView: View {
     @State private var absoluteRect: CGRect!
     @State private var isHovered = false
     @State private var isBeingDragged = false
+    @State private var isDeleting = false
     @FocusState private var focusedField: FocusableField?
 
     public init(
@@ -77,6 +78,9 @@ public struct TodoItemView: View {
         .frame(height: 47)
         .opacity(isDummy || isBeingDragged ? 0.5 : 1)
         .gesture(dragGesture)
+        .onAppear {
+            focusTextFieldIfNeeded()
+        }
         .onHover {
             isHovered = $0
         }
@@ -86,20 +90,21 @@ public struct TodoItemView: View {
     }
 
     private var contentView: some View {
-        HStack {
+        HStack(spacing: 4) {
             dragDropIndicator
             completionButton
             if !isBacklog {
                 categoryText
             }
             titleView
-            controlButtons
+            deleteButton
         }
+        .padding(.horizontal, 4)
     }
 
     private var dragDropIndicator: some View {
         Text("🖱️")
-            .opacity(isHovered ? 1 : 0.01)
+            .opacity(isHovered ? 1 : 0.001)
             .animation(.easeOut, value: isHovered)
     }
 
@@ -122,7 +127,7 @@ public struct TodoItemView: View {
     private var titleView: some View {
         ZStack {
             titleTextField
-            if focusedField == nil {
+            if isStatic {
                 titleText
             }
         }
@@ -131,14 +136,15 @@ public struct TodoItemView: View {
 
     private var titleTextField: some View {
         TextField(text: $title) {
-            Text("Todo")
-                .foregroundColor(.customGray3)
+            if focusedField == .textField {
+                Text("프로젝트에 할 일을 적어주세요.")
+                    .foregroundColor(.customGray3)
+            }
         }
         .textFieldStyle(.plain)
-        .background(Color.clear)
         .padding(.leading, -8)
         .focused($focusedField, equals: .textField)
-        .opacity(focusedField == .textField ? 1 : 0)
+        .opacity(isStatic ? 0 : 1)
         .onChange(of: title) {
             titlePublisher.send($0)
         }
@@ -153,6 +159,7 @@ public struct TodoItemView: View {
         }
         .onSubmit {
             updateTitle()
+            appendNextTodo()
         }
     }
 
@@ -168,20 +175,22 @@ public struct TodoItemView: View {
         }
     }
 
-    private var controlButtons: some View {
-        HStack {
-            Button {
-                toggleDaily()
-            } label: {
-                Text(todo.isCompleted ? "" : "🔄")
+    private var deleteButton: some View {
+        Button {
+            delete()
+        } label: {
+            Text(isDeleting ? "❌" : "🗑️")
+        }
+        .buttonStyle(.borderless)
+        .opacity(isHovered ? 1 : 0.001)
+        .animation(.easeOut, value: isHovered)
+        .onChange(of: isHovered) {
+            guard !$0 else {
+                return
             }
-            .buttonStyle(.borderless)
-            Button {
-                delete()
-            } label: {
-                Text(todo.isCompleted ? "" : "🚮")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                isDeleting = false
             }
-            .buttonStyle(.borderless)
         }
     }
 
@@ -214,6 +223,10 @@ public struct TodoItemView: View {
             }
     }
 
+    private var isStatic: Bool {
+        !title.isEmpty && focusedField == nil
+    }
+
     private var dragDropableHash: DragDropableHash {
         DragDropableHash(
             item: todo.entity,
@@ -229,29 +242,10 @@ public struct TodoItemView: View {
         )
     }
 
-    private func updateTitle() {
-        Task {
-            try await Self.todoUseCase.update(
-                todo.entity,
-                title: title
-            )
-        }
-    }
-
-    private func toggleDaily() {
-        Task {
-            if todo.entity.isDaily {
-                try await Self.dailyTodoListUseCase.removeTodoFromDaily(todo.entity)
-            } else {
-                try await Self.dailyTodoListUseCase.addTodoToDaily(
-                    todo: todo.entity,
-                    dailyTodoList: Self.dailyTodoListStore.currentDailyTodoList
-                )
-            }
-        }
-    }
-
     private func toggleCompleted() {
+        guard !title.isEmpty else {
+            return
+        }
         Task {
             if todo.entity.isCompleted {
                 try await Self.todoUseCase.undoCompleted(todo.entity)
@@ -264,7 +258,36 @@ public struct TodoItemView: View {
         }
     }
 
+    private func focusTextFieldIfNeeded() {
+        guard title.isEmpty else {
+            return
+        }
+        focusedField = .textField
+    }
+
+    private func updateTitle() {
+        Task {
+            try await Self.todoUseCase.update(
+                todo.entity,
+                title: title
+            )
+        }
+    }
+
+    private func appendNextTodo() {
+        guard !title.isEmpty else {
+            return
+        }
+        Task {
+            try await Self.todoUseCase.createAfterTodo(todo.entity)
+        }
+    }
+
     private func delete() {
+        guard isDeleting else {
+            isDeleting = true
+            return
+        }
         Task {
             try await Self.todoUseCase.delete(todo.entity)
         }

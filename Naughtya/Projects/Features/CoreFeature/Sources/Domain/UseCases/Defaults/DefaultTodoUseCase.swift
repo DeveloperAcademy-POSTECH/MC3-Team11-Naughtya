@@ -17,17 +17,31 @@ struct DefaultTodoUseCase: TodoUseCase {
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity?
     ) async throws -> TodoEntity {
-        let todo = TodoEntity(
+        let todo = try await createTodo(
             project: project,
             dailyTodoList: dailyTodoList
         )
-        Task {
-            let record = try? await Self.cloudKitManager.create(todo.record)
-            todo.recordId = record?.id
-        }
         project.todos.value.append(todo)
         dailyTodoList?.todos.value.append(todo)
         return todo
+    }
+
+    func createAfterTodo(_ todo: TodoEntity) async throws {
+        guard let indexInProject = todo.project.value.todos.value
+            .firstIndex(of: todo) else {
+            return
+        }
+        let newTodo = try await createTodo(
+            project: todo.project.value,
+            dailyTodoList: todo.dailyTodoList.value
+        )
+        newTodo.project.value.todos.value
+            .insert(newTodo, at: indexInProject + 1)
+        if let indexInDaily = todo.dailyTodoList.value?.todos.value
+            .firstIndex(of: todo) {
+            newTodo.dailyTodoList.value?.todos.value
+                .insert(newTodo, at: indexInDaily + 1)
+        }
     }
 
     func readList(searchedText: String) async throws -> [TodoEntity] {
@@ -105,6 +119,21 @@ struct DefaultTodoUseCase: TodoUseCase {
         case (true, true):
             swapInDaily(lhs, rhs)
         }
+    }
+
+    private func createTodo(
+        project: ProjectEntity,
+        dailyTodoList: DailyTodoListEntity?
+    ) async throws -> TodoEntity {
+        let todo = TodoEntity(
+            project: project,
+            dailyTodoList: dailyTodoList
+        )
+        Task {
+            let record = try? await Self.cloudKitManager.create(todo.record)
+            todo.recordId = record?.id
+        }
+        return todo
     }
 
     private func moveToProject(
