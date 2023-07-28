@@ -78,17 +78,15 @@ public struct ProjectItemView: View {
 
     private var todos: [TodoModel] {
         var todos = project.backlogTodos
-        if let filter = filterManager.filter {
-            switch filter {
-            case .uncompleted:
-                todos = todos
-                    .filter { !$0.isCompleted }
-            case .completed:
-                todos = todos
-                    .filter { $0.isCompleted }
-            default:
-                break
-            }
+        switch filterManager.filter {
+        case .uncompleted:
+            todos = todos
+                .filter { !$0.isCompleted }
+        case .completed:
+            todos = todos
+                .filter { $0.isCompleted }
+        default:
+            break
         }
         if filterManager.isSearching {
             todos = todos

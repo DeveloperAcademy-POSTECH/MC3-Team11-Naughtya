@@ -16,13 +16,19 @@ public struct FilterButton: View {
 
     public var body: some View {
         MenuButton(label: Image(systemName: "slider.horizontal.3")) {
-            ForEach(FilterCategory.allCases, id: \.self) { filter in
-                Button(filter.title) {
-                    filterManager.filter = filter
-                }
-            }
+            buildButton(filter: .all)
+            Divider()
+            buildButton(filter: .uncompleted)
+            buildButton(filter: .completed)
         }
+        .opacity(filterManager.filter == .all ? 0.7 : 1)
         .menuButtonStyle(BorderlessButtonMenuButtonStyle())
+    }
+
+    private func buildButton(filter: FilterCategory) -> some View {
+        Button(filter.title) {
+            filterManager.filter = filter
+        }
     }
 }
 
