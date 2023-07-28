@@ -140,9 +140,6 @@ struct DefaultTodoUseCase: TodoUseCase {
         _ lhs: TodoEntity,
         _ rhs: TodoEntity
     ) async throws {
-        guard lhs.project.value === rhs.project.value else {
-            return
-        }
         try await Self.dailyTodoListUseCase.removeTodoFromDaily(lhs)
         swapInProject(lhs, rhs)
     }

@@ -105,10 +105,8 @@ public final class DragDropManager: ObservableObject, DragDropDelegate {
             return
         }
         switch target {
-        case let targetProject as ProjectEntity:
-            if todo.project.value === targetProject {
-                try await Self.todoUseCase.moveToProject(todo: todo)
-            }
+        case _ as ProjectEntity:
+            try await Self.todoUseCase.moveToProject(todo: todo)
         case let targetDailyTodoList as DailyTodoListEntity:
             try await Self.todoUseCase.moveToDaily(
                 todo: todo,
