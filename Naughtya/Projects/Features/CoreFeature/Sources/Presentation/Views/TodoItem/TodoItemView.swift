@@ -14,6 +14,10 @@ public struct TodoItemView: View {
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
     private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
+    private enum FocusableField: Hashable {
+        case textField
+    }
+
     public let todo: TodoModel
     public let isBacklog: Bool
     public let isDummy: Bool
@@ -24,6 +28,7 @@ public struct TodoItemView: View {
     @State private var absoluteRect: CGRect!
     @State private var isHovered = false
     @State private var isBeingDragged = false
+    @FocusState private var focusedField: FocusableField?
 
     public init(
         todo: TodoModel,
@@ -49,75 +54,9 @@ public struct TodoItemView: View {
                     if isHovered {
                         Color.customGray5
                     }
-                    HStack(alignment: .center) {
-                        Text("🖱️")
-                            .opacity(isHovered ? 1 : 0.01)
-                            .animation(.easeOut, value: isHovered)
-                        Button(action: {
-                            toggleCompleted()
-                        }, label: {
-                            Image(systemName: todo.isCompleted ? "checkmark.square" : "square")
-                                .foregroundColor(todo.isCompleted ? Color.customGray3 : Color.pointColor)
-                                .font(.system(size: 22))
-                        })
-                        .buttonStyle(.borderless)
-                        if !isBacklog {
-                            Text("[\(todo.category)]")
-                                .font(
-                                    Font.custom("Apple SD Gothic Neo", size: 16)
-                                        .weight(.bold)
-                                )
-                        }
-                        ZStack {
-                            if todo.isCompleted {
-                                Text("\(todo.title)")
-                                    .strikethrough()
-                                    .font(Font.custom("Apple SD Gothic Neo", size: 16))
-                                    .textFieldStyle(.plain)
-
-                                    .foregroundColor(Color.customGray3)
-                            } else {
-                                TextField(text: $title) {
-                                    placeholder
-                                }
-                                .padding(.leading, -8)
-                                .font(Font.custom("Apple SD Gothic Neo", size: 16))
-                                .textFieldStyle(.plain)
-                                .onChange(of: title) {
-                                    titlePublisher.send($0)
-                                }
-                                .onReceive(
-                                    titlePublisher
-                                        .debounce(
-                                            for: .milliseconds(100),
-                                            scheduler: DispatchQueue.global(qos: .userInteractive)
-                                        )
-                                ) { _ in
-                                    updateTitle()
-                                }
-                                .onSubmit {
-                                    updateTitle()
-                                }
-                            }
-                        }
-                        Button {
-                            toggleDaily()
-                        } label: {
-                            Text(todo.isCompleted ? "" : "🔄")
-                        }
-                        .buttonStyle(.borderless)
-                        Button {
-                            delete()
-                        } label: {
-                            Text(todo.isCompleted ? "" : "🚮")
-                        }
-                        .buttonStyle(.borderless)
-                        Spacer()
-
-                    }
-                    .frame(height: 35)
+                    contentView
                 }
-                Spacer()
+                .frame(height: 42)
             }
             .onAppear {
                 registerAbsoluteRect(absoluteRect)
@@ -135,8 +74,8 @@ public struct TodoItemView: View {
                 registerAbsoluteRect(absoluteRect)
             }
         }
-        .frame(height: 40)
-        .opacity(opacity)
+        .frame(height: 47)
+        .opacity(isDummy || isBeingDragged ? 0.5 : 1)
         .gesture(
             DragGesture()
                 .onChanged {
@@ -173,16 +112,103 @@ public struct TodoItemView: View {
         }
     }
 
-    private var placeholder: some View {
-        Text("Todo")
-            .foregroundColor(Color.customGray3)
+    private var contentView: some View {
+        HStack {
+            dragDropIndicator
+            completionButton
+            if !isBacklog {
+                categoryText
+            }
+            titleView
+            controlButtons
+        }
     }
 
-    private var opacity: CGFloat {
-        if isDummy || isBeingDragged {
-            return 0.5
-        } else {
-            return 1
+    private var dragDropIndicator: some View {
+        Text("🖱️")
+            .opacity(isHovered ? 1 : 0.01)
+            .animation(.easeOut, value: isHovered)
+    }
+
+    private var completionButton: some View {
+        Button {
+            toggleCompleted()
+        } label: {
+            Image(systemName: todo.isCompleted ? "checkmark.square" : "square")
+                .foregroundColor(todo.isCompleted ? .customGray3 : .pointColor)
+                .font(.system(size: 22))
+        }
+        .buttonStyle(.borderless)
+    }
+
+    private var categoryText: some View {
+        Text("[\(todo.category)]")
+            .font(Font.custom("SF Pro", size: 16).weight(.bold))
+    }
+
+    private var titleView: some View {
+        ZStack {
+            titleTextField
+            if focusedField == nil {
+                titleText
+            }
+        }
+        .font(Font.custom("SF Pro", size: 16))
+    }
+
+    private var titleTextField: some View {
+        TextField(text: $title) {
+            Text("Todo")
+                .foregroundColor(.customGray3)
+        }
+        .textFieldStyle(.plain)
+        .background(Color.clear)
+        .padding(.leading, -8)
+        .focused($focusedField, equals: .textField)
+        .opacity(focusedField == .textField ? 1 : 0)
+        .onChange(of: title) {
+            titlePublisher.send($0)
+        }
+        .onReceive(
+            titlePublisher
+                .debounce(
+                    for: .milliseconds(100),
+                    scheduler: DispatchQueue.global(qos: .userInteractive)
+                )
+        ) { _ in
+            updateTitle()
+        }
+        .onSubmit {
+            updateTitle()
+        }
+    }
+
+    private var titleText: some View {
+        HStack {
+            Text(title)
+                .foregroundColor(todo.isCompleted ? .customGray3 : .white)
+                .strikethrough(todo.isCompleted)
+                .onTapGesture {
+                    focusedField = .textField
+                }
+            Spacer()
+        }
+    }
+
+    private var controlButtons: some View {
+        HStack {
+            Button {
+                toggleDaily()
+            } label: {
+                Text(todo.isCompleted ? "" : "🔄")
+            }
+            .buttonStyle(.borderless)
+            Button {
+                delete()
+            } label: {
+                Text(todo.isCompleted ? "" : "🚮")
+            }
+            .buttonStyle(.borderless)
         }
     }
 
