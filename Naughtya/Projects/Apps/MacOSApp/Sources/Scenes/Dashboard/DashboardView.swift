@@ -10,12 +10,19 @@ struct DashboardView: View {
         NavigationSplitView {
             projectListView
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
-        } content: {
-            projectTodoListView
-                .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         } detail: {
-            dailyTodoListView
-                .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
+            switch selectedTabIndex {
+            case 0:
+                NavigationStack {
+                    NavigationView {
+                        projectTodoListView
+                        dailyTodoListView
+                            .frame(minWidth: 424)
+                    }
+                }
+            default: ProjectResultListView()
+            }
+
         }
         .navigationTitle("")
         .toolbar {
@@ -38,6 +45,8 @@ struct DashboardView: View {
         List {
             ProjectTodoListView(projects: viewModel.selectedProjects)
         }
+        .frame(minWidth: 462, minHeight: 756)
+        .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 FilterButton()
@@ -61,9 +70,10 @@ struct DashboardView: View {
 
     private var tabPicker: some View {
         Picker(selection: $selectedTabIndex, label: Text("")) {
-            ForEach(tabs, id: \.self) { tab in
-                Image(systemName: tab)
-            }
+            Image(systemName: "house")
+                .tag(0)
+            Image(systemName: "list.bullet")
+                .tag(1)
         }
         .pickerStyle(.segmented)
     }

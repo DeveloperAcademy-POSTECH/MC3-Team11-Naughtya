@@ -53,7 +53,7 @@ public struct TodoItemView: View {
                 Spacer()
                 ZStack {
                     if isHovered {
-                        Color.customGray5
+                        Color.customGray8
                     }
                     contentView
                 }
@@ -113,7 +113,7 @@ public struct TodoItemView: View {
             toggleCompleted()
         } label: {
             Image(systemName: todo.isCompleted ? "checkmark.square" : "square")
-                .foregroundColor(todo.isCompleted ? .customGray3 : .pointColor)
+                .foregroundColor(todo.isCompleted ? .customGray4 : .pointColor)
                 .font(.system(size: 22))
         }
         .buttonStyle(.borderless)
@@ -138,7 +138,7 @@ public struct TodoItemView: View {
         TextField(text: $title) {
             if focusedField == .textField {
                 Text("프로젝트에 할 일을 적어주세요.")
-                    .foregroundColor(.customGray3)
+                    .foregroundColor(.customGray4)
             }
         }
         .textFieldStyle(.plain)
@@ -166,7 +166,7 @@ public struct TodoItemView: View {
     private var titleText: some View {
         HStack {
             Text(title)
-                .foregroundColor(todo.isCompleted ? .customGray3 : .white)
+                .foregroundColor(todo.isCompleted ? .customGray4 : .white)
                 .strikethrough(todo.isCompleted)
                 .onTapGesture {
                     focusedField = .textField
