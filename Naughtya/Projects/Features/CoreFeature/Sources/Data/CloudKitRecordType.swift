@@ -9,6 +9,7 @@
 import Foundation
 
 public enum CloudKitRecordType: String {
+    case userSetting
     case project
     case todo
     case dailyTodoList

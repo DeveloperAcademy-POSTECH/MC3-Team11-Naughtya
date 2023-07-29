@@ -129,7 +129,7 @@ public final class CloudKitManager {
 
     public func syncWithStores() async throws { // 메서드가 매시브해서 ㅈㅅ
         guard isEnabled else {
-            throw DataError.cloudKitDisabled
+            return
         }
 
         let projectRecords = try await readList(ProjectRecord.self)

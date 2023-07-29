@@ -10,7 +10,7 @@ import SwiftUI
 
 public struct LaunchView<Content>: View where Content: View {
     private let content: () -> Content
-    @State private var isLoaded = false
+    @StateObject private var viewModel = LaunchViewModel()
 
     public init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
@@ -18,23 +18,11 @@ public struct LaunchView<Content>: View where Content: View {
 
     public var body: some View {
         ZStack {
-            if isLoaded {
+            if viewModel.isLoaded {
                 content()
             } else {
                 Text("Loading")
             }
-        }
-        .onAppear {
-            setup()
-        }
-    }
-
-    private func setup() {
-        Task {
-            try await CloudKitManager.shared.syncWithStores()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.isLoaded = true
         }
     }
 }
