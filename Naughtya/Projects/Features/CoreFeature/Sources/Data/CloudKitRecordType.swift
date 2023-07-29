@@ -15,7 +15,7 @@ public enum CloudKitRecordType: String {
     case dailyTodoList
     case todoHistory
     case projectResult
-    case performance
+    case ability
 
     public var key: String {
         rawValue.capitalized

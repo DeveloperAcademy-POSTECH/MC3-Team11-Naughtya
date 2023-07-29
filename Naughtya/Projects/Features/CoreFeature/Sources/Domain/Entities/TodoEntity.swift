@@ -40,11 +40,17 @@ public class TodoEntity: Equatable, Identifiable {
         self.histories = .init(histories)
         self.completedAt = .init(completedAt)
         setupUpdatingStore()
+        setupStampingHistory()
     }
 
     /// 고유값
     public var id: ObjectIdentifier {
         ObjectIdentifier(self)
+    }
+
+    /// 미완료 여부
+    public var isBacklog: Bool {
+        !isCompleted
     }
 
     /// 데일리 여부
@@ -57,30 +63,25 @@ public class TodoEntity: Equatable, Identifiable {
         completedAt.value != nil
     }
 
-    /// 미완료 여부
-    public var isBacklog: Bool {
-        !isCompleted
-    }
-
-    /// 미룸 여부
-    public var isDelayed: Bool {
-        !isDailyCompleted
-    }
-
     /// 안미룸 여부
     public var isDailyCompleted: Bool {
-        guard let firstMovedToDaily = histories.value.first(where: { $0.dailyTodoList != nil }),
-              let firstCompleted = histories.value.last(where: { $0.isCompleted }) else {
-            return false
-        }
-        return firstMovedToDaily.createdAt.isSame(firstCompleted.createdAt)
+        isCompleted && delayedCount == 0
+    }
+
+    /// 미룬 횟수
+    public var delayedCount: Int {
+        Set(
+            histories.value
+                .filter { $0.dailyTodoList != nil }
+                .compactMap { $0.createdAt?.getDateString() }
+        ).count - 1
     }
 
     private var historyStamp: TodoHistoryEntity {
         TodoHistoryEntity(
             dailyTodoList: dailyTodoList.value,
             isCompleted: isCompleted,
-            createdAt: completedAt.value ?? dailyTodoList.value?.date ?? .now
+            createdAt: completedAt.value ?? dailyTodoList.value?.date
         )
     }
 
@@ -126,6 +127,22 @@ public class TodoEntity: Equatable, Identifiable {
                 Task {
                     try? await Self.cloudKitManager.update(record)
                 }
+            }
+            .store(in: &cancellable)
+    }
+
+    private func setupStampingHistory() {
+        Publishers
+            .Merge(
+                dailyTodoList
+                    .map { _ in }
+                    .eraseToAnyPublisher(),
+                completedAt
+                    .map { _ in }
+                    .eraseToAnyPublisher()
+            )
+            .sink { [unowned self] in
+                histories.value.append(historyStamp)
             }
             .store(in: &cancellable)
     }

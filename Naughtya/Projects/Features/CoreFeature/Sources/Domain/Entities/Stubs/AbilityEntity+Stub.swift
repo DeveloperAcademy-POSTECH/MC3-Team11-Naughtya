@@ -1,5 +1,5 @@
 //
-//  PerformanceEntity+Stub.swift
+//  AbilityEntity+Stub.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-public extension PerformanceEntity {
-    static let sample = PerformanceEntity(
+public extension AbilityEntity {
+    static let sample = AbilityEntity(
         category: .sample,
         title: "sample",
         todos: [.sample]
