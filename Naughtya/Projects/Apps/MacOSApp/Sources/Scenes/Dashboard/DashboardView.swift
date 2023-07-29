@@ -10,16 +10,15 @@ struct DashboardView: View {
         NavigationSplitView {
             projectListView
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
-
         } detail: {
             switch selectedTabIndex {
             case 0:
                 NavigationStack {
-                    HStack {
+                    NavigationView {
                         projectTodoListView
+                            .frame(minWidth: 424)
                         dailyTodoListView
-
-                        //                        .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
+                            .frame(minWidth: 424)
                     }
                 }
             default: ProjectResultListView()
