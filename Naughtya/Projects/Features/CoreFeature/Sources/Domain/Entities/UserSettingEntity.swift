@@ -11,6 +11,7 @@ import Combine
 import CloudKit
 
 public class UserSettingEntity: Equatable, Identifiable {
+    private static let localStore: LocalStore = .shared
     private static let cloudKitManager: CloudKitManager = .shared
 
     public internal(set) var recordId: CKRecord.ID?
@@ -40,6 +41,16 @@ public class UserSettingEntity: Equatable, Identifiable {
                     .map { _ in }
                     .eraseToAnyPublisher()
             )
+
+        publisher
+            .debounce(
+                for: .milliseconds(100),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink {
+                Self.localStore.update()
+            }
+            .store(in: &cancellable)
 
         publisher
             .debounce(

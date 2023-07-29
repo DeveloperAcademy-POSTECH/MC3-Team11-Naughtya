@@ -11,8 +11,7 @@ import Combine
 import CloudKit
 
 public class TodoEntity: Equatable, Identifiable {
-    private static let projectStore: ProjectStore = .shared
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let cloudKitManager: CloudKitManager = .shared
 
     public internal(set) var recordId: CKRecord.ID?
@@ -114,8 +113,7 @@ public class TodoEntity: Equatable, Identifiable {
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .sink {
-                Self.projectStore.update()
-                Self.dailyTodoListStore.update()
+                Self.localStore.update()
             }
             .store(in: &cancellable)
 

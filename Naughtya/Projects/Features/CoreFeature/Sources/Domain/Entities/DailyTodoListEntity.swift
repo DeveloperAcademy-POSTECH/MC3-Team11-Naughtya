@@ -11,7 +11,7 @@ import Combine
 import CloudKit
 
 public class DailyTodoListEntity: Equatable, Identifiable {
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let cloudKitManager: CloudKitManager = .shared
     private static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -55,7 +55,7 @@ public class DailyTodoListEntity: Equatable, Identifiable {
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .sink { _ in
-                Self.dailyTodoListStore.update()
+                Self.localStore.update()
             }
             .store(in: &cancellable)
 

@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 public final class LaunchViewModel: ObservableObject {
     private static let schedulingManager: SchedulingManager = .shared
 
@@ -18,8 +19,13 @@ public final class LaunchViewModel: ObservableObject {
     }
 
     private func setup() {
-        scheduleToResetDay()
-        isLoaded = true
+        Task {
+            try? await CloudKitManager.shared.syncWithLocalStore()
+            scheduleToResetDay()
+            DispatchQueue.main.async { [unowned self] in
+                isLoaded = true
+            }
+        }
     }
 
     private func scheduleToResetDay() {

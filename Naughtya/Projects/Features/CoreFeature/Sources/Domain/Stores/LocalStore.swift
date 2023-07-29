@@ -1,5 +1,5 @@
 //
-//  DailyTodoListStore.swift
+//  LocalStore.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/19.
@@ -8,9 +8,11 @@
 
 import Foundation
 
-public final class DailyTodoListStore: ObservableObject {
-    public static let shared: DailyTodoListStore = .init()
+public final class LocalStore: ObservableObject {
+    public static let shared: LocalStore = .init()
 
+    @Published public var userSetting: UserSettingEntity?
+    @Published public var projects: [ProjectEntity] = []
     @Published public var dailyTodoLists: [DailyTodoListEntity] = []
     public var currentDailyTodoList: DailyTodoListEntity?
 

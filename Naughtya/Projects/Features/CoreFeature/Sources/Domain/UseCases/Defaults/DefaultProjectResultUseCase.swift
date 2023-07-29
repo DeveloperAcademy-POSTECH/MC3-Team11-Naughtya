@@ -9,14 +9,14 @@
 import Foundation
 
 struct DefaultProjectResultUseCase: ProjectResultUseCase {
-    private static let projectStore: ProjectStore = .shared
+    private static let localStore: LocalStore = .shared
 
     func create(project: ProjectEntity) async throws -> ProjectResultEntity {
         ProjectResultEntity(project: project)
     }
 
     func readList() async throws -> [ProjectResultEntity] {
-        Self.projectStore.projects
+        Self.localStore.projects
             .filter { $0.isEnded }
             .map {
                 ProjectResultEntity(project: $0)

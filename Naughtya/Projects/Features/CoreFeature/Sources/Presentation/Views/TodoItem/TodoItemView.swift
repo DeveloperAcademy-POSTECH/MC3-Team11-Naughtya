@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 public struct TodoItemView: View {
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
     private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
