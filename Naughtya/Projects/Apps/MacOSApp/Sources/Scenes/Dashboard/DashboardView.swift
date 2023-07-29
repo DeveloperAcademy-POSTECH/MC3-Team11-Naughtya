@@ -16,7 +16,6 @@ struct DashboardView: View {
                 NavigationStack {
                     NavigationView {
                         projectTodoListView
-                            .frame(minWidth: 424)
                         dailyTodoListView
                             .frame(minWidth: 424)
                     }
