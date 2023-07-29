@@ -13,7 +13,7 @@ public struct ResultCompleteTodoView: View {
         // Initialization code here
     }
     public var body: some View {
-        HStack(alignment: .center, spacing: 70) {
+        HStack {
 
             HStack {
                 Text(" 10개의 능력을 획득 했어요")
@@ -27,7 +27,9 @@ public struct ResultCompleteTodoView: View {
                     .frame(width: 33, height: 19)
             }
 
-            HStack(alignment: .center, spacing: 20) {
+            Spacer()
+
+            HStack {
                 Text("􀁜")
                     .font(Font.custom("SF Pro", size: 16))
                     .multilineTextAlignment(.center)
@@ -66,6 +68,8 @@ public struct ResultCompleteTodoView: View {
             .background(Color(red: 0.18, green: 0.18, blue: 0.18).opacity(0.5))
             .cornerRadius(8)
         }
+        .padding(.bottom, 35)
+        .padding(.trailing, 30)
     }
 }
 

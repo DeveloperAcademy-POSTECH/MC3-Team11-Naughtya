@@ -13,15 +13,22 @@ public struct ResultView: View {
         // Initialization code here
     }
     public var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ResultNameView()
             ResultCompleteTodoView()
             ResultCardView()
-            HStack {
+            HStack(alignment: .center, spacing: 80) {
                 ResultDelayTodoView()
+
                 ResultIncompleteTodoView()
             }
+            .padding(.vertical, 30)
+            .padding(.horizontal, 30)
         }
+        .padding(.leading, 50)
+        .padding(.bottom, 95)
+        .frame(minWidth: 816, maxWidth: 1512, minHeight: 729, maxHeight: 929, alignment: .topLeading)
+        .background(Color(red: 0.13, green: 0.13, blue: 0.13))
     }
 }
 

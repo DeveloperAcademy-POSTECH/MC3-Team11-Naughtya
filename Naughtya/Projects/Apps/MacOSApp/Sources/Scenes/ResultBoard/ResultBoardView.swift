@@ -10,10 +10,8 @@ struct ResultBoardView: View {
         NavigationSplitView {
             projectListView
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
-        } content: {
-            ResultView()
         } detail: {
-//            dailyTodoListView
+            ResultView()
 //                .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
         }
         .navigationTitle("")

@@ -24,7 +24,7 @@ public struct ResultCardView: View {
                             .background(Color.black)
 
                     }
-                }.padding(.leading, 34)
+                }.padding(.vertical, 30)
 
             }
 
@@ -36,7 +36,7 @@ public struct ResultCardView: View {
                     )
                     .multilineTextAlignment(.center)
                     .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
-                Text("1/3 ")
+                Text("1/3")
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 23)
                             .weight(.semibold)
@@ -52,7 +52,7 @@ public struct ResultCardView: View {
                     .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
 
             }
-            .padding(10)
+            .padding(27)
         }
 
     }

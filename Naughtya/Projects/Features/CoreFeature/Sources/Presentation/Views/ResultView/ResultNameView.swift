@@ -15,24 +15,26 @@ public struct ResultNameView: View {
     public var body: some View {
 
             HStack {
-                VStack {
+                VStack(alignment: .leading, spacing: 0) {
                     Text("MC3 프로젝트") // 종료된 프로젝트와 데이터 연결
-                        .frame(width: 360, alignment: .leading)
+
                         .font(
                             Font.custom("Apple SD Gothic Neo", size: 32)
                                 .weight(.bold)
                         )
                         .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
-                        .padding(.bottom, 10)
 
                     Text("35일간의 여정") // 종료된 프로젝트와 데이터 연결
+
                         .font(
                             Font.custom("Apple SD Gothic Neo", size: 20)
                                 .weight(.medium)
                         )
                         .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
-                        .frame(width: 360, alignment: .leading)
+                        .padding(.vertical, 10)
+
                 }
+
                 Spacer()
                 VStack {
                     Rectangle()
@@ -55,9 +57,12 @@ public struct ResultNameView: View {
                         .multilineTextAlignment(.center)
                         .foregroundColor(.white)
                 }
+                .padding(.trailing, 30)
+
             }
-            .padding(.vertical, 35)
-            .frame(width: 1214)
+            .padding(.top, 20)
+            .padding(.bottom, 10)
+//            .frame(minWidth: 762, maxWidth: 1389, minHeight: 99, maxHeight: 112)
             .background(Color(red: 0.13, green: 0.13, blue: 0.13))
     }
 }
