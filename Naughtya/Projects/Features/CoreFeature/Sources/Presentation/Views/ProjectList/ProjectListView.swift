@@ -21,7 +21,7 @@ public struct ProjectListView: View {
 
     public var body: some View {
         ZStack {
-            Color.customGray5
+            Color.customGray8
             VStack(spacing: 15) {
                 headerView
                 if projects.isEmpty {
@@ -46,7 +46,7 @@ public struct ProjectListView: View {
         HStack {
             Text("All My Projects")
                 .font(Font.custom("SF Pro", size: 14).weight(.medium))
-                .foregroundColor(Color.customGray3)
+                .foregroundColor(Color.customGray4)
             Spacer()
             Button {
                 Self.dummyDataGenerator.generate()
@@ -71,7 +71,7 @@ public struct ProjectListView: View {
         .cornerRadius(5)
         .overlay(
             RoundedRectangle(cornerRadius: 5)
-                .stroke(Color.customGray3, lineWidth: 1)
+                .stroke(Color.customGray4, lineWidth: 1)
         )
     }
 

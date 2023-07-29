@@ -31,7 +31,7 @@ struct ProjectCardView: View {
             let absoluteRect = geometry.frame(in: .global)
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 5)
-                    .fill(project.isSelected ? Color.customGray4 : Color.customGray5)
+                    .fill(project.isSelected ? Color.customGray4 : Color.customGray8)
                 VStack {
                     Spacer()
                     HStack {

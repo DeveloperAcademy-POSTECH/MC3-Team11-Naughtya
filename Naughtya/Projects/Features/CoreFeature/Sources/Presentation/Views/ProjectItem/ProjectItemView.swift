@@ -57,10 +57,10 @@ public struct ProjectItemView: View {
                         Font.custom("SF Pro", size: 22)
                             .weight(.light)
                     )
-                    .foregroundColor(Color.customGray3)
+                    .foregroundColor(Color.customGray4)
                 Text("프로젝트 할 일을 추가해보세요.")
                     .font(Font.custom("SF Pro", size: 14))
-                    .foregroundColor(Color.customGray3)
+                    .foregroundColor(Color.customGray4)
                     .frame(width: 184, height: 16, alignment: .leading)
             }
             .background(
