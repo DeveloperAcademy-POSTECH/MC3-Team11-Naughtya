@@ -154,12 +154,6 @@ struct ProjectCardView: View {
     private var contextMenu: some View {
         VStack {
             Button {
-                showModal = true
-            } label: {
-                Label("Modify", systemImage: "pencil")
-                    .labelStyle(.titleAndIcon)
-            }
-            Button {
                 Task {
                     try await Self.projectUseCase.toggleIsBookmarked(
                         project.entity,
@@ -167,16 +161,24 @@ struct ProjectCardView: View {
                     )
                 }
             } label: {
-                Label("Bookmark", systemImage: "bookmark")
+                Label("즐겨찾기", systemImage: "star.fill")
+                    .font(Font.custom("SF Pro", size: 12))
                     .labelStyle(.titleAndIcon)
             }
-            Divider()
+            Button {
+                showModal = true
+            } label: {
+                Label("수정하기", systemImage: "pencil.circle")
+                    .font(Font.custom("SF Pro", size: 12))
+                    .labelStyle(.titleAndIcon)
+            }
             Button {
                 Task {
                     try await Self.projectUseCase.delete(project.entity)
                 }
             } label: {
-                Label("삭제", systemImage: "trash")
+                Label("삭제하기", systemImage: "x.circle")
+                    .font(Font.custom("SF Pro", size: 12))
                     .labelStyle(.titleAndIcon)
             }
         }
