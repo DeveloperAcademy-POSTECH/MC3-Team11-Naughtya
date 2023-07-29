@@ -1,5 +1,5 @@
 //
-//  FilterType.swift
+//  FilterCategory.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/27.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum FilterType: String, CaseIterable {
+public enum FilterCategory: String, CaseIterable {
     case uncompleted
     case completed
     case all

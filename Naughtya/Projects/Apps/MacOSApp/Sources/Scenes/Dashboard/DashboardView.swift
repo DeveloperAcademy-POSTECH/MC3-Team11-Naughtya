@@ -1,7 +1,7 @@
 import SwiftUI
- import MacOSCoreFeature
+import MacOSCoreFeature
 
- struct DashboardView: View {
+struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
     @State private var selectedTabIndex = 0
     private let tabs = ["folder", "list.clipboard"]
@@ -67,7 +67,7 @@ import SwiftUI
         }
         .pickerStyle(.segmented)
     }
- }
+}
 
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {

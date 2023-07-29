@@ -11,7 +11,7 @@ import Foundation
 public final class FilterManager: ObservableObject {
     public static let shared: FilterManager = .init()
 
-    @Published public var filter: FilterType?
+    @Published public var filter: FilterCategory = .all
     @Published public var searchedText: String = ""
 
     private init() {

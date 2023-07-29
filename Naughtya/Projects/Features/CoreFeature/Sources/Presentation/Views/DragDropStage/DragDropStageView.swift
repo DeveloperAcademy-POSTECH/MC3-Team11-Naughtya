@@ -21,20 +21,30 @@ public struct DragDropStageView: View {
         ZStack(alignment: .topLeading) {
             emptyView
             if let dragged = dragDropManager.dragged {
-                if let todo = dragged.item as? TodoEntity {
-                    TodoItemView(
-                        todo: .from(entity: todo),
-                        isDummy: true
-                    )
-                    .offset(
-                        x: dragged.location.x,
-                        y: dragged.location.y - dragged.size.height / 2 - topPadding / 2
-                    )
-                    .frame(
-                        width: dragged.size.width,
-                        height: dragged.size.height
-                    )
+                VStack {
+                    switch dragged.item {
+                    case let project as ProjectEntity:
+                        ProjectCardView(
+                            project: .from(entity: project),
+                            isDummy: true
+                        )
+                    case let todo as TodoEntity:
+                        TodoItemView(
+                            todo: .from(entity: todo),
+                            isDummy: true
+                        )
+                    default:
+                        EmptyView()
+                    }
                 }
+                .offset(
+                    x: dragged.location.x,
+                    y: dragged.location.y - dragged.size.height / 2 - topPadding / 2
+                )
+                .frame(
+                    width: dragged.size.width,
+                    height: dragged.size.height
+                )
             }
         }
     }

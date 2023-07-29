@@ -47,7 +47,7 @@ public struct TodoListView: View {
                     HStack(alignment: .center, spacing: 4) {
                         Text("데일리 투두에 오늘 할일을 드래그 해주세요")
                           .lineLimit(1)
-                          .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                          .font(Font.custom("SF Pro", size: 16))
 
                           .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
                           .frame(width: 277, height: 16, alignment: .center)
@@ -81,22 +81,32 @@ public struct TodoListView: View {
         }
     }
 
+    private var dragDropableHash: DragDropableHash? {
+        guard let item = section else {
+            return nil
+        }
+        return DragDropableHash(
+            item: item,
+            priority: 2
+        )
+    }
+
     private func registerAbsoluteRect(_ rect: CGRect) {
-        guard let section = section else {
+        guard let hash = dragDropableHash else {
             return
         }
         absoluteRect = rect
         dragDropDelegate.registerAbsoluteRect(
-            section,
+            hash,
             rect: rect
         )
     }
 
     private func unregisterAbsoluteRect() {
-        guard let section = section else {
+        guard let hash = dragDropableHash else {
             return
         }
-        dragDropDelegate.unregisterAbsoluteRect(section)
+        dragDropDelegate.unregisterAbsoluteRect(hash)
     }
 }
 

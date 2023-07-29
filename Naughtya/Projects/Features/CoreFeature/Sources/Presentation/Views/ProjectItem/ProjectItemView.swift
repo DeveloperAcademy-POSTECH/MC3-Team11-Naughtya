@@ -59,7 +59,7 @@ public struct ProjectItemView: View {
                     )
                     .foregroundColor(Color.customGray3)
                 Text("프로젝트 할 일을 추가해보세요.")
-                    .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                    .font(Font.custom("SF Pro", size: 14))
                     .foregroundColor(Color.customGray3)
                     .frame(width: 184, height: 16, alignment: .leading)
             }
@@ -78,17 +78,15 @@ public struct ProjectItemView: View {
 
     private var todos: [TodoModel] {
         var todos = project.backlogTodos
-        if let filter = filterManager.filter {
-            switch filter {
-            case .uncompleted:
-                todos = todos
-                    .filter { !$0.isCompleted }
-            case .completed:
-                todos = todos
-                    .filter { $0.isCompleted }
-            default:
-                break
-            }
+        switch filterManager.filter {
+        case .uncompleted:
+            todos = todos
+                .filter { !$0.isCompleted }
+        case .completed:
+            todos = todos
+                .filter { $0.isCompleted }
+        default:
+            break
         }
         if filterManager.isSearching {
             todos = todos
