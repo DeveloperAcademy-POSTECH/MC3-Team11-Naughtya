@@ -76,9 +76,9 @@ struct ProjectSetModalView: View {
                     HStack {
                         VStack(alignment: .leading) {
                             Text("시작")
-                              .font(Font.custom("SF Pro", size: 12))
-                              .foregroundColor(Color(red: 0.69, green: 0.68, blue: 0.68))
-                            DatePicker("", selection: $projectStartDay, displayedComponents: [.date])
+                                .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                                .foregroundColor(Color(red: 0.69, green: 0.68, blue: 0.68))
+                            DatePicker("", selection: $projectStartDay, in: ...projectEndDay, displayedComponents: [.date])
                                 .datePickerStyle(.field)
                         }
                         VStack {
@@ -87,12 +87,13 @@ struct ProjectSetModalView: View {
                         }
                         VStack(alignment: .leading) {
                             Text("종료")
-                                .font(Font.custom("SF Pro", size: 12))
+                                .font(Font.custom("Apple SD Gothic Neo", size: 12))
                                 .foregroundColor(Color(red: 0.69, green: 0.68, blue: 0.68))
-                            DatePicker("", selection: $projectEndDay, displayedComponents: [.date])
+                            DatePicker("", selection: $projectEndDay, in: projectStartDay..., displayedComponents: [.date])
                                 .datePickerStyle(.field)
                         }
                     }
+
                 }
                 Spacer().frame(height: 67.5)
                 HStack {

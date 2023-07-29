@@ -14,11 +14,13 @@ struct DashboardView: View {
         } detail: {
             switch selectedTabIndex {
             case 0:
-                NavigationView {
-                    projectTodoListView
-                        .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
-                    dailyTodoListView
-                        .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
+                NavigationStack {
+                    HStack {
+                        projectTodoListView
+                        dailyTodoListView
+
+                        //                        .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
+                    }
                 }
             default: ProjectResultListView()
             }
@@ -45,6 +47,8 @@ struct DashboardView: View {
         List {
             ProjectTodoListView(projects: viewModel.selectedProjects)
         }
+        .frame(minWidth: 462, minHeight: 756)
+        .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 FilterButton()
