@@ -17,6 +17,9 @@ struct ProjectCardView: View {
     @State private var absoluteRect: CGRect!
     @State private var isBeingDragged = false
     @State private var showModal = false
+    var projectEndday: Date {
+        project.endedAt!
+    }
 
     init(project: ProjectModel,
          isDummy: Bool = false,
@@ -42,14 +45,12 @@ struct ProjectCardView: View {
                             todosCountView
                                 .multilineTextAlignment(.trailing)
                         }
-
                     }
                     .padding(.leading, 25)
                     .padding(.trailing, 15)
                     .padding(.top, 17)
                     .padding(.bottom, 15)
                 }
-
                 .frame(height: 68)
             }
             .onAppear {
@@ -91,7 +92,7 @@ struct ProjectCardView: View {
 
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text("D-38")
+            Text("\(Date().dDayCalculater(projectEndDay: projectEndday))")
               .font(Font.custom("Apple SD Gothic Neo", size: 12).weight(.semibold)
               )
               .foregroundColor(Color.pointColor)
@@ -105,10 +106,10 @@ struct ProjectCardView: View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text("\(project.completedTodos.count)")
                 .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
-                .foregroundColor(.pointColor)
+                .foregroundColor(.white)
             Text("/\(project.todos.count)")
                 .font(Font.custom("Apple SD Gothic Neo", size: 16).weight(.regular))
-                .foregroundColor(.white)
+                .foregroundColor(.customGray1)
         }
     }
 

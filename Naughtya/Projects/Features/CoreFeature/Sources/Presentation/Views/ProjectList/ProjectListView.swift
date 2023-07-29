@@ -28,11 +28,11 @@ public struct ProjectListView: View {
                     emptyView
                 } else {
                     ScrollView {
-                        VStack(spacing: 10) {
-                            ForEach(projects) { project in
-                                ProjectCardView(project: project)
-                            }
+                        ForEach(projects) { project in
+                            ProjectCardView(project: project)
+                                .frame(width: 278, height: 68)
                         }
+                        Spacer()
                     }
                 }
                 Spacer()

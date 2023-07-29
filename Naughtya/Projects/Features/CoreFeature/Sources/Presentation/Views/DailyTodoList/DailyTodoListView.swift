@@ -31,7 +31,7 @@ public struct DailyTodoListView: View {
         .padding(.horizontal, 40)
         .padding(.top, 40)
         .padding(.bottom, 36)
-        .frame(maxWidth: .infinity, minHeight: 138, maxHeight: 138, alignment: .top)
+        .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300, alignment: .top)
         .background(Color(red: 0.13, green: 0.13, blue: 0.13)) // MARK: - 나중에 색 점검
         .onAppear {
             viewModel.fetchTodayIfNeeded()
@@ -44,7 +44,7 @@ public struct DailyTodoListView: View {
                 Button {
                     viewModel.gotoOneDayBefore()
                 } label: {
-                    Image(systemName: "arrowtriangle.backward.fill")
+                    Image(systemName: "chevron.left")
                         .foregroundColor(Color.customGray2)
                 }
                 .frame(width: 10, height: 23)
@@ -70,7 +70,7 @@ public struct DailyTodoListView: View {
                 Button {
                     viewModel.gotoOneDayAfter()
                 } label: {
-                    Image(systemName: "arrowtriangle.right.fill")
+                    Image(systemName: "chevron.right")
                         .foregroundColor(Color.customGray2)
                 }
                 .frame(width: 10, height: 23)
