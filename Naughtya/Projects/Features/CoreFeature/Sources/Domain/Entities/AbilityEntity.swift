@@ -9,9 +9,10 @@
 import Foundation
 import CloudKit
 
-public struct AbilityEntity: Equatable {
+public struct AbilityEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
+    public let id: UUID = .init()
     public let category: AbilityCategory
     public let title: String
-    public let todos: [TodoEntity]
+    public var todos: [TodoEntity]
 }

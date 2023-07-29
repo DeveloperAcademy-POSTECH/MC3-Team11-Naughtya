@@ -14,16 +14,19 @@ public class ProjectResultEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
     public let project: ProjectEntity
     public let abilities: CurrentValueSubject<[AbilityEntity], Never>
+    public let isGenerated: CurrentValueSubject<Bool, Never>
     private var cancellable = Set<AnyCancellable>()
 
     public init(
         recordId: CKRecord.ID? = nil,
         project: ProjectEntity,
-        abilities: [AbilityEntity] = []
+        abilities: [AbilityEntity] = [],
+        isGenerated: Bool = false
     ) {
         self.recordId = recordId
         self.project = project
         self.abilities = .init(abilities)
+        self.isGenerated = .init(isGenerated)
         setupUpdatingStore()
     }
 

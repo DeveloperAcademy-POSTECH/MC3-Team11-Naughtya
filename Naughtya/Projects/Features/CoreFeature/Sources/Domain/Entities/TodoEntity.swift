@@ -18,7 +18,7 @@ public class TodoEntity: Equatable, Identifiable {
     public let project: CurrentValueSubject<ProjectEntity, Never>
     public let dailyTodoList: CurrentValueSubject<DailyTodoListEntity?, Never>
     public let title: CurrentValueSubject<String, Never>
-    public let createdAt: CurrentValueSubject<Date, Never>
+    public let createdAt: CurrentValueSubject<Date?, Never>
     public let histories: CurrentValueSubject<[TodoHistoryEntity], Never>
     public let completedAt: CurrentValueSubject<Date?, Never>
     private var cancellable = Set<AnyCancellable>()
@@ -28,7 +28,7 @@ public class TodoEntity: Equatable, Identifiable {
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity? = nil,
         title: String = "",
-        createdAt: Date = .now, // TODO: 더미데이터도 고려하기
+        createdAt: Date? = nil,
         histories: [TodoHistoryEntity] = [],
         completedAt: Date? = nil
     ) {
@@ -68,13 +68,19 @@ public class TodoEntity: Equatable, Identifiable {
         isCompleted && delayedCount == 0
     }
 
+    /// 미룸 여부
+    public var isDelayed: Bool {
+        delayedCount > 0
+    }
+
     /// 미룬 횟수
     public var delayedCount: Int {
-        Set(
+        let count = Set(
             histories.value
                 .filter { $0.dailyTodoList != nil }
                 .compactMap { $0.createdAt?.getDateString() }
         ).count - 1
+        return max(count, 0)
     }
 
     private var historyStamp: TodoHistoryEntity {

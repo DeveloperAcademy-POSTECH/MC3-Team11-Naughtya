@@ -10,7 +10,7 @@ import Foundation
 
 public extension AbilityEntity {
     static let sample = AbilityEntity(
-        category: .sample,
+        category: .performance,
         title: "sample",
         todos: [.sample]
     )

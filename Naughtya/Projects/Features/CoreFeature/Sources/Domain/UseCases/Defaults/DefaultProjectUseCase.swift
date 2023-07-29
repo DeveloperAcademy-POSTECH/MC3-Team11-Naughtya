@@ -48,8 +48,8 @@ struct DefaultProjectUseCase: ProjectUseCase {
         Self.localStore.projects
     }
 
-    func readItem(category: String) async throws -> ProjectEntity {
-        Self.localStore.projects.first { $0.category.value == category }!
+    func readItem(category: String) async throws -> ProjectEntity? {
+        Self.localStore.projects.first { $0.category.value == category }
     }
 
     func update(

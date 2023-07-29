@@ -11,7 +11,8 @@ import Foundation
 final class DayResetter: TimeSchedulable, TasksBatchable {
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
 
-    var scheduledTime: Time
+    let scheduledTime: Time
+    let scheduledInterval: TimeInterval = 1
 
     init(scheduledTime: Time) {
         self.scheduledTime = scheduledTime

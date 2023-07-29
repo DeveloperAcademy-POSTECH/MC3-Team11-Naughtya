@@ -9,20 +9,14 @@
 import Foundation
 
 final class SchedulingManager {
-    static let shared: SchedulingManager = .init()
-
-    private var timeSchedule: TimeSchedulable?
-    private var tasksBatch: TasksBatchable?
+    let timeSchedule: TimeSchedulable
+    let tasksBatch: TasksBatchable
     private var timer: Timer?
     private var lastTime: Time?
 
-    private init() {
-        setup()
-    }
-
-    func register(
-        timeSchedule: TimeSchedulable?,
-        tasksBatch: TasksBatchable?
+    init(
+        timeSchedule: TimeSchedulable,
+        tasksBatch: TasksBatchable
     ) {
         self.timeSchedule = timeSchedule
         self.tasksBatch = tasksBatch
@@ -43,10 +37,10 @@ final class SchedulingManager {
 
     private func batchTasksIfTimeScheduled(_ currentTime: Time) {
         guard currentTime != lastTime,
-              currentTime == timeSchedule?.scheduledTime else {
+              currentTime == timeSchedule.scheduledTime else {
             return
         }
-        tasksBatch?.batchTasks()
+        tasksBatch.batchTasks()
     }
 
     private static var currentTime: Time? {

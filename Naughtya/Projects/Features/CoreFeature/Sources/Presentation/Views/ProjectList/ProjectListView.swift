@@ -9,8 +9,9 @@
 import SwiftUI
 
 public struct ProjectListView: View {
-    private static let dummyDataGenerator: DummyDataGenerator = .shared
     private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
+    private static let dummyDataGenerator: DummyDataGenerator = .shared
+    private static let schedulingStore: SchedulingStore = .shared
 
     public let projects: [ProjectModel]
     @State private var showModal = false
@@ -52,6 +53,14 @@ public struct ProjectListView: View {
                 Self.dummyDataGenerator.generate()
             } label: {
                 Text("dummy")
+            }
+            Button {
+                Self.schedulingStore.managers
+                    .forEach {
+                        $0.tasksBatch.batchTasks()
+                    }
+            } label: {
+                Text("result")
             }
         }
         .padding(.horizontal, 5)

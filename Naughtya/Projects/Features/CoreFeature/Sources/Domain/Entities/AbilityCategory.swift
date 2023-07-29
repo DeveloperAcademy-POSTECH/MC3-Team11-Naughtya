@@ -10,9 +10,7 @@ import Foundation
 
 public enum AbilityCategory: String {
     case performance
-    case delayed
     case uncompleted
-    case sample
 
     public var gaslighting: String {
         """

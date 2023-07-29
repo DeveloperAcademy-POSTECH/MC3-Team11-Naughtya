@@ -14,6 +14,7 @@ public final class LocalStore: ObservableObject {
     @Published public var userSetting: UserSettingEntity?
     @Published public var projects: [ProjectEntity] = []
     @Published public var dailyTodoLists: [DailyTodoListEntity] = []
+    @Published public var projectResults: [ProjectResultEntity] = []
     public var currentDailyTodoList: DailyTodoListEntity?
 
     private init() {

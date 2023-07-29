@@ -10,4 +10,5 @@ import Foundation
 
 public protocol TimeSchedulable: AnyObject {
     var scheduledTime: Time { get }
+    var scheduledInterval: TimeInterval { get }
 }

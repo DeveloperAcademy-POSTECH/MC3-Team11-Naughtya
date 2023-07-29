@@ -12,6 +12,7 @@ public struct ProjectResultModel: Modelable {
     public let entity: ProjectResultEntity
     public let project: ProjectModel
     public let abilities: [AbilityEntity]
+    public let isGenerated: Bool
 
     public var projectName: String {
         project.category
@@ -63,7 +64,8 @@ public struct ProjectResultModel: Modelable {
         ProjectResultModel(
             entity: entity,
             project: .from(entity: entity.project),
-            abilities: entity.abilities.value
+            abilities: entity.abilities.value,
+            isGenerated: entity.isGenerated.value
         )
     }
 }
