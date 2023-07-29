@@ -10,67 +10,117 @@ import SwiftUI
 
 public struct DailyTodoListView: View {
     @StateObject private var viewModel = DailyTodoListViewModel()
+    @State private var todoDate = Date()
 
     public init() {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Daily To Do")
-                        .font(
-                            Font.custom("SF Pro", size: 24)
-                                .weight(.bold)
-                        )
-                        .foregroundColor(.white)
-                    dateHeader
-                }
-                .frame(width: 300, alignment: .topLeading)
-            .padding(.horizontal, 20)
-            .padding(.top, 20)
-            Spacer().frame(height: 20)
-            if let dailyTodoList = viewModel.dailyTodoList {
-                TodoListView(
-                    section: dailyTodoList.entity,
-                    todos: dailyTodoList.todos
-                )
+        VStack(alignment: .center, spacing: 6) {
+            VStack(alignment: .center) {
+                dateHeader
             }
+        Spacer().frame(height: 20)
+        if let dailyTodoList = viewModel.dailyTodoList {
+            TodoListView(
+                section: dailyTodoList.entity,
+                todos: dailyTodoList.todos
+            )
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 18)
-        .frame(maxWidth: .infinity, alignment: .topLeading)
+        }
+        .padding(.horizontal, 40)
+        .padding(.top, 40)
+        .padding(.bottom, 36)
+        .frame(maxWidth: .infinity, minHeight: 138, maxHeight: 138, alignment: .top)
+        .background(Color(red: 0.13, green: 0.13, blue: 0.13)) // MARK: - 나중에 색 점검
         .onAppear {
             viewModel.fetchTodayIfNeeded()
         }
     }
 
     private var dateHeader: some View {
-        HStack {
-            Button {
-                viewModel.gotoOneDayBefore()
-            } label: {
-                Image(systemName: "arrowtriangle.backward.fill")
-                    .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
-            }
-            .buttonStyle(.borderless)
-            if !viewModel.isTodayFetched {
-                Button("Today") {
-                    viewModel.fetchTodayIfNeeded()
+        VStack(alignment: .center, spacing: 17) {
+            HStack {
+                Button {
+                    viewModel.gotoOneDayBefore()
+                } label: {
+                    Image(systemName: "arrowtriangle.backward.fill")
+                        .foregroundColor(Color.customGray2)
                 }
+                .frame(width: 10, height: 23)
                 .buttonStyle(.borderless)
-            } else {
-                Text(viewModel.dateTitle)
-                  .font(Font.custom("SF Pro", size: 14))
-                  .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
+                if !viewModel.isTodayFetched {
+                    Button("Today") {
+                        viewModel.fetchTodayIfNeeded()
+                    }
+                    .buttonStyle(.borderless)
+                } else {
+                    Text(viewModel.dateTitle)
+                        .font(
+                            Font.custom("Apple SD Gothic Neo", size: 32)
+                                .weight(.bold)
+                        )
+                        .foregroundColor(Color.customGray1)
+                        // MARK: - 캘린더 구현하기
+//                        .onTapGesture {
+//                            DatePicker("", selection: $todoDate, in: ...todoDate, displayedComponents: [.date])
+//                                .datePickerStyle(.compact)
+//                        }
+                }
+                Button {
+                    viewModel.gotoOneDayAfter()
+                } label: {
+                    Image(systemName: "arrowtriangle.right.fill")
+                        .foregroundColor(Color.customGray2)
+                }
+                .frame(width: 10, height: 23)
+                .buttonStyle(.borderless)
             }
-            Button {
-                viewModel.gotoOneDayAfter()
-            } label: {
-                Image(systemName: "arrowtriangle.right.fill")
-                    .foregroundColor(Color(red: 0.72, green: 0.72, blue: 0.72))
+            HStack(alignment: .top, spacing: 9) {
+                HStack(alignment: .center, spacing: 10) {
+                    Text("전체 할 일")
+                      .font(
+                        Font.custom("Apple SD Gothic Neo", size: 12)
+                          .weight(.medium)
+                      )
+                      .multilineTextAlignment(.center)
+                      .foregroundColor(Color.customGray1)
+                      .frame(width: 48, height: 8, alignment: .center)
+                    Text("9")
+                      .font(
+                        Font.custom("Apple SD Gothic Neo", size: 20)
+                          .weight(.medium)
+                      )
+                      .foregroundColor(Color.pointColor)
+                }
+                .frame(width: 91.5, height: 26, alignment: .center)
+                .background(Color.customGray8)
+                .cornerRadius(5)
+                HStack(alignment: .center, spacing: 10) {
+                    Text("남은 할 일")
+                      .font(
+                        Font.custom("Apple SD Gothic Neo", size: 12)
+                          .weight(.medium)
+                      )
+                      .multilineTextAlignment(.center)
+                      .foregroundColor(Color.customGray1)
+                      .frame(width: 48, height: 8, alignment: .center)
+                    Text("2")
+                      .font(
+                        Font.custom("Apple SD Gothic Neo", size: 20)
+                          .weight(.medium)
+                      )
+                      .foregroundColor(Color.pointColor)
+                }
+                .frame(width: 91.5, height: 26, alignment: .center)
+                .background(Color.customGray8)
+                .cornerRadius(5)
             }
-            .buttonStyle(.borderless)
+            .padding(0)
+            .frame(maxWidth: .infinity, alignment: .top)
         }
+        .frame(width: 444, height: 62)
+        .padding(0)
     }
 }
 
