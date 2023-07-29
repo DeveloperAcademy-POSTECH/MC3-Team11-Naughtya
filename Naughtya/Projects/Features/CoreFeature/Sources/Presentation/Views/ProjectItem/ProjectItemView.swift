@@ -28,7 +28,7 @@ public struct ProjectItemView: View {
                     .lineLimit(1)
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 32)
-                            .weight(.bold)
+                            .weight(.semibold)
                     )
                     .foregroundColor(Color.customGray1)
                 HStack(spacing: 0) {

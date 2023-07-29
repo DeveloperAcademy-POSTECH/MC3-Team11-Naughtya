@@ -58,7 +58,7 @@ public struct DailyTodoListView: View {
                     Text(viewModel.dateTitle)
                         .font(
                             Font.custom("Apple SD Gothic Neo", size: 32)
-                                .weight(.bold)
+                                .weight(.semibold)
                         )
                         .foregroundColor(Color.customGray1)
                         // MARK: - 캘린더 구현하기

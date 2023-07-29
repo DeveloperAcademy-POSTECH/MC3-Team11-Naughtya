@@ -172,6 +172,7 @@ struct ProjectCardView: View {
                     .font(Font.custom("SF Pro", size: 12))
                     .labelStyle(.titleAndIcon)
             }
+            Divider()
             Button {
                 Task {
                     try await Self.projectUseCase.delete(project.entity)
