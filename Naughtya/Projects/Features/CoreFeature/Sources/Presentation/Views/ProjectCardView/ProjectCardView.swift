@@ -33,19 +33,24 @@ struct ProjectCardView: View {
                 RoundedRectangle(cornerRadius: 5)
                     .fill(project.isSelected ? Color.customGray4 : Color.customGray8)
                 VStack {
-                    Spacer()
-                    HStack {
+                    HStack(alignment: .lastTextBaseline) {
                         contentView
+                            .padding(0)
                         Spacer()
-                        todosCountView
+                        VStack(alignment: .trailing) {
+                            bookmarkIndicator
+                            todosCountView
+                                .multilineTextAlignment(.trailing)
+                        }
+
                     }
                     .padding(.leading, 25)
                     .padding(.trailing, 15)
-                    Spacer()
+                    .padding(.top, 17)
+                    .padding(.bottom, 15)
                 }
-                if project.isBookmarked {
-                    bookmarkIndicator
-                }
+
+                .frame(height: 68)
             }
             .onAppear {
                 registerAbsoluteRect(absoluteRect)
@@ -63,7 +68,6 @@ struct ProjectCardView: View {
                 registerAbsoluteRect(absoluteRect)
             }
         }
-        .frame(height: 68)
         .opacity(isDummy || isBeingDragged ? 0.5 : 1)
         .gesture(dragGesture)
         .contextMenu {
@@ -86,40 +90,35 @@ struct ProjectCardView: View {
     }
 
     private var contentView: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 1) {
+            Text("D-38")
+              .font(Font.custom("Apple SD Gothic Neo", size: 12).weight(.semibold)
+              )
+              .foregroundColor(Color.pointColor)
             Text(project.category)
-                .font(Font.custom("SF Pro", size: 24).weight(.medium))
+                .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
                 .foregroundColor(.white)
-            if let projectEndDay = project.endedAt {
-                Text("- \(changeDateFormat(projectEndDay: projectEndDay))")
-                    .font(Font.custom("SF Pro", size: 12).weight(.semibold))
-                    .foregroundColor(.customGray2)
-            }
         }
     }
 
     private var todosCountView: some View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text("\(project.completedTodos.count)")
-                .font(Font.custom("SF Pro", size: 24).weight(.semibold))
+                .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
                 .foregroundColor(.pointColor)
             Text("/\(project.todos.count)")
-                .font(Font.custom("SF Pro", size: 16).weight(.regular))
+                .font(Font.custom("Apple SD Gothic Neo", size: 16).weight(.regular))
                 .foregroundColor(.white)
         }
-        .multilineTextAlignment(.trailing)
     }
 
     private var bookmarkIndicator: some View {
-        Image(systemName: "pin.fill")
-            .rotationEffect(.degrees(30))
-            .font(.system(size: 9))
-            .foregroundColor(.pointColor)
+        Image(systemName: project.isBookmarked ? "star.fill" : "star")
+            .font(Font.custom("SF Pro", size: 15))
+            .foregroundColor(project.isBookmarked ? .pointColor : .customGray2)
             .onTapGesture {
                 toggleIsBookmarked()
             }
-            .offset(x: 12, y: 16)
-            .zIndex(1)
     }
 
     private var dragGesture: some Gesture {
