@@ -38,19 +38,16 @@ public final class SearchViewModel: ObservableObject {
     }
 
     private func setupFetchingData() {
-        Publishers.CombineLatest(
-            Self.localStore.objectWillChange,
-            Self.localStore.objectWillChange
-        )
-        .debounce(
-            for: .milliseconds(100),
-            scheduler: DispatchQueue.global(qos: .userInitiated)
-        )
-        .receive(on: DispatchQueue.main)
-        .sink { _ in
-        } receiveValue: { [unowned self] _ in
-            fetchSearchedTodos()
-        }
-        .store(in: &cancellable)
+        Self.localStore.objectWillChange
+            .debounce(
+                for: .milliseconds(100),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+            } receiveValue: { [unowned self] _ in
+                fetchSearchedTodos()
+            }
+            .store(in: &cancellable)
     }
 }
