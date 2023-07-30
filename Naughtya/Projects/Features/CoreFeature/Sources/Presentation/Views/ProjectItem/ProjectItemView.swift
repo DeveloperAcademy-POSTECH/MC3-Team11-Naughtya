@@ -32,13 +32,13 @@ public struct ProjectItemView: View {
                     )
                     .foregroundColor(Color.customGray1)
                 HStack(spacing: 0) {
-                    Text("2023.07.29")
+                    Text(project.startedAt?.getDateString() ?? "")
                         .font(Font.custom("Apple SD Gothic Neo", size: 16))
                         .foregroundColor(Color.customGray3)
-                    Text("-")
+                    Text(" -")
                         .font(Font.custom("Apple SD Gothic Neo", size: 16))
                         .foregroundColor(Color.customGray3)
-                    Text("2023.08.15")
+                    Text(project.endedAt?.getDateString() ?? "")
                         .font(Font.custom("Apple SD Gothic Neo", size: 16))
                         .foregroundColor(Color.customGray3)
                 }
@@ -83,7 +83,7 @@ public struct ProjectItemView: View {
                     .fill(Color.white.opacity(0.0001))
                     .frame(minWidth: 1000, alignment: .leading)
             )
-            .padding(.top, -100)
+//            .padding(.top, 100)
             .padding(.leading, 28)
             .frame(maxWidth: .infinity, alignment: .leading)
             .onTapGesture {

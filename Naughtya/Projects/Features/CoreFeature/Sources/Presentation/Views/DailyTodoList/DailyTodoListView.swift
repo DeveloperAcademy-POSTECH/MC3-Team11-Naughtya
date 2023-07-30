@@ -24,7 +24,6 @@ public struct DailyTodoListView: View {
             .padding(.top, 50)
             .padding(.bottom, 41)
             .frame(alignment: .top)
-            .background(Color(red: 0.13, green: 0.13, blue: 0.13)) // MARK: - 나중에 색 점검
             if let dailyTodoList = viewModel.dailyTodoList {
                 TodoListView(
                     section: dailyTodoList.entity,
@@ -46,7 +45,7 @@ public struct DailyTodoListView: View {
                     Image(systemName: "chevron.left")
                         .foregroundColor(Color.customGray2)
                 }
-                .frame(width: 10, height: 23)
+                .frame(width: 20, height: 23)
                 .buttonStyle(.borderless)
                 if !viewModel.isTodayFetched {
                     Button("Today") {
@@ -60,7 +59,7 @@ public struct DailyTodoListView: View {
                                 .weight(.semibold)
                         )
                         .foregroundColor(Color.customGray1)
-                    // MARK: - 캘린더 구현하기
+                    // TODO: - 캘린더 구현하기
                     //                        .onTapGesture {
                     //                            DatePicker("", selection: $todoDate, in: ...todoDate, displayedComponents: [.date])
                     //                                .datePickerStyle(.compact)
@@ -72,7 +71,7 @@ public struct DailyTodoListView: View {
                     Image(systemName: "chevron.right")
                         .foregroundColor(Color.customGray2)
                 }
-                .frame(width: 10, height: 23)
+                .frame(width: 20, height: 23)
                 .buttonStyle(.borderless)
             }
             HStack(alignment: .top, spacing: 9) {

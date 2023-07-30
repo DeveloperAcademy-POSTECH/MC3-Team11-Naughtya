@@ -78,7 +78,6 @@ public struct TodoListView: View {
                             )
                         }
                 }
-                .padding(.bottom, 100)
             }
                 // MARK: - 원래코드
 //            VStack(spacing: 0) {
