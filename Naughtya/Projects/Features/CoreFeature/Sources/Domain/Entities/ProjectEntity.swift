@@ -56,7 +56,7 @@ public class ProjectEntity: Equatable, Identifiable {
         guard let endedAt = endedAt.value else {
             return false
         }
-        return endedAt.timeIntervalSinceNow < Date.now.timeIntervalSinceNow
+        return endedAt.timeIntervalSinceNow < Date.today.timeIntervalSinceNow
     }
 
     private func setupUpdatingStore() {

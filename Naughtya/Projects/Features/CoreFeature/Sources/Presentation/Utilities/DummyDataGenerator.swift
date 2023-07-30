@@ -15,9 +15,8 @@ public final class DummyDataGenerator {
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
     private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
-    private let startDate = "2023-06-01"
-    private let middleDate = "2023-07-01"
-    private let endDate = "2023-08-01"
+    private let startDate = "2023-07-01"
+    private let endDate = "2023-08-15"
     private let todoTitles = [
         "일어나기",
         "씻기",
@@ -57,15 +56,16 @@ public final class DummyDataGenerator {
 
     private func createProject() async throws {
         let uuid = UUID().uuidString
+        let startedAt = Date.getRandomDate(
+            start: startDate,
+            end: endDate
+        )
         let project = try await Self.projectUseCase.create(
             category: String(uuid.prefix(8)),
             goals: uuid,
-            startedAt: .getRandomDate(
-                start: startDate,
-                end: middleDate
-            ),
+            startedAt: startedAt,
             endedAt: .getRandomDate(
-                start: middleDate,
+                start: startedAt.getDateString(),
                 end: endDate
             )
         )

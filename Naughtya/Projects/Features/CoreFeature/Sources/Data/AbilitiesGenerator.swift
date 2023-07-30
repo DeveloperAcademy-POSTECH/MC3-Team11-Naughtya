@@ -15,8 +15,8 @@ struct AbilitiesGenerator {
 
     func generate() async throws -> [AbilityEntity] {
         let abilitiesForPerformance = try await fetchAbilities(category: .performance)
-        let abilitiesForUncompleted = try await fetchAbilities(category: .uncompleted)
-        return [abilitiesForPerformance, abilitiesForUncompleted]
+        let abilitiesForIncompleted = try await fetchAbilities(category: .incompleted)
+        return [abilitiesForPerformance, abilitiesForIncompleted]
             .flatMap { $0 }
     }
 
@@ -37,6 +37,7 @@ struct AbilitiesGenerator {
                     )
                 ]
             }
+            .filter { !$0.todos.isEmpty }
     }
 
     private func fetchAnswerFromOpenAI(category: AbilityCategory) async throws -> String {
@@ -69,8 +70,8 @@ struct AbilitiesGenerator {
         switch category {
         case .performance:
             return projectResult.completedTodosSummary
-        case .uncompleted:
-            return projectResult.uncompletedTodosSummary
+        case .incompleted:
+            return projectResult.incompletedTodosSummary
         }
     }
 

@@ -33,7 +33,7 @@ public struct ProjectResultListView: View {
                         ForEach(projectResult.top3DelayedTodos) { todo in
                             Text("- \(todo.title) 총 \(todo.delayedCount)회")
                         }
-                        Text("미완료 To-do \(projectResult.uncompletedTodos.count)")
+                        Text("미완료 To-do \(projectResult.incompletedTodos.count)")
                     } else {
                         Text("리포트 생성중 🙂")
                     }

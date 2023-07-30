@@ -20,7 +20,7 @@ final class DayResetter: TimeSchedulable, TasksBatchable {
 
     func batchTasks() {
         Task {
-            try await Self.dailyTodoListUseCase.removeUncompletedTodosFromDaily()
+            try await Self.dailyTodoListUseCase.removeIncompletedTodosFromDaily()
         }
     }
 }

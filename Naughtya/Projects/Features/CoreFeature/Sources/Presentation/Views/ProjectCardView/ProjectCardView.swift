@@ -13,22 +13,22 @@ struct ProjectCardView: View {
 
     let project: ProjectModel
     let isDummy: Bool
-    let dragDropDelegate: DragDropDelegate
+    let dragDropDelegate: DragDropDelegate?
+    let projectSelector: ProjectSelectable?
     @State private var absoluteRect: CGRect!
     @State private var isBeingDragged = false
     @State private var showModal = false
     @State private var gradientPosition: Double = 0.0
     @State private var isAnimating = true
-    var projectEndday: Date {
-        project.endedAt!
-    }
 
     init(project: ProjectModel,
          isDummy: Bool = false,
-         dragDropDelegate: DragDropDelegate = DragDropManager.shared) {
+         dragDropDelegate: DragDropDelegate? = nil,
+         projectSelector: ProjectSelectable? = nil) {
         self.project = project
         self.isDummy = isDummy
         self.dragDropDelegate = dragDropDelegate
+        self.projectSelector = projectSelector
     }
 
     var body: some View {
@@ -111,15 +111,19 @@ struct ProjectCardView: View {
             contextMenu
         }
         .onTapGesture {
-            Task {
-                try await Self.projectUseCase.toggleSelected(
-                    project.entity,
-                    isSelected: !project.isSelected
-                )
+            if let projectSelector = projectSelector {
+                projectSelector.selectProject(project.entity)
+            } else {
+                Task {
+                    try await Self.projectUseCase.toggleSelected(
+                        project.entity,
+                        isSelected: !project.isSelected
+                    )
+                }
             }
         }
         .onDisappear {
-            dragDropDelegate.unregisterAbsoluteRect(dragDropableHash)
+            dragDropDelegate?.unregisterAbsoluteRect(dragDropableHash)
         }
         .sheet(isPresented: $showModal) {
             ProjectSetModalView(project: project)
@@ -128,7 +132,7 @@ struct ProjectCardView: View {
 
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text("\(Date().dDayCalculater(projectEndDay: projectEndday))")
+            Text("\(Date().dDayCalculater(projectEndDay: projectEndDay))")
                 .font(Font.custom("Apple SD Gothic Neo", size: 12).weight(.semibold)
                 )
                 .foregroundColor(Color.customGray1)
@@ -154,7 +158,7 @@ struct ProjectCardView: View {
             .font(Font.custom("SF Pro", size: 15))
             .foregroundColor(project.isBookmarked ? .pointColor : .customGray2)
             .onTapGesture {
-                toggleIsBookmarked()
+                toggleBookmarked()
             }
     }
 
@@ -163,13 +167,13 @@ struct ProjectCardView: View {
             .onChanged {
                 let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
                 if !isBeingDragged {
-                    dragDropDelegate.startToDrag(
+                    dragDropDelegate?.startToDrag(
                         project.entity,
                         size: absoluteRect.size,
                         itemLocation: itemLocation
                     )
                 } else {
-                    dragDropDelegate.drag(
+                    dragDropDelegate?.drag(
                         project.entity,
                         itemLocation: itemLocation
                     )
@@ -177,7 +181,7 @@ struct ProjectCardView: View {
                 isBeingDragged = true
             }
             .onEnded {
-                dragDropDelegate.drop(
+                dragDropDelegate?.drop(
                     project.entity,
                     touchLocation: absoluteRect.origin + $0.location
                 )
@@ -191,7 +195,7 @@ struct ProjectCardView: View {
         VStack {
             Button {
                 Task {
-                    try await Self.projectUseCase.toggleIsBookmarked(
+                    try await Self.projectUseCase.toggleBookmarked(
                         project.entity,
                         isBookmarked: !project.isBookmarked
                     )
@@ -221,6 +225,10 @@ struct ProjectCardView: View {
         }
     }
 
+    private var projectEndDay: Date {
+        project.endedAt!
+    }
+
     private var dragDropableHash: DragDropableHash {
         DragDropableHash(
             item: project.entity,
@@ -230,17 +238,18 @@ struct ProjectCardView: View {
 
     private func registerAbsoluteRect(_ rect: CGRect) {
         absoluteRect = rect
-        dragDropDelegate.registerAbsoluteRect(
+        dragDropDelegate?.registerAbsoluteRect(
             dragDropableHash,
             rect: rect
         )
     }
 
-    private func toggleIsBookmarked() {
+    private func toggleBookmarked() {
         Task {
-            try await Self.projectUseCase.toggleIsBookmarked(
+            try await Self.projectUseCase.toggleBookmarked(
                 project.entity,
-                isBookmarked: !project.isBookmarked)
+                isBookmarked: !project.isBookmarked
+            )
         }
     }
 

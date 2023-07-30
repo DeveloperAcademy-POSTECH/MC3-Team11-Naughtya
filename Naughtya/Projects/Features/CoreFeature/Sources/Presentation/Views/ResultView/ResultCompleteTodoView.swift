@@ -9,26 +9,25 @@
 import SwiftUI
 
 public struct ResultCompleteTodoView: View {
-    public init() {
-        // Initialization code here
+    public let projectResult: ProjectResultModel
+
+    public init(projectResult: ProjectResultModel) {
+        self.projectResult = projectResult
     }
+
     public var body: some View {
         HStack {
-
             HStack {
-                Text(" 10개의 능력을 획득 했어요")
+                Text("\(projectResult.abilitiesCount)개의 능력을 획득 했어요")
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 42)
                             .weight(.bold)
                     )
                     .foregroundColor(.white)
-
                 Image(systemName: "arrow.right")
                     .frame(width: 33, height: 19)
             }
-
             Spacer()
-
             HStack {
                 Text("􀁜")
                     .font(Font.custom("SF Pro", size: 16))
@@ -40,7 +39,7 @@ public struct ResultCompleteTodoView: View {
                             .weight(.semibold)
                     )
                     .foregroundColor(.white)
-                Text("94%")
+                Text("\(projectResult.completedPercent)%")
                     .font(
                         Font.custom("SF Pro", size: 20)
                             .weight(.semibold)
@@ -48,14 +47,13 @@ public struct ResultCompleteTodoView: View {
                     .multilineTextAlignment(.center)
                     .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
                     .frame(width: 46, height: 14, alignment: .center)
-
                 Text("달성 To-do 갯수")
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 16)
                             .weight(.semibold)
                     )
                     .foregroundColor(.white)
-                Text("100/100")
+                Text("\(projectResult.completedCount)/\(projectResult.allTodosCount)")
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 20)
                             .weight(.bold)
@@ -64,7 +62,6 @@ public struct ResultCompleteTodoView: View {
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 32)
-
             .background(Color(red: 0.18, green: 0.18, blue: 0.18).opacity(0.5))
             .cornerRadius(8)
         }
@@ -75,6 +72,6 @@ public struct ResultCompleteTodoView: View {
 
 struct ResultCompleteTodoView_Previews: PreviewProvider {
     static var previews: some View {
-        ResultCompleteTodoView()
+        ResultCompleteTodoView(projectResult: .from(entity: ProjectResultEntity.sample))
     }
 }

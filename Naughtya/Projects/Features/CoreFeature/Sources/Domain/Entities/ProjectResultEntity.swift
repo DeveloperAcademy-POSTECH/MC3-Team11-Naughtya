@@ -11,6 +11,8 @@ import Combine
 import CloudKit
 
 public class ProjectResultEntity: Equatable, Identifiable {
+    private static let localStore: LocalStore = .shared
+
     public internal(set) var recordId: CKRecord.ID?
     public let project: ProjectEntity
     public let abilities: CurrentValueSubject<[AbilityEntity], Never>
@@ -42,7 +44,7 @@ public class ProjectResultEntity: Equatable, Identifiable {
             }
     }
 
-    public var uncompletedTodosSummary: String {
+    public var incompletedTodosSummary: String {
         project.todos.value
             .filter { !$0.isCompleted }
             .reduce("") {
@@ -51,7 +53,25 @@ public class ProjectResultEntity: Equatable, Identifiable {
     }
 
     private func setupUpdatingStore() {
-        // TODO
+        let publishers = Publishers
+            .Merge(
+                abilities
+                    .map { _ in }
+                    .eraseToAnyPublisher(),
+                isGenerated
+                    .map { _ in }
+                    .eraseToAnyPublisher()
+            )
+
+        publishers
+            .debounce(
+                for: .milliseconds(100),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink { _ in
+                Self.localStore.update()
+            }
+            .store(in: &cancellable)
     }
 
     public static func == (lhs: ProjectResultEntity, rhs: ProjectResultEntity) -> Bool {

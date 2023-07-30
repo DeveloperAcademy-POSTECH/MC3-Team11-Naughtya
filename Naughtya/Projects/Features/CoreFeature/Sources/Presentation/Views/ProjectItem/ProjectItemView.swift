@@ -98,7 +98,7 @@ public struct ProjectItemView: View {
     private var todos: [TodoModel] {
         var todos = project.backlogTodos
         switch filterManager.filter {
-        case .uncompleted:
+        case .incompleted:
             todos = todos
                 .filter { !$0.isCompleted }
         case .completed:

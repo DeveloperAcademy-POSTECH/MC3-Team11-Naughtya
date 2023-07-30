@@ -9,11 +9,12 @@
 import SwiftUI
 
 public struct ResultDelayTodoView: View {
-    public init() {
-        // Initialization code here
+    public let projectResult: ProjectResultModel
+
+    public init(projectResult: ProjectResultModel) {
+        self.projectResult = projectResult
     }
 
-    let delayTodos = ["김동혁", "하요", "김김혁"]
     @State private var currentIndex = 0
     @State private var offsetY: CGFloat = 0
 
@@ -26,7 +27,7 @@ public struct ResultDelayTodoView: View {
                 )
                 .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
             VStack(alignment: .leading, spacing: 23) {
-
+                let todo = projectResult.top3DelayedTodos[currentIndex]
                 HStack {
                     VStack {
                         Text("\(currentIndex + 1)")
@@ -34,7 +35,6 @@ public struct ResultDelayTodoView: View {
                                 Font.custom("Apple SD Gothic Neo", size: 13.83245)
                                     .weight(.semibold)
                             )
-
                             .foregroundColor(Color(red: 0.77, green: 0.77, blue: 0.77))
                     }
                     .offset(y: offsetY)
@@ -42,8 +42,7 @@ public struct ResultDelayTodoView: View {
                     .padding(.vertical, 5)
                     .background(Color(red: 0.27, green: 0.27, blue: 0.27))
                     .cornerRadius(5)
-
-                    Text("\(delayTodos[currentIndex])")
+                    Text(todo.title)
                         .font(
                             Font.custom("Apple SD Gothic Neo", size: 18)
                                 .weight(.semibold)
@@ -51,19 +50,21 @@ public struct ResultDelayTodoView: View {
                         .offset(y: offsetY)
                         .foregroundColor(Color(red: 0.97, green: 0.97, blue: 0.97))
                     Spacer()
-
-                    Text("총 3회")
+                    Text("총 \(todo.delayedCount)회")
                         .font(
                             Font.custom("Apple SD Gothic Neo", size: 18)
                                 .weight(.semibold)
                         )
                         .foregroundColor(Color(red: 0.52, green: 0.52, blue: 0.52))
                 }
-
-                Text("다음번에 성공한다면 플러터 개발 능력을 획득 할 수 있어요!")
-                    .font(Font.custom("Apple SD Gothic Neo", size: 16))
-                    .foregroundColor(Color(red: 0.86, green: 0.86, blue: 0.86))
-
+                if let abilityTitle = projectResult.getAbilityTitleFromTodo(
+                    todo,
+                    category: .performance
+                ) {
+                    Text("다음번에 성공한다면 \(abilityTitle)을 획득 할 수 있어요!")
+                        .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                        .foregroundColor(Color(red: 0.86, green: 0.86, blue: 0.86))
+                }
             }
             .padding(.leading, 50)
             .padding(.trailing, 102)
@@ -75,10 +76,9 @@ public struct ResultDelayTodoView: View {
                 // Start the timer when the view appears
                 startTimer()
             }
-
         }
-
     }
+
     func startTimer() {
         // Schedule a repeating timer with 5-second interval
         Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
@@ -90,7 +90,7 @@ public struct ResultDelayTodoView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 // Restore the offset to the original position after the animation is done
                 offsetY = 0
-                currentIndex = (currentIndex + 1) % delayTodos.count
+                currentIndex = (currentIndex + 1) % projectResult.top3DelayedTodos.count
             }
         }
     }
@@ -98,6 +98,6 @@ public struct ResultDelayTodoView: View {
 
 struct ResultDelayTodoView_Previews: PreviewProvider {
     static var previews: some View {
-        ResultDelayTodoView()
+        ResultDelayTodoView(projectResult: .from(entity: ProjectResultEntity.sample))
     }
 }
