@@ -95,7 +95,7 @@ struct ProjectCardView: View {
             Text("\(Date().dDayCalculater(projectEndDay: projectEndday))")
               .font(Font.custom("Apple SD Gothic Neo", size: 12).weight(.semibold)
               )
-              .foregroundColor(Color.pointColor)
+              .foregroundColor(Color.customGray1)
             Text(project.category)
                 .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
                 .foregroundColor(.white)
