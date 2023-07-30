@@ -20,11 +20,6 @@ struct ResultBoardView: View {
                 tabPicker
             }
         }
-        .onAppear {
-            Task {
-                try await CloudKitManager.shared.syncWithStores()
-            }
-        }
     }
 
     private var projectListView: some View {

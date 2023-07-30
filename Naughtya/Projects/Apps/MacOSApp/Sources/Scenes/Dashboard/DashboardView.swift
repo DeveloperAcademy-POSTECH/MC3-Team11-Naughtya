@@ -20,7 +20,8 @@ struct DashboardView: View {
                             .frame(minWidth: 424)
                     }
                 }
-            default: ProjectResultListView()
+            default:
+                ResultView()
             }
 
         }
