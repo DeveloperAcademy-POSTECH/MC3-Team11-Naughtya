@@ -31,7 +31,7 @@ public struct ProjectListView: View {
                     ScrollView {
                         ForEach(projects) { project in
                             ProjectCardView(project: project)
-                                .frame(width: 278, height: 68)
+                                .frame(height: 68)
                         }
                         Spacer()
                     }
