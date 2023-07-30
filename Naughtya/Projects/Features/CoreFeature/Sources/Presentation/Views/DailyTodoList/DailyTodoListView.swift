@@ -21,8 +21,8 @@ public struct DailyTodoListView: View {
                 dateHeader
             }
             .padding(.horizontal, 40)
-            .padding(.top, 40)
-            .padding(.bottom, 36)
+            .padding(.top, 50)
+            .padding(.bottom, 41)
             .frame(alignment: .top)
             .background(Color(red: 0.13, green: 0.13, blue: 0.13)) // MARK: - 나중에 색 점검
             if let dailyTodoList = viewModel.dailyTodoList {

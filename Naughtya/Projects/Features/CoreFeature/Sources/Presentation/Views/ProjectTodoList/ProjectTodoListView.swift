@@ -32,6 +32,7 @@ public struct ProjectTodoListView: View {
                 }
             }
         }
+        .padding(0)
     }
 }
 

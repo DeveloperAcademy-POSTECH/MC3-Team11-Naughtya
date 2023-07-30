@@ -109,7 +109,7 @@ struct ProjectCardView: View {
                 .foregroundColor(.white)
             Text("/\(project.todos.count)")
                 .font(Font.custom("Apple SD Gothic Neo", size: 16).weight(.regular))
-                .foregroundColor(.customGray1)
+                .foregroundColor(.customGray2)
         }
     }
 
