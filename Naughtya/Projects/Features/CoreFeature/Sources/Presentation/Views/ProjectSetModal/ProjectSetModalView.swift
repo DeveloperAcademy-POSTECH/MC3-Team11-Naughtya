@@ -66,7 +66,7 @@ struct ProjectSetModalView: View {
                 Text("프로젝트 기간")
                     .font(Font.custom("Apple SD Gothic Neo", size: 14))
                     .foregroundColor(.white)
-                HStack {
+                HStack(alignment: .bottom, spacing: 17) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("시작")
                             .font(Font.custom("Apple SD Gothic Neo", size: 12))
@@ -75,14 +75,12 @@ struct ProjectSetModalView: View {
                             .datePickerStyle(.field)
                     }
                     VStack {
-                        Spacer().frame(height: 28)
                         Text("~")
-                          .font(
-                            Font.custom("Apple SD Gothic Neo", size: 20)
-                              .weight(.bold)
-                          )
-                          .foregroundColor(Color.customGray6)
-//                          .frame(width: 11, height: 45, alignment: .leading)
+                            .font(
+                                Font.custom("Apple SD Gothic Neo", size: 20)
+                                    .weight(.bold)
+                            )
+                            .foregroundColor(Color.customGray6)
                     }
                     VStack(alignment: .leading, spacing: 6) {
                         Text("종료")
