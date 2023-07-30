@@ -92,7 +92,7 @@ struct ProjectSetModalView: View {
                 }
 
             }
-            Spacer().frame(height: 67.5)
+            Spacer().frame(height: 35)
             HStack {
                 Spacer()
                 Button("Cancel") {
@@ -114,7 +114,7 @@ struct ProjectSetModalView: View {
         .padding(.horizontal, 20)
         .padding(.top, 52)
         .padding(.bottom, 32)
-        .frame(width: 413, height: 423)
+        .frame(width: 350, height: 350)
         .cornerRadius(15)
     }
 
