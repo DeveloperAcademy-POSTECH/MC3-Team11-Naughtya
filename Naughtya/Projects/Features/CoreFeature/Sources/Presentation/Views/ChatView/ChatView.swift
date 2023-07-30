@@ -4,7 +4,7 @@ public struct ChatView: View {
     @ObservedObject var viewModel = ViewModel()
 //    @Environment(\.dismiss) private var dismiss
 
-    static let store = ProjectStore.shared
+    static let store = LocalStore.shared
 
     public init() {
     }

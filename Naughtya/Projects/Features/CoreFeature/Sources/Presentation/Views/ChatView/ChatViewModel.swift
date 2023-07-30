@@ -14,7 +14,6 @@ extension ChatView {
         private let openAIService = OpenAIService()
 
         func updateCurrentInput(with projectResult: ProjectResultModel) {
-            currentInput = projectResult.allTodosSummary
             print(currentInput)
         }
 

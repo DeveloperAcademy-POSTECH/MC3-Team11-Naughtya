@@ -19,16 +19,24 @@ public struct ProjectResultListView: View {
     public var body: some View {
         HStack {
             ForEach(projectResults) { projectResult in
-                VStack {
-                    Text(projectResult.project.category)
-                        .font(.headline)
-                    Text("전체 : \(projectResult.allTodos.count)")
-                    Text("완료 : \(projectResult.completedTodos.count)")
-                    Text("미완료 : \(projectResult.backlogTodos.count)")
-                    Text("안미룸 : \(projectResult.dailyCompletedTodos.count)")
-                    Text("미룸 : \(projectResult.delayedTodos.count)")
-                    Text("삭제됨 : \(projectResult.deletedTodos.count)")
-                    Text(projectResult.allTodosSummary)
+                VStack(alignment: .leading) {
+                    Text("\(projectResult.projectName) 프로젝트")
+                    Text("\(projectResult.daysInProject)일간의 여정")
+                    if projectResult.isGenerated {
+                        Text("\(projectResult.abilitiesCount)개의 능력을 획득 했어요")
+                        ForEach(projectResult.abilities) { ability in
+                            Text("- \(ability.title) 총 \(ability.todos.count)개")
+                        }
+                        Text("평균 To-do 달성률 \(projectResult.completedPercent)%")
+                        Text("달성 To-do 갯수 \(projectResult.completedCount)/\(projectResult.allTodosCount)")
+                        Text("Top3 미룬 To-do")
+                        ForEach(projectResult.top3DelayedTodos) { todo in
+                            Text("- \(todo.title) 총 \(todo.delayedCount)회")
+                        }
+                        Text("미완료 To-do \(projectResult.uncompletedTodos.count)")
+                    } else {
+                        Text("리포트 생성중 🙂")
+                    }
                 }
             }
         }

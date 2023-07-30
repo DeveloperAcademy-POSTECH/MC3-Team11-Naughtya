@@ -18,7 +18,7 @@ public protocol ProjectUseCase {
     ) async throws -> ProjectEntity
 
     func readList() async throws -> [ProjectEntity]
-    func readItem(category: String) async throws -> ProjectEntity
+    func readItem(category: String) async throws -> ProjectEntity?
 
     func update(
         _ project: ProjectEntity,

@@ -9,7 +9,7 @@
 import Foundation
 
 struct DefaultTodoUseCase: TodoUseCase {
-    private static let projectStore: ProjectStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
     private static let cloudKitManager: CloudKitManager = .shared
 
@@ -48,7 +48,7 @@ struct DefaultTodoUseCase: TodoUseCase {
         guard !searchedText.isEmpty else {
             return []
         }
-        return Self.projectStore.projects
+        return Self.localStore.projects
             .flatMap { $0.todos.value }
             .filter { $0.title.value.contains(searchedText) }
     }

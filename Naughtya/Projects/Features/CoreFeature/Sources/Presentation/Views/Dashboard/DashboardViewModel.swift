@@ -11,7 +11,7 @@ import Combine
 
 @MainActor
 public final class DashboardViewModel: ObservableObject {
-    private static let projectStore: ProjectStore = .shared
+    private static let localStore: LocalStore = .shared
 
     @Published public var projects: [ProjectModel] = []
     private var cancellable = Set<AnyCancellable>()
@@ -31,7 +31,7 @@ public final class DashboardViewModel: ObservableObject {
     }
 
     private func setupFetchingData() {
-        Self.projectStore.objectWillChange
+        Self.localStore.objectWillChange
             .debounce(
                 for: .milliseconds(100),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
@@ -39,7 +39,7 @@ public final class DashboardViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { _ in
             } receiveValue: { [unowned self] _ in
-                projects = Self.projectStore.projects
+                projects = Self.localStore.projects
                     .map { .from(entity: $0) }
             }
             .store(in: &cancellable)

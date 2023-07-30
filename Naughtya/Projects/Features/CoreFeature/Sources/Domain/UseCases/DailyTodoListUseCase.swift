@@ -20,4 +20,5 @@ public protocol DailyTodoListUseCase {
     ) async throws
 
     func removeTodoFromDaily(_ todo: TodoEntity) async throws
+    func removeUncompletedTodosFromDaily() async throws
 }

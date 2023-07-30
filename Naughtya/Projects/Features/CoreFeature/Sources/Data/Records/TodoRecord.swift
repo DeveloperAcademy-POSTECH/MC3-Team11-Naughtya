@@ -16,7 +16,7 @@ struct TodoRecord: Recordable {
     let project: CKRecord.Reference?
     let dailyTodoList: CKRecord.Reference?
     let title: String
-    let createdAt: Date
+    let createdAt: Date?
     let histories: [CKRecord.Reference]
     let completedAt: Date?
 
@@ -49,7 +49,7 @@ struct TodoRecord: Recordable {
             project: ckRecord["project"] as? CKRecord.Reference,
             dailyTodoList: ckRecord["dailyTodoList"] as? CKRecord.Reference,
             title: ckRecord["title"] as? String ?? .init(),
-            createdAt: ckRecord["createdAt"] as? Date ?? .init(),
+            createdAt: ckRecord["createdAt"] as? Date,
             histories: ckRecord["histories"] as? [CKRecord.Reference] ?? .init(),
             completedAt: ckRecord["completedAt"] as? Date
         )

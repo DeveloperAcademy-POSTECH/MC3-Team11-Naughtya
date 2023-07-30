@@ -7,10 +7,6 @@
 
 import Foundation
 
-enum Constants {
-    static let openAIAPIKey = "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"
-}
-
 let prompt: String = """
 INPUT:
 

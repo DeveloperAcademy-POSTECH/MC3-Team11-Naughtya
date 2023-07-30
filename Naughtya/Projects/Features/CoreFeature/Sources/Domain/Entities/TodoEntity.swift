@@ -11,15 +11,14 @@ import Combine
 import CloudKit
 
 public class TodoEntity: Equatable, Identifiable {
-    private static let projectStore: ProjectStore = .shared
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let cloudKitManager: CloudKitManager = .shared
 
     public internal(set) var recordId: CKRecord.ID?
     public let project: CurrentValueSubject<ProjectEntity, Never>
     public let dailyTodoList: CurrentValueSubject<DailyTodoListEntity?, Never>
     public let title: CurrentValueSubject<String, Never>
-    public let createdAt: CurrentValueSubject<Date, Never>
+    public let createdAt: CurrentValueSubject<Date?, Never>
     public let histories: CurrentValueSubject<[TodoHistoryEntity], Never>
     public let completedAt: CurrentValueSubject<Date?, Never>
     private var cancellable = Set<AnyCancellable>()
@@ -29,7 +28,7 @@ public class TodoEntity: Equatable, Identifiable {
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity? = nil,
         title: String = "",
-        createdAt: Date = .now, // TODO: 더미데이터도 고려하기
+        createdAt: Date? = nil,
         histories: [TodoHistoryEntity] = [],
         completedAt: Date? = nil
     ) {
@@ -41,11 +40,17 @@ public class TodoEntity: Equatable, Identifiable {
         self.histories = .init(histories)
         self.completedAt = .init(completedAt)
         setupUpdatingStore()
+        setupStampingHistory()
     }
 
     /// 고유값
     public var id: ObjectIdentifier {
         ObjectIdentifier(self)
+    }
+
+    /// 미완료 여부
+    public var isBacklog: Bool {
+        !isCompleted
     }
 
     /// 데일리 여부
@@ -58,30 +63,31 @@ public class TodoEntity: Equatable, Identifiable {
         completedAt.value != nil
     }
 
-    /// 미완료 여부
-    public var isBacklog: Bool {
-        !isCompleted
+    /// 안미룸 여부
+    public var isDailyCompleted: Bool {
+        isCompleted && delayedCount == 0
     }
 
     /// 미룸 여부
     public var isDelayed: Bool {
-        !isDailyCompleted
+        delayedCount > 0
     }
 
-    /// 안미룸 여부
-    public var isDailyCompleted: Bool {
-        guard let firstMovedToDaily = histories.value.first(where: { $0.dailyTodoList != nil }),
-              let firstCompleted = histories.value.last(where: { $0.isCompleted }) else {
-            return false
-        }
-        return firstMovedToDaily.createdAt.isSame(firstCompleted.createdAt)
+    /// 미룬 횟수
+    public var delayedCount: Int {
+        let count = Set(
+            histories.value
+                .filter { $0.dailyTodoList != nil }
+                .compactMap { $0.createdAt?.getDateString() }
+        ).count - 1
+        return max(count, 0)
     }
 
     private var historyStamp: TodoHistoryEntity {
         TodoHistoryEntity(
             dailyTodoList: dailyTodoList.value,
             isCompleted: isCompleted,
-            createdAt: completedAt.value ?? dailyTodoList.value?.date ?? .now
+            createdAt: completedAt.value ?? dailyTodoList.value?.date
         )
     }
 
@@ -114,8 +120,7 @@ public class TodoEntity: Equatable, Identifiable {
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .sink {
-                Self.projectStore.update()
-                Self.dailyTodoListStore.update()
+                Self.localStore.update()
             }
             .store(in: &cancellable)
 
@@ -128,6 +133,22 @@ public class TodoEntity: Equatable, Identifiable {
                 Task {
                     try? await Self.cloudKitManager.update(record)
                 }
+            }
+            .store(in: &cancellable)
+    }
+
+    private func setupStampingHistory() {
+        Publishers
+            .Merge(
+                dailyTodoList
+                    .map { _ in }
+                    .eraseToAnyPublisher(),
+                completedAt
+                    .map { _ in }
+                    .eraseToAnyPublisher()
+            )
+            .sink { [unowned self] in
+                histories.value.append(historyStamp)
             }
             .store(in: &cancellable)
     }

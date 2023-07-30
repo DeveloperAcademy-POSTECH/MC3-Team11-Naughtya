@@ -24,8 +24,7 @@ public final class SearchViewModel: ObservableObject {
 
     // MARK: - Deprecated
 
-    private static let projectStore: ProjectStore = .shared
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     @Published public var searchedTodos: [TodoModel] = []
@@ -39,19 +38,16 @@ public final class SearchViewModel: ObservableObject {
     }
 
     private func setupFetchingData() {
-        Publishers.CombineLatest(
-            Self.projectStore.objectWillChange,
-            Self.dailyTodoListStore.objectWillChange
-        )
-        .debounce(
-            for: .milliseconds(100),
-            scheduler: DispatchQueue.global(qos: .userInitiated)
-        )
-        .receive(on: DispatchQueue.main)
-        .sink { _ in
-        } receiveValue: { [unowned self] _ in
-            fetchSearchedTodos()
-        }
-        .store(in: &cancellable)
+        Self.localStore.objectWillChange
+            .debounce(
+                for: .milliseconds(100),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+            } receiveValue: { [unowned self] _ in
+                fetchSearchedTodos()
+            }
+            .store(in: &cancellable)
     }
 }

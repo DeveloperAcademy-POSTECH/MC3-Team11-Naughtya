@@ -13,4 +13,5 @@ public protocol ProjectResultUseCase {
     func create(project: ProjectEntity) async throws -> ProjectResultEntity
 
     func readList() async throws -> [ProjectResultEntity]
+    func readItem(project: ProjectEntity) async throws -> ProjectResultEntity?
 }
