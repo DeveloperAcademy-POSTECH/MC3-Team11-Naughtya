@@ -1,7 +1,7 @@
 import SwiftUI
 import MacOSCoreFeature
 
-struct DashboardView: View {
+struct ResultBoardView: View {
     @StateObject private var viewModel = DashboardViewModel()
     @State private var selectedTabIndex = 0
     private let tabs = ["folder", "list.clipboard"]
@@ -11,19 +11,8 @@ struct DashboardView: View {
             projectListView
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
         } detail: {
-            switch selectedTabIndex {
-            case 0:
-                NavigationStack {
-                    NavigationView {
-                        projectTodoListView
-                        dailyTodoListView
-                            .frame(minWidth: 424)
-                    }
-                }
-            default:
-                ResultView()
-            }
-
+            ResultView()
+//                .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
         }
         .navigationTitle("")
         .toolbar {
@@ -41,8 +30,6 @@ struct DashboardView: View {
         List {
             ProjectTodoListView(projects: viewModel.selectedProjects)
         }
-        .frame(minWidth: 462, minHeight: 756)
-        .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 FilterButton()
@@ -66,16 +53,15 @@ struct DashboardView: View {
 
     private var tabPicker: some View {
         Picker(selection: $selectedTabIndex, label: Text("")) {
-            Image(systemName: "house")
-                .tag(0)
-            Image(systemName: "list.bullet")
-                .tag(1)
+            ForEach(tabs, id: \.self) { tab in
+                Image(systemName: tab)
+            }
         }
         .pickerStyle(.segmented)
     }
 }
 
-struct DashboardView_Previews: PreviewProvider {
+struct ResultBoardView_Previews: PreviewProvider {
     static var previews: some View {
         DashboardView()
     }
