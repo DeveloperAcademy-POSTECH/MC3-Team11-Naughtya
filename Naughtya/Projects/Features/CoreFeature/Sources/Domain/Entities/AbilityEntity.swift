@@ -1,5 +1,5 @@
 //
-//  PerformanceEntity.swift
+//  AbilityEntity.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/17.
@@ -9,9 +9,10 @@
 import Foundation
 import CloudKit
 
-public struct PerformanceEntity: Equatable {
+public struct AbilityEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
-    public let category: PerformanceCategory
+    public let id: UUID = .init()
+    public let category: AbilityCategory
     public let title: String
-    public let todos: [TodoEntity]
+    public var todos: [TodoEntity]
 }

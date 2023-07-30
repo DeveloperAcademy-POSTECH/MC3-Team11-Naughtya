@@ -13,7 +13,15 @@ import MacOSCoreFeature
 struct MacOSApp: App {
     var body: some Scene {
         WindowGroup {
+
             ZStack {ResultBoardView()
+
+//             LaunchView {
+//                 ZStack {
+//                     DashboardView()
+//                     DragDropStageView(topPadding: 52)
+//                 }
+
             }
             .frame(minWidth: 1174, minHeight: 756)
             .preferredColorScheme(.dark)

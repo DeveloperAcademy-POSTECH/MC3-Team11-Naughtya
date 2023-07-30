@@ -17,6 +17,9 @@ struct ProjectCardView: View {
     @State private var absoluteRect: CGRect!
     @State private var isBeingDragged = false
     @State private var showModal = false
+    var projectEndday: Date {
+        project.endedAt!
+    }
 
     init(project: ProjectModel,
          isDummy: Bool = false,
@@ -31,21 +34,24 @@ struct ProjectCardView: View {
             let absoluteRect = geometry.frame(in: .global)
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 5)
-                    .fill(project.isSelected ? Color.customGray4 : Color.customGray5)
+                    .fill(project.isSelected ? Color.customGray4 : Color.customGray8)
                 VStack {
-                    Spacer()
-                    HStack {
+                    HStack(alignment: .lastTextBaseline) {
                         contentView
+                            .padding(0)
                         Spacer()
-                        todosCountView
+                        VStack(alignment: .trailing) {
+                            bookmarkIndicator
+                            todosCountView
+                                .multilineTextAlignment(.trailing)
+                        }
                     }
                     .padding(.leading, 25)
                     .padding(.trailing, 15)
-                    Spacer()
+                    .padding(.top, 17)
+                    .padding(.bottom, 15)
                 }
-                if project.isBookmarked {
-                    bookmarkIndicator
-                }
+                .frame(height: 68)
             }
             .onAppear {
                 registerAbsoluteRect(absoluteRect)
@@ -63,7 +69,6 @@ struct ProjectCardView: View {
                 registerAbsoluteRect(absoluteRect)
             }
         }
-        .frame(height: 68)
         .opacity(isDummy || isBeingDragged ? 0.5 : 1)
         .gesture(dragGesture)
         .contextMenu {
@@ -86,40 +91,35 @@ struct ProjectCardView: View {
     }
 
     private var contentView: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 1) {
+            Text("\(Date().dDayCalculater(projectEndDay: projectEndday))")
+              .font(Font.custom("Apple SD Gothic Neo", size: 12).weight(.semibold)
+              )
+              .foregroundColor(Color.pointColor)
             Text(project.category)
-                .font(Font.custom("SF Pro", size: 24).weight(.medium))
+                .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
                 .foregroundColor(.white)
-            if let projectEndDay = project.endedAt {
-                Text("- \(changeDateFormat(projectEndDay: projectEndDay))")
-                    .font(Font.custom("SF Pro", size: 12).weight(.semibold))
-                    .foregroundColor(.customGray2)
-            }
         }
     }
 
     private var todosCountView: some View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text("\(project.completedTodos.count)")
-                .font(Font.custom("SF Pro", size: 24).weight(.semibold))
-                .foregroundColor(.pointColor)
-            Text("/\(project.todos.count)")
-                .font(Font.custom("SF Pro", size: 16).weight(.regular))
+                .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
                 .foregroundColor(.white)
+            Text("/\(project.todos.count)")
+                .font(Font.custom("Apple SD Gothic Neo", size: 16).weight(.regular))
+                .foregroundColor(.customGray1)
         }
-        .multilineTextAlignment(.trailing)
     }
 
     private var bookmarkIndicator: some View {
-        Image(systemName: "pin.fill")
-            .rotationEffect(.degrees(30))
-            .font(.system(size: 9))
-            .foregroundColor(.pointColor)
+        Image(systemName: project.isBookmarked ? "star.fill" : "star")
+            .font(Font.custom("SF Pro", size: 15))
+            .foregroundColor(project.isBookmarked ? .pointColor : .customGray2)
             .onTapGesture {
                 toggleIsBookmarked()
             }
-            .offset(x: 12, y: 16)
-            .zIndex(1)
     }
 
     private var dragGesture: some Gesture {
@@ -154,12 +154,6 @@ struct ProjectCardView: View {
     private var contextMenu: some View {
         VStack {
             Button {
-                showModal = true
-            } label: {
-                Label("Modify", systemImage: "pencil")
-                    .labelStyle(.titleAndIcon)
-            }
-            Button {
                 Task {
                     try await Self.projectUseCase.toggleIsBookmarked(
                         project.entity,
@@ -167,7 +161,15 @@ struct ProjectCardView: View {
                     )
                 }
             } label: {
-                Label("Bookmark", systemImage: "bookmark")
+                Label("즐겨찾기", systemImage: "star.fill")
+                    .font(Font.custom("SF Pro", size: 12))
+                    .labelStyle(.titleAndIcon)
+            }
+            Button {
+                showModal = true
+            } label: {
+                Label("수정하기", systemImage: "pencil.circle")
+                    .font(Font.custom("SF Pro", size: 12))
                     .labelStyle(.titleAndIcon)
             }
             Divider()
@@ -176,7 +178,8 @@ struct ProjectCardView: View {
                     try await Self.projectUseCase.delete(project.entity)
                 }
             } label: {
-                Label("삭제", systemImage: "trash")
+                Label("삭제하기", systemImage: "x.circle")
+                    .font(Font.custom("SF Pro", size: 12))
                     .labelStyle(.titleAndIcon)
             }
         }

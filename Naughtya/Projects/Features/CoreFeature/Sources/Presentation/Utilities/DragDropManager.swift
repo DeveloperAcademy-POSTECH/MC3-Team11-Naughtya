@@ -10,8 +10,7 @@ import Foundation
 
 public final class DragDropManager: ObservableObject, DragDropDelegate {
     public static let shared: DragDropManager = .init()
-    private static let projectStore: ProjectStore = .shared
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
     private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()

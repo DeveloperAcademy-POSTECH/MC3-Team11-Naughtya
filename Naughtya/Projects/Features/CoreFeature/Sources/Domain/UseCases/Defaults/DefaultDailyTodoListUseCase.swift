@@ -9,7 +9,7 @@
 import Foundation
 
 struct DefaultDailyTodoListUseCase: DailyTodoListUseCase {
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let cloudKitManager: CloudKitManager = .shared
 
     func create(dateString: String) async throws -> DailyTodoListEntity? {
@@ -21,12 +21,12 @@ struct DefaultDailyTodoListUseCase: DailyTodoListUseCase {
             let record = try? await Self.cloudKitManager.create(dailyTodoList.record)
             dailyTodoList.recordId = record?.id
         }
-        Self.dailyTodoListStore.dailyTodoLists.append(dailyTodoList)
+        Self.localStore.dailyTodoLists.append(dailyTodoList)
         return dailyTodoList
     }
 
     func readByDate(dateString: String) async throws -> DailyTodoListEntity? {
-        Self.dailyTodoListStore.getDailyTodoList(dateString: dateString)
+        Self.localStore.getDailyTodoList(dateString: dateString)
     }
 
     func addTodoToDaily(
@@ -44,5 +44,14 @@ struct DefaultDailyTodoListUseCase: DailyTodoListUseCase {
     func removeTodoFromDaily(_ todo: TodoEntity) async throws {
         todo.dailyTodoList.value?.todos.value.remove(todo)
         todo.dailyTodoList.value = nil
+    }
+
+    func removeUncompletedTodosFromDaily() async throws {
+        let todos = Self.localStore.dailyTodoLists
+            .flatMap { $0.todos.value }
+            .filter { !$0.isCompleted }
+        for todo in todos {
+            try await removeTodoFromDaily(todo)
+        }
     }
 }

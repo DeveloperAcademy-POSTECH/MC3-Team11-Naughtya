@@ -11,8 +11,7 @@ import CloudKit
 
 public final class CloudKitManager {
     public static let shared: CloudKitManager = .init()
-    private static let projectStore: ProjectStore = .shared
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
 
     public let isEnabled = false
 
@@ -127,7 +126,8 @@ public final class CloudKitManager {
         }
     }
 
-    public func syncWithStores() async throws { // 메서드가 매시브해서 ㅈㅅ
+    // 메서드가 매시브해서 ㅈㅅ
+    public func syncWithLocalStore() async throws {
         guard isEnabled else {
             throw DataError.cloudKitDisabled
         }
@@ -177,11 +177,11 @@ public final class CloudKitManager {
                 }
             }
 
-        Self.projectStore.projects = projectRecords
+        Self.localStore.projects = projectRecords
             .compactMap { $0.id }
             .compactMap { projectIdEntityMap[$0] }
 
-        Self.dailyTodoListStore.dailyTodoLists = dailyTodoListRecords
+        Self.localStore.dailyTodoLists = dailyTodoListRecords
             .compactMap { $0.id }
             .compactMap { dailyTodoListIdEntityMap[$0] }
     }

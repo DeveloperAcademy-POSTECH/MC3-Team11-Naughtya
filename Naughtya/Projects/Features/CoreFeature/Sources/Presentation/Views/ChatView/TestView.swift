@@ -31,8 +31,6 @@ public struct TestView: View {
 //                    Text(projectResult.allTodosSummary)
 //                    Text(projectResult.alldelayedTodosSummary)
 //                    Text(projectResult.alldeletedTodosSummary)
-                    Text(projectResult.allUnachievedTodosSummary.joined(separator: "\n"))
-
                 }
             }
         }

@@ -20,7 +20,7 @@ public struct SearchView: View {
         HStack(spacing: 5) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 13))
-                .foregroundColor(.customGray3)
+                .foregroundColor(.customGray4)
             TextField(text: $viewModel.searchedText) {
                 Text("오늘 할 일을 검색해보세요.")
                     .foregroundColor(.customGray1)
@@ -32,7 +32,7 @@ public struct SearchView: View {
         .frame(width: 222, height: 27)
         .overlay(
             RoundedRectangle(cornerRadius: 5)
-                .stroke(Color.customGray3, lineWidth: 1)
+                .stroke(Color.customGray4, lineWidth: 1)
         )
         .onChange(of: viewModel.searchedText) {
             viewModel.searchGlobally(text: $0)

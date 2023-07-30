@@ -13,5 +13,5 @@ public struct TodoHistoryEntity: Equatable {
     public internal(set) var recordId: CKRecord.ID?
     public let dailyTodoList: DailyTodoListEntity?
     public let isCompleted: Bool
-    public let createdAt: Date
+    public let createdAt: Date?
 }
