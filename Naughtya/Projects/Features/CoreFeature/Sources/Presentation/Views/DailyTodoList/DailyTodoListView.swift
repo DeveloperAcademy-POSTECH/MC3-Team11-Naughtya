@@ -11,6 +11,8 @@ import SwiftUI
 public struct DailyTodoListView: View {
     @StateObject private var viewModel = DailyTodoListViewModel()
     @State private var todoDate = Date()
+    @State private var isPopoverVisible = false
+    @State var dateForPicker = Date()
 
     public init() {
     }
@@ -59,11 +61,12 @@ public struct DailyTodoListView: View {
                                 .weight(.semibold)
                         )
                         .foregroundColor(Color.customGray1)
-                    // TODO: - 캘린더 구현하기
-                    //                        .onTapGesture {
-                    //                            DatePicker("", selection: $todoDate, in: ...todoDate, displayedComponents: [.date])
-                    //                                .datePickerStyle(.compact)
-                    //                        }
+                        .onTapGesture {
+                            isPopoverVisible = true
+                        }
+                        .popover(isPresented: $isPopoverVisible) {
+                            calendarPopup
+                        }
                 }
                 Button {
                     viewModel.gotoOneDayAfter()
@@ -120,6 +123,15 @@ public struct DailyTodoListView: View {
         .frame(height: 62)
         .padding(0)
     }
+
+    private var calendarPopup: some View {
+            VStack {
+                DatePicker("", selection: $dateForPicker, in: ...dateForPicker, displayedComponents: [.date])
+                    .datePickerStyle(.graphical)
+            }
+            .frame(width: 400, height: 300)
+    }
+
 }
 
 struct DailyTodoListView_Previews: PreviewProvider {
