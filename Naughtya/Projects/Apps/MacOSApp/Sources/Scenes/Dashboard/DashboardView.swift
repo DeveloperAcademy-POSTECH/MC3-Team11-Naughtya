@@ -44,8 +44,8 @@ struct DashboardView: View {
         .frame(minWidth: 462, minHeight: 756)
         .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                FilterButton()
+            ToolbarItem(placement: .secondaryAction) {
+                    FilterButton()
             }
         }
     }

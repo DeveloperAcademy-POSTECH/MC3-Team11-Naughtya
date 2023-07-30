@@ -31,7 +31,7 @@ public struct ProjectListView: View {
                     ScrollView {
                         ForEach(projects) { project in
                             ProjectCardView(project: project)
-                                .frame(width: 278, height: 68)
+                                .frame(height: 68)
                         }
                         Spacer()
                     }
@@ -90,27 +90,20 @@ public struct ProjectListView: View {
             Button {
                 showModal = true
             } label: {
-                HStack(alignment: .center, spacing: 5) {
-                    Spacer()
-                    Text("+")
-                        .font(Font.custom("SF Pro", size: 20))
-                    Text("Add project")
-                        .font(Font.custom("SF Pro", size: 14).weight(.semibold))
-                    Spacer()
+                ZStack {
+                    Circle()
+                        .fill(Color.pointColor)
+                        .frame(width: 44, height: 44)
+                    HStack(alignment: .center) {
+                        Image(systemName: "plus")
+                            .font(Font.custom("SF Pro", size: 24))
+                            .multilineTextAlignment(.center)
+                    }
+                    .foregroundColor(.white)
                 }
-                .frame(height: 36)
-                .lineLimit(1)
-                .foregroundColor(.white)
-                .background(Color.pointColor)
-                .cornerRadius(10)
             }
             .buttonStyle(.borderless)
-            .frame(
-                minWidth: 100,
-                maxWidth: .infinity,
-                alignment: .center
-            )
-            .padding(.horizontal, 81)
+//            .padding(.horizontal, 81)
             .padding(.bottom, 103)
             .sheet(isPresented: self.$showModal) {
                 ProjectSetModalView()

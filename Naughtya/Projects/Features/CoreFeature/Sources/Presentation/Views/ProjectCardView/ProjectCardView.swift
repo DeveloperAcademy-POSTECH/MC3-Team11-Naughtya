@@ -17,6 +17,8 @@ struct ProjectCardView: View {
     @State private var absoluteRect: CGRect!
     @State private var isBeingDragged = false
     @State private var showModal = false
+    @State private var gradientPosition: Double = 0.0
+    @State private var isAnimating = true
     var projectEndday: Date {
         project.endedAt!
     }
@@ -33,25 +35,59 @@ struct ProjectCardView: View {
         GeometryReader { geometry in
             let absoluteRect = geometry.frame(in: .global)
             ZStack(alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: 5)
-                    .fill(project.isSelected ? Color.customGray4 : Color.customGray8)
-                VStack {
-                    HStack(alignment: .lastTextBaseline) {
-                        contentView
-                            .padding(0)
-                        Spacer()
-                        VStack(alignment: .trailing) {
-                            bookmarkIndicator
-                            todosCountView
-                                .multilineTextAlignment(.trailing)
+                // MARK: - 그라데이션
+                ZStack {
+                    LinearGradient(
+                        gradient: Gradient(colors: [.pointColor, .pointColor]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .mask(
+                        Rectangle()
+                            .fill(
+                                AngularGradient(
+                                    gradient: Gradient(colors: [.clear, .pointColor, .clear]),
+                                    center: .center,
+                                    angle: .degrees(gradientPosition)
+                                )
+                            )
+                            .cornerRadius(5)
+                    )
+                    .opacity(isAnimating ? 1.0 : 0.0) // 애니메이션 중에만 보이도록 투명도 조절
+                            .onAppear {
+                                registerAbsoluteRect(absoluteRect)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                                    isAnimating = false // 10초 후에 애니메이션을 멈추도록 설정
+                                }
+                            }
+
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(project.isSelected ? Color.customGray4 : Color.customGray8)
+                        .frame(width: geometry.size.width - 4, height: geometry.size.height - 4)
+                    VStack {
+                        HStack(alignment: .lastTextBaseline) {
+                            contentView
+                                .padding(0)
+                            Spacer()
+                            VStack(alignment: .trailing) {
+                                bookmarkIndicator
+                                todosCountView
+                                    .multilineTextAlignment(.trailing)
+                            }
                         }
+                        .padding(.leading, 25)
+                        .padding(.trailing, 15)
+                        .padding(.top, 17)
+                        .padding(.bottom, 15)
                     }
-                    .padding(.leading, 25)
-                    .padding(.trailing, 15)
-                    .padding(.top, 17)
-                    .padding(.bottom, 15)
+                    .frame(height: 68)
                 }
-                .frame(height: 68)
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .onAppear {
+                    withAnimation(Animation.linear(duration: 10)) {
+                        gradientPosition = 360 * 5 // 360도 회전 (한 바퀴)
+                    }
+                }
             }
             .onAppear {
                 registerAbsoluteRect(absoluteRect)
@@ -93,9 +129,9 @@ struct ProjectCardView: View {
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 1) {
             Text("\(Date().dDayCalculater(projectEndDay: projectEndday))")
-              .font(Font.custom("Apple SD Gothic Neo", size: 12).weight(.semibold)
-              )
-              .foregroundColor(Color.pointColor)
+                .font(Font.custom("Apple SD Gothic Neo", size: 12).weight(.semibold)
+                )
+                .foregroundColor(Color.customGray1)
             Text(project.category)
                 .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
                 .foregroundColor(.white)
@@ -109,7 +145,7 @@ struct ProjectCardView: View {
                 .foregroundColor(.white)
             Text("/\(project.todos.count)")
                 .font(Font.custom("Apple SD Gothic Neo", size: 16).weight(.regular))
-                .foregroundColor(.customGray1)
+                .foregroundColor(.customGray2)
         }
     }
 

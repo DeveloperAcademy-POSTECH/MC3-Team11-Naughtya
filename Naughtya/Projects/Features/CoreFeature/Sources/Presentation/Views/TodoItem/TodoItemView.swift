@@ -179,8 +179,11 @@ public struct TodoItemView: View {
         Button {
             delete()
         } label: {
-            Text(isDeleting ? "❌" : "🗑️")
+            Image(systemName: isDeleting ? "xmark.circle" : "trash")
+                .font(Font.custom("SF Pro", size: 20))
+                .foregroundColor(isDeleting ? .red : Color.customGray4)
         }
+        .padding(.trailing, 10)
         .buttonStyle(.borderless)
         .opacity(isHovered ? 1 : 0.001)
         .animation(.easeOut, value: isHovered)

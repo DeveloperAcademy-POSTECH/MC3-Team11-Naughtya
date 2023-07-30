@@ -32,13 +32,13 @@ public struct ProjectItemView: View {
                     )
                     .foregroundColor(Color.customGray1)
                 HStack(spacing: 0) {
-                    Text("2023.07.29")
+                    Text(project.startedAt?.getDateString() ?? "")
                         .font(Font.custom("Apple SD Gothic Neo", size: 16))
                         .foregroundColor(Color.customGray3)
-                    Text("-")
+                    Text(" -")
                         .font(Font.custom("Apple SD Gothic Neo", size: 16))
                         .foregroundColor(Color.customGray3)
-                    Text("2023.08.15")
+                    Text(project.endedAt?.getDateString() ?? "")
                         .font(Font.custom("Apple SD Gothic Neo", size: 16))
                         .foregroundColor(Color.customGray3)
                 }
@@ -58,9 +58,9 @@ public struct ProjectItemView: View {
                 .background(Color.customGray8)
                 .cornerRadius(5)
             }
-            .padding(.horizontal, 40)
+            .padding(.horizontal, 26)
             .padding(.top, 40)
-            .padding(.bottom, 20)
+            .padding(.bottom, 10)
             .frame(alignment: .topLeading)
             Spacer()
         }
@@ -72,7 +72,7 @@ public struct ProjectItemView: View {
             )
             HStack(alignment: .center, spacing: 4) {
                 Text("􀅼")
-                    .font(Font.custom("SF Pro", size: 22).weight(.light))
+                    .font(Font.custom("SF Pro", size: 20).weight(.light))
                 Text("여기를 클릭해서 할 일을 추가해보세요.")
                     .font(Font.custom("Apple SD Gothic Neo", size: 14))
                     .frame(height: 16, alignment: .leading)
@@ -83,8 +83,9 @@ public struct ProjectItemView: View {
                     .fill(Color.white.opacity(0.0001))
                     .frame(minWidth: 1000, alignment: .leading)
             )
-            .padding(.top, -100)
-            .frame(maxWidth: .infinity, alignment: .center)
+//            .padding(.top, 100)
+            .padding(.leading, 28)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .onTapGesture {
                 appendNewTodo(project: project.entity)
             }
