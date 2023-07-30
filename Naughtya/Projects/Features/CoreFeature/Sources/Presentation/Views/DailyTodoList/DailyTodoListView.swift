@@ -129,9 +129,8 @@ public struct DailyTodoListView: View {
                 DatePicker("", selection: $dateForPicker, in: ...dateForPicker, displayedComponents: [.date])
                     .datePickerStyle(.graphical)
             }
-            .frame(width: 400, height: 300)
+            .frame(width: 150, height: 170)
     }
-
 }
 
 struct DailyTodoListView_Previews: PreviewProvider {
