@@ -68,7 +68,7 @@ public struct ResultCompleteTodoView: View {
             .background(Color(red: 0.18, green: 0.18, blue: 0.18).opacity(0.5))
             .cornerRadius(8)
         }
-        .padding(.bottom, 35)
+        .padding(.bottom, 47)
         .padding(.trailing, 30)
     }
 }
