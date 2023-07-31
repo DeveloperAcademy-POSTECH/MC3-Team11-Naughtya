@@ -24,7 +24,7 @@ public struct ResultDelayTodoView: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 27 * geometry.size.height / 892) {
-            Text("Top3 미룬 To-DO")
+            Text("Top3 미룬 To-Do")
                 .font(
                     Font.custom("Apple SD Gothic Neo", size: 24  * (geometry.size.height/892))
                         .weight(.bold)
@@ -72,7 +72,7 @@ public struct ResultDelayTodoView: View {
                         .font(Font.custom("Apple SD Gothic Neo", size: 16  * (geometry.size.height/892)))
                         .foregroundColor(Color(red: 0.86, green: 0.86, blue: 0.86))
                         .lineLimit(1)
-
+                    
                 }
             }
             .padding(.leading, 50)

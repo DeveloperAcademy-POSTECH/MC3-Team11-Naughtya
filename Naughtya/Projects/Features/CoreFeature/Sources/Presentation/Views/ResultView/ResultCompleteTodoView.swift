@@ -41,10 +41,11 @@ public struct ResultCompleteTodoView: View {
             }
             Spacer()
 
-            HStack(spacing: 20  * (geometry.size.width/1512)) {
+            HStack(alignment: .firstTextBaseline, spacing: 20  * (geometry.size.width/1512)) {
                 Text("􀁜")
-                    .font(Font.custom("SF Pro", size: 16   * (geometry.size.width/1512)))
-                    .multilineTextAlignment(.center)
+                    .font(Font.custom("SF Pro", size: 20 * (geometry.size.width/1512)))
+                    .fontWeight(.semibold)
+                //                    .multilineTextAlignment(.center)
                     .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                 Text("평균 To do 달성률")
                     .font(
@@ -57,7 +58,7 @@ public struct ResultCompleteTodoView: View {
                         Font.custom("SF Pro", size: 20   * (geometry.size.width/1512))
                             .weight(.semibold)
                     )
-                    .multilineTextAlignment(.center)
+
                     .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
                     .frame(width: 46, height: 14, alignment: .center)
                     .padding(.trailing, 35  * (geometry.size.width/1512))
@@ -68,12 +69,14 @@ public struct ResultCompleteTodoView: View {
                             .weight(.semibold)
                     )
                     .foregroundColor(.white)
+
                 Text("\(projectResult.completedCount)/\(projectResult.allTodosCount)")
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 20   * (geometry.size.width/1512))
-                            .weight(.bold)
+                            .weight(.semibold)
                     )
                     .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
+
             }
             .padding(.vertical, 12 * geometry.size.height / 892)
             .padding(.horizontal, 40)
