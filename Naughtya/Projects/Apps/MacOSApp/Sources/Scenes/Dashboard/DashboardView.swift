@@ -8,8 +8,11 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationSplitView {
-            projectListView
-                .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
+            VStack {
+                Image("sample")
+                projectListView
+                    .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
+            }
         } detail: {
             switch selectedTabIndex {
             case 0:
@@ -23,7 +26,6 @@ struct DashboardView: View {
             default:
                 ResultView()
             }
-
         }
         .navigationTitle("")
         .toolbar {
