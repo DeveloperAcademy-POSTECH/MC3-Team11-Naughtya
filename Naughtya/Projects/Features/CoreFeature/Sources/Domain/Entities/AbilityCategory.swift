@@ -11,6 +11,7 @@ import Foundation
 public enum AbilityCategory: String {
     case performance
     case incompleted
+    case sample
 
     public var gaslighting: String {
         """

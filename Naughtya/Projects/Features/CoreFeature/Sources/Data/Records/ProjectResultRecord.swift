@@ -25,6 +25,15 @@ struct ProjectResultRecord: Recordable {
         ]
     }
 
+    var entity: ProjectResultEntity {
+        ProjectResultEntity(
+            recordId: id,
+            project: .sample,
+            abilities: [],
+            isGenerated: isGenerated != 0
+        )
+    }
+
     static func build(ckRecord: CKRecord) -> ProjectResultRecord {
         ProjectResultRecord(
             id: ckRecord.recordID,

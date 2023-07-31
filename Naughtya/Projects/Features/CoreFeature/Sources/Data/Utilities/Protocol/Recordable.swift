@@ -9,11 +9,13 @@
 import Foundation
 import CloudKit
 
-public protocol Recordable {
+protocol Recordable {
+    associatedtype Entity: RecordConvertable
     static var recordType: CloudKitRecordType { get }
 
     var id: CKRecord.ID? { get }
     var dictionary: [String: Any?] { get }
+    var entity: Entity { get }
 
     static func build(ckRecord: CKRecord) -> Self
 }

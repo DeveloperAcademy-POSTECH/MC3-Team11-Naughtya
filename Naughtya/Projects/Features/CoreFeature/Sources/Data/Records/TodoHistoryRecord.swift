@@ -25,6 +25,15 @@ struct TodoHistoryRecord: Recordable {
         ]
     }
 
+    var entity: TodoHistoryEntity {
+        TodoHistoryEntity(
+            recordId: id,
+            dailyTodoList: nil,
+            isCompleted: isCompleted != 0,
+            createdAt: createdAt
+        )
+    }
+
     static func build(ckRecord: CKRecord) -> TodoHistoryRecord {
         TodoHistoryRecord(
             id: ckRecord.recordID,

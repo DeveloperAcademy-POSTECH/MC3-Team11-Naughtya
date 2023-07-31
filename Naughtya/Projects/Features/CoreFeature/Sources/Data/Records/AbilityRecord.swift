@@ -25,6 +25,15 @@ struct AbilityRecord: Recordable {
         ]
     }
 
+    var entity: AbilityEntity {
+        AbilityEntity(
+            recordId: id,
+            category: category ?? .sample,
+            title: title,
+            todos: []
+        )
+    }
+
     static func build(ckRecord: CKRecord) -> AbilityRecord {
         AbilityRecord(
             id: ckRecord.recordID,

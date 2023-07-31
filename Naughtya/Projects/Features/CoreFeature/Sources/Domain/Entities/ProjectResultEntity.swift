@@ -15,7 +15,7 @@ public class ProjectResultEntity: Equatable, Identifiable {
     private static let cloudKitManager: CloudKitManager = .shared
 
     public internal(set) var recordId: CKRecord.ID?
-    public let project: ProjectEntity
+    public var project: ProjectEntity
     public let abilities: CurrentValueSubject<[AbilityEntity], Never>
     public let isGenerated: CurrentValueSubject<Bool, Never>
     private var cancellable = Set<AnyCancellable>()

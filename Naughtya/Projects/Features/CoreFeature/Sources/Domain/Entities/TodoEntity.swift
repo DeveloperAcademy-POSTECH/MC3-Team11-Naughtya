@@ -12,6 +12,7 @@ import CloudKit
 
 public class TodoEntity: Equatable, Identifiable {
     private static let localStore: LocalStore = .shared
+    private static let todoHistoryUseCase: TodoHistoryUseCase = DefaultTodoHistoryUseCase()
     private static let cloudKitManager: CloudKitManager = .shared
 
     public internal(set) var recordId: CKRecord.ID?
@@ -83,14 +84,6 @@ public class TodoEntity: Equatable, Identifiable {
         return max(count, 0)
     }
 
-    private var historyStamp: TodoHistoryEntity {
-        TodoHistoryEntity(
-            dailyTodoList: dailyTodoList.value,
-            isCompleted: isCompleted,
-            createdAt: completedAt.value ?? dailyTodoList.value?.date
-        )
-    }
-
     private func setupUpdatingStore() {
         let publisher = Publishers
             .MergeMany(
@@ -152,9 +145,20 @@ public class TodoEntity: Equatable, Identifiable {
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .sink { [unowned self] in
-                histories.value.append(historyStamp)
+                Task {
+                    try await appendHistory()
+                }
             }
             .store(in: &cancellable)
+    }
+
+    private func appendHistory() async throws {
+        let history = try await Self.todoHistoryUseCase.create(
+            dailyTodoList: dailyTodoList.value,
+            isCompleted: isCompleted,
+            createdAt: completedAt.value ?? dailyTodoList.value?.date
+        )
+        histories.value.append(history)
     }
 
     public static func == (lhs: TodoEntity, rhs: TodoEntity) -> Bool {
