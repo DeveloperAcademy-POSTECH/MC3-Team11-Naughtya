@@ -11,7 +11,7 @@ struct OpenAIService {
         }
 
         let openAIMessages = messages.map { OpenAIChatMessage(role: $0.role, content: $0.content) }
-        let body = OpenAIChatBody(model: "gpt-3.5-turbo", messages: openAIMessages, temperature: 1)
+        let body = OpenAIChatBody(model: "gpt-3.5-turbo", messages: openAIMessages, temperature: 0)
 
         guard let url = URL(string: endpointUrl) else {
             throw NSError(domain: "InvalidURL", code: 0, userInfo: nil)

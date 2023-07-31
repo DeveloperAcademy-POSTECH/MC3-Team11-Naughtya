@@ -1,11 +1,3 @@
-//
-//  ResultView.swift
-//  CoreFeature
-//
-//  Created by DongHyeok Kim on 2023/07/29.
-//  Copyright © 2023 Naughtya. All rights reserved.
-//
-
 import SwiftUI
 
 public struct ResultView: View {
@@ -16,27 +8,57 @@ public struct ResultView: View {
     }
 
     public var body: some View {
-        ZStack {
-            if projectResult.isGenerated {
-                VStack(spacing: 0) {
-                    ResultNameView(projectResult: projectResult)
-                    ResultCompleteTodoView(projectResult: projectResult)
-                    ResultCardView(projectResult: projectResult)
-                    HStack(alignment: .center, spacing: 80) {
-                        ResultDelayTodoView(projectResult: projectResult)
-                        ResultIncompleteTodoView(projectResult: projectResult)
+        GeometryReader { geometry in
+            ZStack {
+                if projectResult.isGenerated {
+                    VStack(spacing: 0) {
+                        ResultNameView(
+                            projectResult: projectResult,
+                            geometry: geometry
+                        )
+                        HStack {
+                            Divider()
+                                .frame(width: 2, height: 635 * geometry.size.height / 892)
+                                .overlay(.gray)
+                                .padding(.trailing, 50 * (geometry.size.width / 1512))
+                            VStack {
+                                ResultCompleteTodoView(
+                                    projectResult: projectResult,
+                                    geometry: geometry
+                                )
+                                ResultCardView(
+                                    projectResult: projectResult,
+                                    geometry: geometry
+                                )
+                                HStack(alignment: .center, spacing: 80) {
+                                    ResultDelayTodoView(
+                                        projectResult: projectResult,
+                                        geometry: geometry
+                                    )
+                                    Spacer(minLength: 80 * (geometry.size.width / 1512))
+                                    ResultIncompleteTodoView(
+                                        projectResult: projectResult,
+                                        geometry: geometry
+                                    )
+                                }
+                                .padding(.vertical, 30)
+                                .padding(.horizontal, 30)
+                            }
+                        }
                     }
-                    .padding(.vertical, 30)
-                    .padding(.horizontal, 30)
+                    .padding(.leading, 50)
+                    .padding(.bottom, 95)
+                    .background(Color(red: 0.13, green: 0.13, blue: 0.13))
+                } else {
+                    emptyView
                 }
-                .padding(.leading, 50)
-                .padding(.bottom, 95)
-                .background(Color(red: 0.13, green: 0.13, blue: 0.13))
-            } else {
-                emptyView
             }
+            .padding(.leading, 50)
+            .padding(.top, 35 * geometry.size.height / 892)
+            .padding(.trailing, 70)
+            .frame(minWidth: 911, maxWidth: 1512, minHeight: 756, maxHeight: 892, alignment: .topLeading)
+            .background(Color(red: 0.13, green: 0.13, blue: 0.13))
         }
-        .frame(minWidth: 816, maxWidth: 1512, minHeight: 729, maxHeight: 929, alignment: .topLeading)
     }
 
     private var emptyView: some View {
@@ -53,8 +75,8 @@ public struct ResultView: View {
     }
 }
 
-struct ResultView_Previews: PreviewProvider {
-    static var previews: some View {
-        ResultView(projectResult: .from(entity: ProjectResultEntity.sample))
-    }
-}
+// struct ResultView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ResultView(projectResult: .from(entity: ProjectResultEntity.sample))
+//    }
+// }

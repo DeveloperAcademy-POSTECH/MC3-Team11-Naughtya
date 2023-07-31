@@ -10,19 +10,23 @@ import SwiftUI
 
 public struct ResultIncompleteTodoView: View {
     public let projectResult: ProjectResultModel
-
-    public init(projectResult: ProjectResultModel) {
-        self.projectResult = projectResult
-    }
-
+    private let geometry: GeometryProxy
     @State private var currentIndex = 0
     @State private var offsetY: CGFloat = 0
 
+    public init(
+        projectResult: ProjectResultModel,
+        geometry: GeometryProxy
+    ) {
+        self.projectResult = projectResult
+        self.geometry = geometry
+    }
+
     public var body: some View {
-        VStack(alignment: .leading, spacing: 27) {
+        VStack(alignment: .leading, spacing: 27 * geometry.size.height / 892) {
             Text("미완료 To-Do")
                 .font(
-                    Font.custom("Apple SD Gothic Neo", size: 24)
+                    Font.custom("Apple SD Gothic Neo", size: 24 * (geometry.size.width/1512))
                         .weight(.bold)
                 )
                 .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
@@ -30,25 +34,27 @@ public struct ResultIncompleteTodoView: View {
                 let todo = projectResult.incompletedTodos[currentIndex]
                 Text(todo.title)
                     .font(
-                        Font.custom("Apple SD Gothic Neo", size: 18)
+                        Font.custom("Apple SD Gothic Neo", size: 18 * (geometry.size.width/1512))
                             .weight(.semibold)
                     )
                     .offset(y: offsetY)
+                    .padding(.vertical, 5)
                     .foregroundColor(Color(red: 0.97, green: 0.97, blue: 0.97))
                 if let abilityTitle = projectResult.getAbilityTitleFromTodo(
                     todo,
                     category: .incompleted
                 ) {
                     Text("다음번에 성공한다면 \(abilityTitle)을 획득 할 수 있어요!")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                        .font(Font.custom("Apple SD Gothic Neo", size: 16 * (geometry.size.width/1512)))
                         .foregroundColor(Color(red: 0.86, green: 0.86, blue: 0.86))
                 }
             }
             .padding(.leading, 50)
-            .padding(.trailing, 102)
-            .padding(.vertical, 36)
+            .padding(.trailing, 44)
+            .padding(.vertical, 36 * geometry.size.height / 892)
             .background(Color(red: 0.17, green: 0.17, blue: 0.17))
             .cornerRadius(8)
+            .frame(maxWidth: 620)
             .onAppear {
                 // Start the timer when the view appears
                 startTimer()
@@ -73,8 +79,8 @@ public struct ResultIncompleteTodoView: View {
     }
 }
 
-struct ResultIncompleteTodoView_Previews: PreviewProvider {
-    static var previews: some View {
-        ResultIncompleteTodoView(projectResult: .from(entity: ProjectResultEntity.sample))
-    }
-}
+// struct ResultIncompleteTodoView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ResultIncompleteTodoView(projectResult: .from(entity: ProjectResultEntity.sample))
+//    }
+// }

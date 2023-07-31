@@ -10,19 +10,23 @@ import SwiftUI
 
 public struct ResultDelayTodoView: View {
     public let projectResult: ProjectResultModel
-
-    public init(projectResult: ProjectResultModel) {
-        self.projectResult = projectResult
-    }
-
+    private let geometry: GeometryProxy
     @State private var currentIndex = 0
     @State private var offsetY: CGFloat = 0
 
+    public init(
+        projectResult: ProjectResultModel,
+        geometry: GeometryProxy
+    ) {
+        self.projectResult = projectResult
+        self.geometry = geometry
+    }
+
     public var body: some View {
-        VStack(alignment: .leading, spacing: 27) {
+        VStack(alignment: .leading, spacing: 27 * geometry.size.height / 892) {
             Text("Top3 미룬 To-DO")
                 .font(
-                    Font.custom("Apple SD Gothic Neo", size: 24)
+                    Font.custom("Apple SD Gothic Neo", size: 24 * (geometry.size.width/1512))
                         .weight(.bold)
                 )
                 .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
@@ -32,30 +36,33 @@ public struct ResultDelayTodoView: View {
                     VStack {
                         Text("\(currentIndex + 1)")
                             .font(
-                                Font.custom("Apple SD Gothic Neo", size: 13.83245)
+                                Font.custom("Apple SD Gothic Neo", size: 13.83245 * (geometry.size.width/1512))
                                     .weight(.semibold)
                             )
                             .foregroundColor(Color(red: 0.77, green: 0.77, blue: 0.77))
                     }
-                    .offset(y: offsetY)
+//                    .offset(y: offsetY)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(Color(red: 0.27, green: 0.27, blue: 0.27))
                     .cornerRadius(5)
                     Text(todo.title)
                         .font(
-                            Font.custom("Apple SD Gothic Neo", size: 18)
+                            Font.custom("Apple SD Gothic Neo", size: 18 * (geometry.size.width/1512))
                                 .weight(.semibold)
                         )
                         .offset(y: offsetY)
+                        .padding(.vertical, 5)
                         .foregroundColor(Color(red: 0.97, green: 0.97, blue: 0.97))
                     Spacer()
                     Text("총 \(todo.delayedCount)회")
                         .font(
-                            Font.custom("Apple SD Gothic Neo", size: 18)
+                            Font.custom("Apple SD Gothic Neo", size: 18 * (geometry.size.width/1512))
                                 .weight(.semibold)
                         )
-                        .foregroundColor(Color(red: 0.52, green: 0.52, blue: 0.52))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
+                        .frame(width: 46, height: 13, alignment: .center)
                 }
                 if let abilityTitle = projectResult.getAbilityTitleFromTodo(
                     todo,
@@ -67,11 +74,11 @@ public struct ResultDelayTodoView: View {
                 }
             }
             .padding(.leading, 50)
-            .padding(.trailing, 102)
-            .padding(.vertical, 36)
+            .padding(.trailing, 44)
+            .padding(.vertical, 36 * geometry.size.height / 892)
             .background(Color(red: 0.17, green: 0.17, blue: 0.17))
             .cornerRadius(8)
-            .frame(maxWidth: 540)
+            .frame(maxWidth: 620)
             .onAppear {
                 // Start the timer when the view appears
                 startTimer()
@@ -81,7 +88,7 @@ public struct ResultDelayTodoView: View {
 
     func startTimer() {
         // Schedule a repeating timer with 5-second interval
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+        Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
             // Update the current index to show the next item in the list
             withAnimation {
                 offsetY = -30 // Move the current item upward
@@ -96,8 +103,8 @@ public struct ResultDelayTodoView: View {
     }
 }
 
-struct ResultDelayTodoView_Previews: PreviewProvider {
-    static var previews: some View {
-        ResultDelayTodoView(projectResult: .from(entity: ProjectResultEntity.sample))
-    }
-}
+// struct ResultDelayTodoView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ResultDelayTodoView(projectResult: .from(entity: ProjectResultEntity.sample))
+//    }
+// }
