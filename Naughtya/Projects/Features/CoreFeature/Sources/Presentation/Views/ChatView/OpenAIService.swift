@@ -4,6 +4,10 @@ struct OpenAIService {
     private let endpointUrl = "https://api.openai.com/v1/chat/completions"
 
     func sendMessage(messages: [Message]) async throws -> OpenAIChatResponse {
+        guard let apiKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"] else {
+            throw DataError(message: "enviornment variables에 `OPENAI_API_KEY`를 추가해야 함")
+        }
+
         let openAIMessages = messages.map { OpenAIChatMessage(role: $0.role, content: $0.content) }
         let body = OpenAIChatBody(model: "gpt-3.5-turbo", messages: openAIMessages, temperature: 1)
 
@@ -13,7 +17,7 @@ struct OpenAIService {
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue("Bearer \(Constants.openAIAPIKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
         let jsonData = try JSONEncoder().encode(body)

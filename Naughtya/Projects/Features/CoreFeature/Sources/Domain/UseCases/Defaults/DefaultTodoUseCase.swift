@@ -9,7 +9,7 @@
 import Foundation
 
 struct DefaultTodoUseCase: TodoUseCase {
-    private static let projectStore: ProjectStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
     private static let cloudKitManager: CloudKitManager = .shared
 
@@ -17,24 +17,38 @@ struct DefaultTodoUseCase: TodoUseCase {
         project: ProjectEntity,
         dailyTodoList: DailyTodoListEntity?
     ) async throws -> TodoEntity {
-        let todo = TodoEntity(
+        let todo = try await createTodo(
             project: project,
             dailyTodoList: dailyTodoList
         )
-        Task {
-            let record = try? await Self.cloudKitManager.create(todo.record)
-            todo.recordId = record?.id
-        }
         project.todos.value.append(todo)
         dailyTodoList?.todos.value.append(todo)
         return todo
+    }
+
+    func createAfterTodo(_ todo: TodoEntity) async throws {
+        guard let indexInProject = todo.project.value.todos.value
+            .firstIndex(of: todo) else {
+            return
+        }
+        let newTodo = try await createTodo(
+            project: todo.project.value,
+            dailyTodoList: todo.dailyTodoList.value
+        )
+        newTodo.project.value.todos.value
+            .insert(newTodo, at: indexInProject + 1)
+        if let indexInDaily = todo.dailyTodoList.value?.todos.value
+            .firstIndex(of: todo) {
+            newTodo.dailyTodoList.value?.todos.value
+                .insert(newTodo, at: indexInDaily + 1)
+        }
     }
 
     func readList(searchedText: String) async throws -> [TodoEntity] {
         guard !searchedText.isEmpty else {
             return []
         }
-        return Self.projectStore.projects
+        return Self.localStore.projects
             .flatMap { $0.todos.value }
             .filter { $0.title.value.contains(searchedText) }
     }
@@ -91,7 +105,10 @@ struct DefaultTodoUseCase: TodoUseCase {
         dailyTodoList.todos.value.append(todo)
     }
 
-    func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
+    func swapTodos(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) async throws {
         switch (lhs.isDaily, rhs.isDaily) {
         case (false, false):
             swapInProject(lhs, rhs)
@@ -104,15 +121,33 @@ struct DefaultTodoUseCase: TodoUseCase {
         }
     }
 
-    private func moveToProject(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
-        guard lhs.project.value === rhs.project.value else {
-            return
+    private func createTodo(
+        project: ProjectEntity,
+        dailyTodoList: DailyTodoListEntity?
+    ) async throws -> TodoEntity {
+        let todo = TodoEntity(
+            project: project,
+            dailyTodoList: dailyTodoList
+        )
+        Task {
+            let record = try? await Self.cloudKitManager.create(todo.record)
+            todo.recordId = record?.id
         }
+        return todo
+    }
+
+    private func moveToProject(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) async throws {
         try await Self.dailyTodoListUseCase.removeTodoFromDaily(lhs)
         swapInProject(lhs, rhs)
     }
 
-    private func moveToDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws {
+    private func moveToDaily(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) async throws {
         try await Self.dailyTodoListUseCase.addTodoToDaily(
             todo: lhs,
             dailyTodoList: rhs.dailyTodoList.value
@@ -120,7 +155,10 @@ struct DefaultTodoUseCase: TodoUseCase {
         swapInDaily(lhs, rhs)
     }
 
-    private func swapInProject(_ lhs: TodoEntity, _ rhs: TodoEntity) {
+    private func swapInProject(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) {
         guard lhs.project.value === rhs.project.value,
               let indexInProject = rhs.project.value.todos.value.firstIndex(of: rhs) else {
             return
@@ -129,7 +167,10 @@ struct DefaultTodoUseCase: TodoUseCase {
         lhs.project.value.todos.value.insert(lhs, at: indexInProject)
     }
 
-    private func swapInDaily(_ lhs: TodoEntity, _ rhs: TodoEntity) {
+    private func swapInDaily(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) {
         guard let indexInDaily = rhs.dailyTodoList.value?.todos.value.firstIndex(of: rhs) else {
             return
         }

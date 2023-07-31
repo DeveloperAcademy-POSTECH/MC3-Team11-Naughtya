@@ -18,7 +18,7 @@ public protocol ProjectUseCase {
     ) async throws -> ProjectEntity
 
     func readList() async throws -> [ProjectEntity]
-    func readItem(category: String) async throws -> ProjectEntity
+    func readItem(category: String) async throws -> ProjectEntity?
 
     func update(
         _ project: ProjectEntity,
@@ -30,6 +30,11 @@ public protocol ProjectUseCase {
 
     func delete(
         _ project: ProjectEntity
+    ) async throws
+
+    func swapProjects(
+        _ lhs: ProjectEntity,
+        _ rhs: ProjectEntity
     ) async throws
 
     func toggleSelected(

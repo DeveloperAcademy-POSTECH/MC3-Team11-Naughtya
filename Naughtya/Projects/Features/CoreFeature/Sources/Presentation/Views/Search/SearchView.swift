@@ -12,34 +12,34 @@ public struct SearchView: View {
     private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
 
     @StateObject private var viewModel = SearchViewModel()
-    private let textFieldHeight: CGFloat = 40
+
+    public init() {
+    }
 
     public var body: some View {
-        TextField(text: $viewModel.searchedText) {
-            Text("오늘 할 일을 검색해보세요.")
-                .font(Font.custom("Apple SD Gothic Neo", size: 12))
-                .foregroundColor(Color.customGray1)
+        HStack(spacing: 5) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 13))
+                .foregroundColor(.customGray4)
+            TextField(text: $viewModel.searchedText) {
+                Text("오늘 할 일을 검색해보세요.")
+                    .foregroundColor(.customGray1)
+            }
+            .textFieldStyle(.plain)
+            .font(Font.custom("SF Pro", size: 12))
         }
-        .textFieldStyle(.roundedBorder)
-        .padding(.horizontal)
-        .frame(height: textFieldHeight)
+        .padding(.horizontal, 7)
+        .frame(width: 222, height: 27)
+        .overlay(
+            RoundedRectangle(cornerRadius: 5)
+                .stroke(Color.customGray4, lineWidth: 1)
+        )
         .onChange(of: viewModel.searchedText) {
             viewModel.searchGlobally(text: $0)
         }
         .onExitCommand {
             viewModel.searchedText = ""
         }
-    }
-
-    private var searchedTodoList: some View {
-        ScrollView {
-            TodoListView(todos: viewModel.searchedTodos)
-                .padding()
-        }
-        .frame(height: 256)
-        .background(.white)
-        .border(.gray)
-        .offset(y: textFieldHeight)
     }
 }
 

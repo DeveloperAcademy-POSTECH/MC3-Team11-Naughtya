@@ -13,17 +13,20 @@ import CloudKit
 public class ProjectResultEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
     public let project: ProjectEntity
-    public let performances: CurrentValueSubject<[PerformanceEntity], Never>
+    public let abilities: CurrentValueSubject<[AbilityEntity], Never>
+    public let isGenerated: CurrentValueSubject<Bool, Never>
     private var cancellable = Set<AnyCancellable>()
 
     public init(
         recordId: CKRecord.ID? = nil,
         project: ProjectEntity,
-        performances: [PerformanceEntity] = []
+        abilities: [AbilityEntity] = [],
+        isGenerated: Bool = false
     ) {
         self.recordId = recordId
         self.project = project
-        self.performances = .init(performances)
+        self.abilities = .init(abilities)
+        self.isGenerated = .init(isGenerated)
         setupUpdatingStore()
     }
 
@@ -31,51 +34,20 @@ public class ProjectResultEntity: Equatable, Identifiable {
         ObjectIdentifier(self)
     }
 
-    public var allTodos: [TodoEntity] {
+    public var completedTodosSummary: String {
         project.todos.value
-    }
-
-    public var completedTodos: [TodoEntity] {
-        allTodos
             .filter { $0.isCompleted }
-    }
-
-    public var backlogTodos: [TodoEntity] {
-        allTodos
-            .filter { $0.isBacklog }
-    }
-
-    public var dailyCompletedTodos: [TodoEntity] {
-        allTodos
-            .filter { $0.isDailyCompleted }
-    }
-
-    public var delayedTodos: [TodoEntity] {
-        allTodos
-            .filter { $0.isDelayed }
-    }
-
-    public var deletedTodos: [TodoEntity] {
-        project.deletedTodos.value
-    }
-
-    public var allTodosSummary: String {
-        allTodos
             .reduce("") {
-                $0 + "- [\($1.isCompleted ? "v" : " ")] \($1.title.value)\n"
+                $0 + "- \($1.title.value)\n"
             }
     }
 
-    public var alldelayedTodosSummary: [String] {
-        allTodos
-            .filter { $0.isDelayed }
-            .map { $0.title.value }
-    }
-
-    public var allUnachievedTodosSummary: [String] {
-        allTodos
+    public var uncompletedTodosSummary: String {
+        project.todos.value
             .filter { !$0.isCompleted }
-            .map { $0.title.value }
+            .reduce("") {
+                $0 + "- \($1.title.value)\n"
+            }
     }
 
     private func setupUpdatingStore() {

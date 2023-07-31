@@ -15,6 +15,8 @@ public protocol TodoUseCase {
         dailyTodoList: DailyTodoListEntity?
     ) async throws -> TodoEntity
 
+    func createAfterTodo(_ todo: TodoEntity) async throws
+
     func readList(searchedText: String) async throws -> [TodoEntity]
 
     @discardableResult
@@ -44,5 +46,8 @@ public protocol TodoUseCase {
         dailyTodoList: DailyTodoListEntity
     ) async throws
 
-    func swapTodos(_ lhs: TodoEntity, _ rhs: TodoEntity) async throws
+    func swapTodos(
+        _ lhs: TodoEntity,
+        _ rhs: TodoEntity
+    ) async throws
 }

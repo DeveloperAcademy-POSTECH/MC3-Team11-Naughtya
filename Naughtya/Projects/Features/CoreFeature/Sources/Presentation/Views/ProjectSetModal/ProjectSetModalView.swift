@@ -37,85 +37,86 @@ struct ProjectSetModalView: View {
     }
 
     var body: some View {
-            VStack {
-                VStack(alignment: .leading) {
-                    Text("프로젝트 제목")
-                      .font(
-                        Font.custom("SF Pro", size: 14)
-                          .weight(.medium)
-                      )
-                      .foregroundColor(.white)
-
-                    TextField(text: $newProjectCategory) {
-                        Text("나의 프로젝트 이름 생성하기")
-                            .foregroundColor(Color(red: 0.16, green: 0.16, blue: 0.16))
-                    }
-                    .foregroundColor(Color.white)
-                    .cornerRadius(6.38361)
-                    Text("프로젝트 목표(선택)")
-                      .font(
-                        Font.custom("SF Pro", size: 14)
-                          .weight(.medium)
-                      )
-                      .foregroundColor(.white)
-
-                    TextField(text: $newProjectGoal) {
-                        Text("나의 프로젝트 목표 생성하기")
-                            .foregroundColor(Color(red: 0.16, green: 0.16, blue: 0.16))
-                    }
-                    .foregroundColor(Color.white)
-                    .cornerRadius(6.38361)
-
-                    Text("프로젝트 기간")
-                      .font(
-                        Font.custom("SF Pro", size: 14)
-                          .weight(.medium)
-                      )
-                      .foregroundColor(.white)
-
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("시작")
-                              .font(Font.custom("Apple SD Gothic Neo", size: 12))
-                              .foregroundColor(Color(red: 0.69, green: 0.68, blue: 0.68))
-                            DatePicker("", selection: $projectStartDay, displayedComponents: [.date])
-                                .datePickerStyle(.field)
-                        }
-                        VStack {
-                            Spacer().frame(height: 10)
-                            Text("~")
-                        }
-                        VStack(alignment: .leading) {
-                            Text("종료")
-                                .font(Font.custom("Apple SD Gothic Neo", size: 12))
-                                .foregroundColor(Color(red: 0.69, green: 0.68, blue: 0.68))
-                            DatePicker("", selection: $projectEndDay, displayedComponents: [.date])
-                                .datePickerStyle(.field)
-                        }
-                    }
+        VStack(spacing: 20) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("프로젝트 제목")
+                    .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                    .foregroundColor(.white)
+                TextField(text: $newProjectCategory) {
+                    Text("나의 프로젝트 이름 생성하기 (10자 이내)")
+                        .foregroundColor(Color.customGray2)
                 }
-                Spacer().frame(height: 67.5)
-                HStack {
-                    Spacer()
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    Button("Save") {
-                        if project == nil {
-                            appendNewProject()
-                        } else {
-                            if let project = project {
-                                update(project.entity)
-                            }
-                        }
-                        dismiss()
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
+                .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                .foregroundColor(Color.white)
+                .cornerRadius(6.38361)
             }
-            .padding(20)
-        .frame(width: 413, height: 426)
+            VStack(alignment: .leading, spacing: 10) {
+                Text("프로젝트 목표(선택)")
+                    .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                    .foregroundColor(.white)
+                TextField(text: $newProjectGoal) {
+                    Text("나의 프로젝트 목표 생성하기 (10자 이내)")
+                        .foregroundColor(Color.customGray2)
+                }
+                .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                .foregroundColor(Color.white)
+                .cornerRadius(6.38361)
+            }
+            VStack(alignment: .leading, spacing: 10) {
+                Text("프로젝트 기간")
+                    .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                    .foregroundColor(.white)
+                HStack(alignment: .bottom, spacing: 17) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("시작")
+                            .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                            .foregroundColor(Color.customGray1)
+                        DatePicker("", selection: $projectStartDay, in: ...projectEndDay, displayedComponents: [.date])
+                            .datePickerStyle(.field)
+                    }
+                    VStack {
+                        Text("~")
+                            .font(
+                                Font.custom("Apple SD Gothic Neo", size: 20)
+                                    .weight(.bold)
+                            )
+                            .foregroundColor(Color.customGray6)
+                    }
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("종료")
+                            .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                            .foregroundColor(Color.customGray1)
+                        DatePicker("", selection: $projectEndDay, in: projectStartDay..., displayedComponents: [.date])
+                            .datePickerStyle(.field)
+                    }
+                }
+
+            }
+            Spacer().frame(height: 35)
+            HStack {
+                Spacer()
+                Button("Cancel") {
+                    dismiss()
+                }
+                Button("Save") {
+                    if project == nil {
+                        appendNewProject()
+                    } else {
+                        if let project = project {
+                            update(project.entity)
+                        }
+                    }
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+            }
         }
+        .padding(.horizontal, 20)
+        .padding(.top, 52)
+        .padding(.bottom, 32)
+        .frame(width: 350, height: 350)
+        .cornerRadius(15)
+    }
 
     private func appendNewProject() {
         Task {

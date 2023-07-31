@@ -9,12 +9,13 @@
 import Foundation
 
 public enum CloudKitRecordType: String {
+    case userSetting
     case project
     case todo
     case dailyTodoList
     case todoHistory
     case projectResult
-    case performance
+    case ability
 
     public var key: String {
         rawValue.capitalized

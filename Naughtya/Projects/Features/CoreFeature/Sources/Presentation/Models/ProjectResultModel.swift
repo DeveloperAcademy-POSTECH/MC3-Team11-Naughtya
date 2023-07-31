@@ -11,47 +11,61 @@ import Foundation
 public struct ProjectResultModel: Modelable {
     public let entity: ProjectResultEntity
     public let project: ProjectModel
-    public let allTodosSummary: String
-    public let alldelayedTodosSummary: [String]
-    public let allUnachievedTodosSummary: [String]
+    public let abilities: [AbilityEntity]
+    public let isGenerated: Bool
 
-    public var allTodos: [TodoModel] {
-        entity.allTodos
-            .map { .from(entity: $0) }
+    public var projectName: String {
+        project.category
     }
 
-    public var completedTodos: [TodoModel] {
-        entity.completedTodos
-            .map { .from(entity: $0) }
+    public var daysInProject: Int {
+        guard let startedAt = project.startedAt,
+              let endedAt = project.endedAt else {
+            return 0
+        }
+        let components = Calendar.current.dateComponents(
+            [.day],
+            from: startedAt,
+            to: endedAt
+        )
+        return components.day!
     }
 
-    public var backlogTodos: [TodoModel] {
-        entity.backlogTodos
-            .map { .from(entity: $0) }
+    public var abilitiesCount: Int {
+        abilities.count
     }
 
-    public var dailyCompletedTodos: [TodoModel] {
-        entity.dailyCompletedTodos
-            .map { .from(entity: $0) }
+    public var completedPercent: Int {
+        Int(round(Double(completedCount) / Double(allTodosCount) * 100))
     }
 
-    public var delayedTodos: [TodoModel] {
-        entity.delayedTodos
-            .map { .from(entity: $0) }
+    public var completedCount: Int {
+        project.completedTodos.count
     }
 
-    public var deletedTodos: [TodoModel] {
-        entity.deletedTodos
-            .map { .from(entity: $0) }
+    public var allTodosCount: Int {
+        project.todos.count
+    }
+
+    public var top3DelayedTodos: [TodoModel] {
+        Array(
+            project.completedTodos
+                .sorted(by: { $0.delayedCount > $1.delayedCount })
+                .prefix(3)
+        )
+    }
+
+    public var uncompletedTodos: [TodoModel] {
+        project.todos
+            .filter { !$0.isCompleted }
     }
 
     public static func from(entity: ProjectResultEntity) -> Self {
         ProjectResultModel(
             entity: entity,
             project: .from(entity: entity.project),
-            allTodosSummary: entity.allTodosSummary,
-            alldelayedTodosSummary: entity.alldelayedTodosSummary,
-            allUnachievedTodosSummary: entity.allUnachievedTodosSummary
+            abilities: entity.abilities.value,
+            isGenerated: entity.isGenerated.value
         )
     }
 }

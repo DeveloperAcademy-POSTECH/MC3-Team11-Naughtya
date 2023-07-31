@@ -32,7 +32,7 @@ public struct TodoListView: View {
             if section != nil {
                 GeometryReader { geometry in
                     let absoluteRect = geometry.frame(in: .global)
-                    Color.black.opacity(0.01)
+                    Color.black.opacity(0.1)
                         .onAppear {
                             registerAbsoluteRect(absoluteRect)
                         }
@@ -41,30 +41,25 @@ public struct TodoListView: View {
                         }
                 }
             }
-            VStack(spacing: 0) {
-                if section is DailyTodoListEntity,
-                   todos.isEmpty {
-                    HStack(alignment: .center, spacing: 4) {
-                        Text("데일리 투두에 오늘 할일을 드래그 해주세요")
-                          .lineLimit(1)
-                          .font(Font.custom("Apple SD Gothic Neo", size: 16))
 
-                          .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
-                          .frame(width: 277, height: 16, alignment: .center)
-                          .padding(.vertical, 8)
-                          .cornerRadius(5)
-                          .overlay(
-                            RoundedRectangle(cornerRadius: 5)
-                              .inset(by: 0.5)
-                              .stroke(Color(red: 0.31, green: 0.31, blue: 0.31), lineWidth: 1)
-                              .frame(width: 600, height: 50)
-                          )
+            if section is DailyTodoListEntity, todos.isEmpty {
+                VStack(spacing: 0) {
+                    HStack(alignment: .center, spacing: 4) {
+                        Text("데일리 투두에 오늘 할일을 드래그 해주세요.")
+                            .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                            .foregroundColor(Color.customGray3)
+                            .multilineTextAlignment(.center)
+                            .frame(width: 277, height: 16, alignment: .center)
                     }
-                    .padding()
+                    .padding(.leading, 4)
+                    .padding(.trailing, 18)
                     .padding(.vertical, 8)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-
-                } else {
+                    .background(Color(red: 0.18, green: 0.18, blue: 0.18))
+                    .cornerRadius(5)
+                }.padding(.bottom, 500)
+            } else if section is DailyTodoListEntity, !todos.isEmpty {
+                VStack(spacing: 0) {
                     ForEach(todos) { todo in
                         TodoItemView(
                             todo: todo,
@@ -72,31 +67,79 @@ public struct TodoListView: View {
                             isBlockedToEdit: isBlockedToEdit
                         )
                     }
+                }.padding(.bottom, 500)
+            } else {
+                VStack(spacing: 0) {
+                        ForEach(todos) { todo in
+                            TodoItemView(
+                                todo: todo,
+                                isBacklog: section is ProjectEntity,
+                                isBlockedToEdit: isBlockedToEdit
+                            )
+                        }
                 }
             }
-            .padding(.bottom, 100)
+                // MARK: - 원래코드
+//            VStack(spacing: 0) {
+//                if section is DailyTodoListEntity,
+//                   todos.isEmpty {
+//                    HStack(alignment: .center, spacing: 4) {
+//                        Text("데일리 투두에 오늘 할일을 드래그 해주세요.")
+//                          .font(Font.custom("Apple SD Gothic Neo", size: 16))
+//                          .foregroundColor(Color.customGray3)
+//                          .multilineTextAlignment(.center)
+//                          .frame(width: 277, height: 16, alignment: .center)
+//
+//                    }
+//                    .padding(.leading, 4)
+//                    .padding(.trailing, 18)
+//                    .padding(.vertical, 8)
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+//                    .background(Color(red: 0.18, green: 0.18, blue: 0.18))
+//                    .cornerRadius(5)
+//                } else {
+//                    ForEach(todos) { todo in
+//                        TodoItemView(
+//                            todo: todo,
+//                            isBacklog: section is ProjectEntity,
+//                            isBlockedToEdit: isBlockedToEdit
+//                        )
+//                    }
+//                }
+//            }
+//            .padding(.bottom, 100)
         }
         .onDisappear {
             unregisterAbsoluteRect()
         }
     }
 
+    private var dragDropableHash: DragDropableHash? {
+        guard let item = section else {
+            return nil
+        }
+        return DragDropableHash(
+            item: item,
+            priority: 2
+        )
+    }
+
     private func registerAbsoluteRect(_ rect: CGRect) {
-        guard let section = section else {
+        guard let hash = dragDropableHash else {
             return
         }
         absoluteRect = rect
         dragDropDelegate.registerAbsoluteRect(
-            section,
+            hash,
             rect: rect
         )
     }
 
     private func unregisterAbsoluteRect() {
-        guard let section = section else {
+        guard let hash = dragDropableHash else {
             return
         }
-        dragDropDelegate.unregisterAbsoluteRect(section)
+        dragDropDelegate.unregisterAbsoluteRect(hash)
     }
 }
 

@@ -10,8 +10,7 @@ import Foundation
 
 public final class DummyDataGenerator {
     public static let shared: DummyDataGenerator = .init()
-    private static let projectStore: ProjectStore = .shared
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
     private static let todoUseCase: TodoUseCase = DefaultTodoUseCase()
@@ -81,7 +80,7 @@ public final class DummyDataGenerator {
         var date = Date.parse(startDate)
         while !date.isSame(.parse(endDate)) {
             let dateString = date.getDateString()
-            let dailyTodoList = Self.dailyTodoListStore.getDailyTodoList(dateString: dateString)
+            let dailyTodoList = Self.localStore.getDailyTodoList(dateString: dateString)
             for _ in 0 ..< .random(in: 1 ... 10) {
                 try await createTodo(
                     project: project,

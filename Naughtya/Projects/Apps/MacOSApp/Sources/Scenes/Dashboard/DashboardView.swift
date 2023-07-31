@@ -1,66 +1,79 @@
 import SwiftUI
- import MacOSCoreFeature
+import MacOSCoreFeature
 
- struct DashboardView: View {
+struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
-    @State private var isSelected = true
+    @State private var selectedTabIndex = 0
+    private let tabs = ["folder", "list.clipboard"]
 
     var body: some View {
         NavigationSplitView {
-            ProjectListView(projects: viewModel.projects)
+            projectListView
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
-        } content: {
-            List {
-                ProjectTodoListView(projects: viewModel.selectedProjects)
-            }
-            .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
-
         } detail: {
-            List {
-                DailyTodoListView()
+            switch selectedTabIndex {
+            case 0:
+                NavigationStack {
+                    NavigationView {
+                        projectTodoListView
+                        dailyTodoListView
+                            .frame(minWidth: 424)
+                    }
+                }
+            default:
+                ResultView()
             }
-            .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
+
         }
         .navigationTitle("")
         .toolbar {
-            ToolbarItem(placement: .status) {
-                Button {
-
-                } label: {
-                    Image(systemName: "list.bullet")
-                }
-            }
-
-            ToolbarItemGroup(placement: .navigation) {
-                HStack(spacing: 0) {
-                    Button {
-                        isSelected = true
-                    } label: {
-                        Image(systemName: "folder")
-                            .foregroundColor(isSelected ? Color(red: 0, green: 0.48, blue: 1) : Color.gray)
-
-                    }
-                    Button {
-                        isSelected = false
-                    } label: {
-                        Image(systemName: "list.clipboard")
-                            .foregroundColor(isSelected ? Color.gray : Color(red: 0, green: 0.48, blue: 1))
-
-                    }
-                }
-            }
-
-            ToolbarItemGroup(placement: .primaryAction) {
-                TopBarView()
-            }
-        }
-        .onAppear {
-            Task {
-                try await CloudKitManager.shared.syncWithStores()
+            ToolbarItem(placement: .navigation) {
+                tabPicker
             }
         }
     }
- }
+
+    private var projectListView: some View {
+        ProjectListView(projects: viewModel.sortedProjects)
+    }
+
+    private var projectTodoListView: some View {
+        List {
+            ProjectTodoListView(projects: viewModel.selectedProjects)
+        }
+        .frame(minWidth: 462, minHeight: 756)
+        .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
+        .toolbar {
+            ToolbarItem(placement: .secondaryAction) {
+                    FilterButton()
+            }
+        }
+    }
+
+    private var dailyTodoListView: some View {
+        List {
+            DailyTodoListView()
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Spacer()
+            }
+            ToolbarItem(placement: .primaryAction) {
+                SearchView()
+            }
+        }
+    }
+
+    private var tabPicker: some View {
+        Picker(selection: $selectedTabIndex, label: Text("")) {
+            Image(systemName: "house")
+                .tag(0)
+            Image(systemName: "list.bullet")
+                .tag(1)
+        }
+        .pickerStyle(.segmented)
+    }
+}
 
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {

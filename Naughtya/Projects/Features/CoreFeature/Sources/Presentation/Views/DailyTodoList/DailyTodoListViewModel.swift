@@ -11,7 +11,7 @@ import Combine
 
 @MainActor
 public final class DailyTodoListViewModel: ObservableObject {
-    private static let dailyTodoListStore: DailyTodoListStore = .shared
+    private static let localStore: LocalStore = .shared
     private static let dailyTodoListUseCase: DailyTodoListUseCase = DefaultDailyTodoListUseCase()
 
     @Published public var dailyTodoList: DailyTodoListModel?
@@ -52,7 +52,7 @@ public final class DailyTodoListViewModel: ObservableObject {
     }
 
     private func setupFetchingData() {
-        Self.dailyTodoListStore.objectWillChange
+        Self.localStore.objectWillChange
             .debounce(
                 for: .milliseconds(100),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
@@ -75,7 +75,7 @@ public final class DailyTodoListViewModel: ObservableObject {
             } else if let new = try await Self.dailyTodoListUseCase.create(dateString: dateString) {
                 dailyTodoList = .from(entity: new)
             }
-            Self.dailyTodoListStore.currentDailyTodoList = dailyTodoList?.entity
+            Self.localStore.currentDailyTodoList = dailyTodoList?.entity
         }
     }
 }

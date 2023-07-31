@@ -10,11 +10,11 @@ import Foundation
 
 public protocol DragDropDelegate: AnyObject {
     func registerAbsoluteRect(
-        _ item: DragDropItemable,
+        _ hash: DragDropableHash,
         rect: CGRect
     )
 
-    func unregisterAbsoluteRect(_ item: DragDropItemable)
+    func unregisterAbsoluteRect(_ hash: DragDropableHash)
 
     func startToDrag(
         _ item: DragDropItemable,
