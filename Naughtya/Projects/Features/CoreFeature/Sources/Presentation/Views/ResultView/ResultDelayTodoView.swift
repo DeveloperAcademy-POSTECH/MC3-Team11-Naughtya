@@ -19,7 +19,7 @@ public struct ResultDelayTodoView: View {
     @State private var offsetY: CGFloat = 0
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 27) {
+        VStack(alignment: .leading, spacing: 27 * geometry.size.height / 892) {
             Text("Top3 미룬 To-DO")
                 .font(
                     Font.custom("Apple SD Gothic Neo", size: 24 * (geometry.size.width/1512))
@@ -38,7 +38,7 @@ public struct ResultDelayTodoView: View {
 
                             .foregroundColor(Color(red: 0.77, green: 0.77, blue: 0.77))
                     }
-                    .offset(y: offsetY)
+//                    .offset(y: offsetY)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(Color(red: 0.27, green: 0.27, blue: 0.27))
@@ -59,7 +59,9 @@ public struct ResultDelayTodoView: View {
                             Font.custom("Apple SD Gothic Neo", size: 18 * (geometry.size.width/1512))
                                 .weight(.semibold)
                         )
-                        .foregroundColor(Color(red: 0.52, green: 0.52, blue: 0.52))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
+                        .frame(width: 46, height: 13, alignment: .center)
                 }
 
                 Text("다음번에 성공한다면 플러터 개발 능력을 획득 할 수 있어요!")
@@ -68,11 +70,11 @@ public struct ResultDelayTodoView: View {
 
             }
             .padding(.leading, 50)
-            .padding(.trailing, 102)
-            .padding(.vertical, 36)
+            .padding(.trailing, 44)
+            .padding(.vertical, 36 * geometry.size.height / 892)
             .background(Color(red: 0.17, green: 0.17, blue: 0.17))
             .cornerRadius(8)
-            .frame(maxWidth: 756)
+            .frame(maxWidth: 620)
             .onAppear {
                 // Start the timer when the view appears
                 startTimer()

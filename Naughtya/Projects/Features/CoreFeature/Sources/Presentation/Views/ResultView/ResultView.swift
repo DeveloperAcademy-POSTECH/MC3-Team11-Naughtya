@@ -10,9 +10,10 @@ public struct ResultView: View {
             VStack {
 
                 ResultNameView(geometry: geometry)
+
                 HStack {
                     Divider()
-                        .frame(width: 2, height: 600 * geometry.size.height / 892)
+                        .frame(width: 2, height: 635 * geometry.size.height / 892)
                         .overlay(.gray)
                         .padding(.trailing, 50 * (geometry.size.width / 1512))
                     VStack {
@@ -22,22 +23,18 @@ public struct ResultView: View {
 
                         HStack {
                             ResultDelayTodoView(geometry: geometry)
-                            Spacer(minLength: 46 * (geometry.size.width / 1512))
+                            Spacer(minLength: 80 * (geometry.size.width / 1512))
                             ResultIncompleteTodoView(geometry: geometry)
                         }
-                        .padding(.trailing, 30)
-                        .padding(.horizontal, 0)
                     }
                 }
             }
             .padding(.leading, 50)
-            .padding(.top, 25)
+            .padding(.top, 35 * geometry.size.height / 892)
+            .padding(.trailing, 70)
             .frame(minWidth: 911, maxWidth: 1512, minHeight: 756, maxHeight: 892, alignment: .topLeading)
             .background(Color(red: 0.13, green: 0.13, blue: 0.13))
-            .onAppear {
-                print(geometry.size.width)
-                print(geometry.size.height)
-            }
+
         }
     }
 }

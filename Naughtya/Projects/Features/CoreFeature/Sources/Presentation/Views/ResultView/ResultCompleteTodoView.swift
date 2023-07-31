@@ -18,17 +18,21 @@ public struct ResultCompleteTodoView: View {
         HStack {
 
             HStack {
-                Text(" 10개의 능력을 획득 했어요")
+                Text("10개의 능력을 획득 했어요")
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 42 * (geometry.size.width/1512))
                             .weight(.bold)
                     )
                     .foregroundColor(.white)
 
-                Image(systemName: "arrow.right")
+                Image(systemName: "chevron.compact.right")
                     .frame(width: 33, height: 19)
+                    .font(
+                        Font.custom("Apple SD Gothic Neo", size: 42 * (geometry.size.width/1512))
+
+                    )
+                    .foregroundColor(.white)
             }
-            .padding(.leading, -6)
 
             Spacer()
 
@@ -65,13 +69,12 @@ public struct ResultCompleteTodoView: View {
                     )
                     .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 32)
+            .padding(.vertical, 12 * geometry.size.height / 892)
+            .padding(.leading, 32)
+            .padding(.trailing, 35)
 
             .background(Color(red: 0.18, green: 0.18, blue: 0.18).opacity(0.5))
             .cornerRadius(8)
         }
-//        .padding(.bottom, 47)
-        .padding(.trailing, 30)
     }
 }
