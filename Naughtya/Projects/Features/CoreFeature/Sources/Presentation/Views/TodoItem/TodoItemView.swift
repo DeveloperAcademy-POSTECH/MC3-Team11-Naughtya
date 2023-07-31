@@ -112,9 +112,9 @@ public struct TodoItemView: View {
         Button {
             toggleCompleted()
         } label: {
-            Image(systemName: todo.isCompleted ? "checkmark.square" : "square")
+            Image(systemName: todo.isCompleted ? "checkmark.circle" : "circle")
                 .foregroundColor(todo.isCompleted ? .customGray4 : .pointColor)
-                .font(.system(size: 22))
+                .font(.system(size: 18))
         }
         .buttonStyle(.borderless)
     }

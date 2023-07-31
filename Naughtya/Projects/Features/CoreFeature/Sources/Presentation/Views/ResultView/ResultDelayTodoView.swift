@@ -72,7 +72,7 @@ public struct ResultDelayTodoView: View {
                         .font(Font.custom("Apple SD Gothic Neo", size: 16  * (geometry.size.height/892)))
                         .foregroundColor(Color(red: 0.86, green: 0.86, blue: 0.86))
                         .lineLimit(1)
-                    
+
                 }
             }
             .padding(.leading, 50)
