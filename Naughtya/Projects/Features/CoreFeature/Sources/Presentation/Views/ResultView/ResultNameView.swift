@@ -47,17 +47,17 @@ public struct ResultNameView: View {
             VStack {
                 Rectangle()
                     .foregroundColor(.clear)
-                    .frame(width: 79 * (geometry.size.width/1512), height: 78 * (geometry.size.height/892))
+                    .frame(width: 79, height: 79)
                     .background(
-                        Image(systemName: "leaf") // 이미지 변경
+                        MacOSCoreFeatureAsset.circle.swiftUIImage // 이미지 변경
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: 79 * (geometry.size.width/1512), height: 78 * (geometry.size.height/892))
+//                            .frame(width: 79, height: 79)
                             .clipped()
                     )
                     .padding(.bottom, 15)
 
-                Text("타임라인 돌아보기")
+                Text("에필로그")
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 16.17978 * (geometry.size.height/892))
                             .weight(.semibold)
@@ -66,7 +66,7 @@ public struct ResultNameView: View {
                     .foregroundColor(.white)
             }
         }
-        .background(Color(red: 0.13, green: 0.13, blue: 0.13))
+
     }
 }
 

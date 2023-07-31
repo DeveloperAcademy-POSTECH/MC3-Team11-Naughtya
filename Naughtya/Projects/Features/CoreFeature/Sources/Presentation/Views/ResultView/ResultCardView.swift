@@ -34,7 +34,7 @@ public struct ResultCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                                    .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -54,7 +54,7 @@ public struct ResultCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                                    .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -73,7 +73,7 @@ public struct ResultCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                                    .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -221,7 +221,9 @@ public struct ResultCardView: View {
         )
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                .fill(Color.customGray8.opacity(0.5)
+
+                     ) // TODO: figma 업데이트 필요
 
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))

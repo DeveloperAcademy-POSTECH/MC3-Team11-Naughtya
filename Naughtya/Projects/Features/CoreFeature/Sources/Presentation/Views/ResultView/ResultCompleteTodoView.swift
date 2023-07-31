@@ -80,7 +80,9 @@ public struct ResultCompleteTodoView: View {
             }
             .padding(.vertical, 12 * geometry.size.height / 892)
             .padding(.horizontal, 40)
-            .background(Color(red: 0.18, green: 0.18, blue: 0.18).opacity(0.5))
+            .background(Color.customGray8.opacity(0.5))
+//            .background(.ultraThinMaterial)
+
             .cornerRadius(8)
         }
     }
