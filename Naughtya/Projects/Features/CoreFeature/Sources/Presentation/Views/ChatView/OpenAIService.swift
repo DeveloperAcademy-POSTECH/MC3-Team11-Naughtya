@@ -1,3 +1,5 @@
+// swiftlint:disable all
+
 import Foundation
 
 struct OpenAIService {
@@ -33,9 +35,8 @@ struct OpenAIChatBody: Encodable {
     let model: String
     let messages: [OpenAIChatMessage]
     let temperature: Float?
-//    let max_tokens: Int
-//    let top_p: Float?
-    // tuist규칙때문에 이게 불가능한데 나는 api요청을 해야하는데... 흠..
+    let max_tokens: Int? = nil
+    let top_p: Float? = nil
 }
 
 struct OpenAIChatMessage: Codable {
