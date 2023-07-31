@@ -9,7 +9,6 @@ struct DashboardView: View {
     var body: some View {
         NavigationSplitView {
             VStack {
-                Image("sample")
                 projectListView
                     .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
             }

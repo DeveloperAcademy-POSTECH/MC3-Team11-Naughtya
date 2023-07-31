@@ -13,10 +13,7 @@ let project = Project(
             platform: .macOS,
             product: .framework,
             deploymentTarget: Constants.DeploymentTarget.macOS,
-            hasResources: true,
-            dependencies: [
-                .external(name: "SDWebImageSwiftUI")
-            ]
+            hasResources: true
         ),
         .build(
             name: "IOS" + projectName,
@@ -24,10 +21,7 @@ let project = Project(
             platform: .iOS,
             product: .framework,
             deploymentTarget: Constants.DeploymentTarget.iOS,
-            hasResources: true,
-            dependencies: [
-                .external(name: "SDWebImageSwiftUI")
-            ]
+            hasResources: true
         )
     ]
 )
