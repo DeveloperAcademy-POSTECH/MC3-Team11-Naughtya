@@ -23,12 +23,15 @@ public struct ResultNameView: View {
         HStack {
             VStack(alignment: .leading, spacing: 0) {
                 Text("\(projectResult.projectName) 프로젝트")
+                    .lineLimit(1)
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 32 * (geometry.size.width/1512))
                             .weight(.bold)
                     )
                     .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
+
                 Text("\(projectResult.daysInProject)일간의 여정") // 종료된 프로젝트와 데이터 연결
+                    .lineLimit(1)
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 28 * (geometry.size.width/1512))
                             .weight(.medium)
@@ -38,7 +41,9 @@ public struct ResultNameView: View {
 
             }
 
+//            Spacer(minLength: 600)
             Spacer()
+
             VStack {
                 Rectangle()
                     .foregroundColor(.clear)
@@ -54,18 +59,13 @@ public struct ResultNameView: View {
 
                 Text("타임라인 돌아보기")
                     .font(
-                        Font.custom("Apple SD Gothic Neo", size: 16.17978 * (geometry.size.width/1512))
+                        Font.custom("Apple SD Gothic Neo", size: 16.17978 * (geometry.size.height/892))
                             .weight(.semibold)
                     )
                     .multilineTextAlignment(.center)
                     .foregroundColor(.white)
             }
-            .padding(.trailing, 30)
-
         }
-        .padding(.top, 20)
-        .padding(.bottom, 10)
-        //            .frame(minWidth: 762, maxWidth: 1389, minHeight: 99, maxHeight: 112)
         .background(Color(red: 0.13, green: 0.13, blue: 0.13))
     }
 }

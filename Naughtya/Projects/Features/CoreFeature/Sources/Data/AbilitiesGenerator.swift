@@ -46,6 +46,7 @@ struct AbilitiesGenerator {
         guard let answer = response.choices.last?.message.content else {
             throw DataError(message: "gpt가 말을 안함")
         }
+        print("@LOG answer \(answer)")
         return answer
     }
 

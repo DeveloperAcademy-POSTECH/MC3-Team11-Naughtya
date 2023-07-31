@@ -9,55 +9,51 @@ public struct ResultView: View {
 
     public var body: some View {
         GeometryReader { geometry in
-            ZStack {
-                if projectResult.isGenerated {
-                    VStack(spacing: 0) {
-                        ResultNameView(
-                            projectResult: projectResult,
-                            geometry: geometry
-                        )
-                        HStack {
-                            Divider()
-                                .frame(width: 2, height: 635 * geometry.size.height / 892)
-                                .overlay(.gray)
-                                .padding(.trailing, 50 * (geometry.size.width / 1512))
-                            VStack {
-                                ResultCompleteTodoView(
+
+            if projectResult.isGenerated {
+                VStack {
+                    ResultNameView(
+                        projectResult: projectResult,
+                        geometry: geometry
+                    )
+                    HStack {
+                        Divider()
+                            .frame(width: 2, height: 635 * geometry.size.height / 892)
+                            .overlay(.gray)
+                            .padding(.trailing, 50 * (geometry.size.width / 1512))
+                        VStack {
+                            ResultCompleteTodoView(
+                                projectResult: projectResult,
+                                geometry: geometry
+                            )
+                            ResultCardView(
+                                projectResult: projectResult,
+                                geometry: geometry
+                            )
+                            HStack(spacing: 80 * (geometry.size.width / 1512)) {
+                                ResultDelayTodoView(
                                     projectResult: projectResult,
                                     geometry: geometry
                                 )
-                                ResultCardView(
+                                //                                    Spacer(minLength: 80 * (geometry.size.width / 1512))
+                                ResultIncompleteTodoView(
                                     projectResult: projectResult,
                                     geometry: geometry
                                 )
-                                HStack(alignment: .center, spacing: 80) {
-                                    ResultDelayTodoView(
-                                        projectResult: projectResult,
-                                        geometry: geometry
-                                    )
-                                    Spacer(minLength: 80 * (geometry.size.width / 1512))
-                                    ResultIncompleteTodoView(
-                                        projectResult: projectResult,
-                                        geometry: geometry
-                                    )
-                                }
-                                .padding(.vertical, 30)
-                                .padding(.horizontal, 30)
                             }
                         }
                     }
-                    .padding(.leading, 50)
-                    .padding(.bottom, 95)
                     .background(Color(red: 0.13, green: 0.13, blue: 0.13))
-                } else {
-                    emptyView
                 }
+
+                .padding(.leading, 50)
+                .padding(.top, 35 * geometry.size.height / 892)
+                .padding(.trailing, 70)
+                .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
+                .background(Color(red: 0.13, green: 0.13, blue: 0.13))
+            } else {
+                emptyView
             }
-            .padding(.leading, 50)
-            .padding(.top, 35 * geometry.size.height / 892)
-            .padding(.trailing, 70)
-            .frame(minWidth: 911, maxWidth: 1512, minHeight: 756, maxHeight: 892, alignment: .topLeading)
-            .background(Color(red: 0.13, green: 0.13, blue: 0.13))
         }
     }
 
