@@ -32,13 +32,13 @@ public struct ProjectItemView: View {
                     )
                     .foregroundColor(Color.customGray1)
                 HStack(spacing: 0) {
-                    Text(project.startedAt?.getDateString() ?? "")
+                    Text(project.startedAt?.getDateString("yyyy.MM.dd") ?? "")
                         .font(Font.custom("Apple SD Gothic Neo", size: 16))
                         .foregroundColor(Color.customGray3)
                     Text(" -")
                         .font(Font.custom("Apple SD Gothic Neo", size: 16))
                         .foregroundColor(Color.customGray3)
-                    Text(project.endedAt?.getDateString() ?? "")
+                    Text(project.endedAt?.getDateString("yyyy.MM.dd") ?? "")
                         .font(Font.custom("Apple SD Gothic Neo", size: 16))
                         .foregroundColor(Color.customGray3)
                 }
