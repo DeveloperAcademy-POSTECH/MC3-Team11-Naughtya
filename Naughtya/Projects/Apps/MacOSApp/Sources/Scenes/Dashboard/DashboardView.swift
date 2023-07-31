@@ -6,8 +6,10 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationSplitView {
-            projectListView
-                .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
+            VStack {
+                projectListView
+                    .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
+            }
         } detail: {
             if viewModel.isResultTab {
                 if let projectResult = viewModel.selectedProjectResult {
