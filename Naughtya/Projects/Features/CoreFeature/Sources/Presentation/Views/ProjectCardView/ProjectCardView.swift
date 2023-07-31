@@ -20,6 +20,8 @@ struct ProjectCardView: View {
     @State private var showModal = false
     @State private var gradientPosition: Double = 0.0
     @State private var isAnimating = true
+    private let cardViewUserDefaultsKey: String // 각 카드 뷰의 UserDefaults 키
+    @State private var hasAppeared = false
 
     init(project: ProjectModel,
          isDummy: Bool = false,
@@ -29,6 +31,10 @@ struct ProjectCardView: View {
         self.isDummy = isDummy
         self.dragDropDelegate = dragDropDelegate
         self.projectSelector = projectSelector
+        // 각 카드 뷰의 UserDefaults 키는 프로젝트 ID를 기반으로 생성합니다.
+        self.cardViewUserDefaultsKey = "ProjectCardView_\(project.id)"
+        // 해당 카드 뷰의 애니메이션 상태를 UserDefaults에서 로드합니다.
+        self._hasAppeared = State(initialValue: UserDefaults.standard.bool(forKey: cardViewUserDefaultsKey))
     }
 
     var body: some View {
@@ -37,33 +43,39 @@ struct ProjectCardView: View {
             ZStack(alignment: .topLeading) {
                 // MARK: - 그라데이션
                 ZStack {
-                    LinearGradient(
-                        gradient: Gradient(colors: [.pointColor, .pointColor]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                    .mask(
-                        Rectangle()
-                            .fill(
-                                AngularGradient(
-                                    gradient: Gradient(colors: [.clear, .pointColor, .clear]),
-                                    center: .center,
-                                    angle: .degrees(gradientPosition)
+                    if !hasAppeared {
+                        LinearGradient(
+                            gradient: Gradient(colors: [.pointColor, .pointColor]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                        .mask(
+                            Rectangle()
+                                .fill(
+                                    AngularGradient(
+                                        gradient: Gradient(colors: [.clear, .pointColor, .clear]),
+                                        center: .center,
+                                        angle: .degrees(gradientPosition)
+                                    )
                                 )
-                            )
-                            .cornerRadius(5)
-                    )
-                    .opacity(isAnimating ? 1 : 0) // 애니메이션 중에만 보이도록 투명도 조절
-                    .onAppear {
-                        registerAbsoluteRect(absoluteRect)
-                        withAnimation(.easeOut(duration: 2)) {
-                            gradientPosition = 360 * 2 // 360도 회전 (한 바퀴)
-                            isAnimating = false
+                                .cornerRadius(5)
+                        )
+                        .opacity(isAnimating ? 1 : 0) // 애니메이션 중에만 보이도록 투명도 조절
+                        .onAppear {
+                            registerAbsoluteRect(absoluteRect)
+                            withAnimation(.easeOut(duration: 2)) {
+                                gradientPosition = 360 * 2 // 360도 회전 (한 바퀴)
+                                isAnimating = false
+                            }
+                            if !hasAppeared {
+                                // 해당 카드 뷰의 애니메이션 상태를 UserDefaults에 저장합니다.
+                                UserDefaults.standard.set(true, forKey: cardViewUserDefaultsKey)
+                            }
                         }
                     }
                     RoundedRectangle(cornerRadius: 5)
                         .fill(project.isSelected ? Color.customGray4 : Color.customGray8)
-                        .frame(width: geometry.size.width - 4, height: geometry.size.height - 4)
+                        .frame(width: geometry.size.width - 6, height: geometry.size.height - 6)
                     VStack {
                         HStack(alignment: .lastTextBaseline) {
                             contentView
