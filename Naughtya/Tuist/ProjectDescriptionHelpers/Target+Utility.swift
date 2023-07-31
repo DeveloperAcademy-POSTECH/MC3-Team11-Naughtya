@@ -14,6 +14,7 @@ extension Target {
         platform: Platform,
         product: Product,
         deploymentTarget: DeploymentTarget? = nil,
+        hasResources: Bool = false,
         dependencies: [TargetDependency] = []
     ) -> Self {
         Target(
@@ -23,6 +24,7 @@ extension Target {
             bundleId: "\(organizationName).\(name)",
             deploymentTarget: deploymentTarget,
             sources: "Sources/**",
+            resources: hasResources ? "Resources/**" : nil,
             scripts: [.swiftlint],
             dependencies: dependencies
         )
