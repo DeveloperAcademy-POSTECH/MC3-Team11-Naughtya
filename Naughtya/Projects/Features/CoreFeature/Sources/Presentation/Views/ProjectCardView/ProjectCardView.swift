@@ -53,14 +53,14 @@ struct ProjectCardView: View {
                             )
                             .cornerRadius(5)
                     )
-                    .opacity(isAnimating ? 1.0 : 0.0) // 애니메이션 중에만 보이도록 투명도 조절
-                            .onAppear {
-                                registerAbsoluteRect(absoluteRect)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                                    isAnimating = false // 10초 후에 애니메이션을 멈추도록 설정
-                                }
-                            }
-
+                    .opacity(isAnimating ? 1 : 0) // 애니메이션 중에만 보이도록 투명도 조절
+                    .onAppear {
+                        registerAbsoluteRect(absoluteRect)
+                        withAnimation(.easeOut(duration: 2)) {
+                            gradientPosition = 360 * 2 // 360도 회전 (한 바퀴)
+                            isAnimating = false
+                        }
+                    }
                     RoundedRectangle(cornerRadius: 5)
                         .fill(project.isSelected ? Color.customGray4 : Color.customGray8)
                         .frame(width: geometry.size.width - 4, height: geometry.size.height - 4)
@@ -83,11 +83,6 @@ struct ProjectCardView: View {
                     .frame(height: 68)
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
-                .onAppear {
-                    withAnimation(Animation.linear(duration: 10)) {
-                        gradientPosition = 360 * 5 // 360도 회전 (한 바퀴)
-                    }
-                }
             }
             .onAppear {
                 registerAbsoluteRect(absoluteRect)
