@@ -25,6 +25,7 @@ public class UserSettingEntity: Equatable, Identifiable {
     ) {
         self.timeToReset = .init(timeToReset)
         self.projects = .init(projects)
+        setupUpdatingStore()
     }
 
     public var id: ObjectIdentifier {

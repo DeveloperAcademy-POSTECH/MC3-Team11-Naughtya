@@ -12,6 +12,7 @@ import CloudKit
 
 public class ProjectResultEntity: Equatable, Identifiable {
     private static let localStore: LocalStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
 
     public internal(set) var recordId: CKRecord.ID?
     public let project: ProjectEntity
@@ -53,7 +54,7 @@ public class ProjectResultEntity: Equatable, Identifiable {
     }
 
     private func setupUpdatingStore() {
-        let publishers = Publishers
+        let publisher = Publishers
             .Merge(
                 abilities
                     .map { _ in }
@@ -63,13 +64,25 @@ public class ProjectResultEntity: Equatable, Identifiable {
                     .eraseToAnyPublisher()
             )
 
-        publishers
+        publisher
             .debounce(
                 for: .milliseconds(100),
                 scheduler: DispatchQueue.global(qos: .userInitiated)
             )
             .sink { _ in
                 Self.localStore.update()
+            }
+            .store(in: &cancellable)
+
+        publisher
+            .debounce(
+                for: .seconds(3),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
+            .sink { [unowned self] in
+                Task {
+                    try? await Self.cloudKitManager.update(record)
+                }
             }
             .store(in: &cancellable)
     }

@@ -147,6 +147,10 @@ public class TodoEntity: Equatable, Identifiable {
                     .map { _ in }
                     .eraseToAnyPublisher()
             )
+            .debounce(
+                for: .milliseconds(100),
+                scheduler: DispatchQueue.global(qos: .userInitiated)
+            )
             .sink { [unowned self] in
                 histories.value.append(historyStamp)
             }
