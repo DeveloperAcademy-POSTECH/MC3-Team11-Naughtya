@@ -14,10 +14,15 @@ public struct ProjectListView: View {
     private static let schedulingStore: SchedulingStore = .shared
 
     public let projects: [ProjectModel]
+    public let projectSelector: ProjectSelectable?
     @State private var showModal = false
 
-    public init(projects: [ProjectModel] = []) {
+    public init(
+        projects: [ProjectModel] = [],
+        projectSelector: ProjectSelectable? = nil
+    ) {
         self.projects = projects
+        self.projectSelector = projectSelector
     }
 
     public var body: some View {
@@ -30,8 +35,20 @@ public struct ProjectListView: View {
                 } else {
                     ScrollView {
                         ForEach(projects) { project in
-                            ProjectCardView(project: project)
-                                .frame(height: 68)
+                            VStack {
+                                if let projectSelector = projectSelector {
+                                    ProjectCardView(
+                                        project: project,
+                                        projectSelector: projectSelector
+                                    )
+                                } else {
+                                    ProjectCardView(
+                                        project: project,
+                                        dragDropDelegate: DragDropManager.shared
+                                    )
+                                }
+                            }
+                            .frame(height: 68)
                         }
                         Spacer()
                     }

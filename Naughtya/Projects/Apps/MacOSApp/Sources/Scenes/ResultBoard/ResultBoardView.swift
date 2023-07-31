@@ -11,8 +11,6 @@ struct ResultBoardView: View {
             projectListView
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
         } detail: {
-            ResultView()
-//                .navigationSplitViewColumnWidth(min: 424, ideal: 524, max: 900)
         }
         .navigationTitle("")
         .toolbar {
@@ -23,12 +21,12 @@ struct ResultBoardView: View {
     }
 
     private var projectListView: some View {
-        ProjectListView(projects: viewModel.sortedProjects)
+        ProjectListView(projects: viewModel.projectsInSidebar)
     }
 
     private var projectTodoListView: some View {
         List {
-            ProjectTodoListView(projects: viewModel.selectedProjects)
+            ProjectTodoListView(projects: viewModel.selectedProjectsInProgress)
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {

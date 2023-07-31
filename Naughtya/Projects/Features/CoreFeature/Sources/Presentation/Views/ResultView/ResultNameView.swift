@@ -8,29 +8,42 @@
 
 import SwiftUI
 public struct ResultNameView: View {
-    let geometry: GeometryProxy
+    public let projectResult: ProjectResultModel
+    private let geometry: GeometryProxy
 
-    public init(geometry: GeometryProxy) {
+    public init(
+        projectResult: ProjectResultModel,
+        geometry: GeometryProxy
+    ) {
+        self.projectResult = projectResult
         self.geometry = geometry
     }
-    public var body: some View {
 
+    public var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 0) {
-                Text("MC3 프로젝트")
+                Text("\(projectResult.projectName) 프로젝트")
+                    .lineLimit(1)
                     .font(
-                        Font.custom("Apple SD Gothic Neo", size: 32 * (geometry.size.width/1512)) // 화면 비율에 따라 글자 크기 조정
+                        Font.custom("Apple SD Gothic Neo", size: 32 * (geometry.size.width/1512))
+                            .weight(.bold)
                     )
                     .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
-                Text("35일간의 여정")
+
+                Text("\(projectResult.daysInProject)일간의 여정") // 종료된 프로젝트와 데이터 연결
+                    .lineLimit(1)
                     .font(
-                        Font.custom("Apple SD Gothic Neo", size: 28 * (geometry.size.width/1512)) // 화면 비율에 따라 글자 크기 조정
+                        Font.custom("Apple SD Gothic Neo", size: 28 * (geometry.size.width/1512))
+                            .weight(.medium)
                     )
                     .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
-                    .padding(.vertical, 10) // 화면 비율에 따라 padding 조정
+                    .padding(.vertical, 10)
+
             }
 
+//            Spacer(minLength: 600)
             Spacer()
+
             VStack {
                 Rectangle()
                     .foregroundColor(.clear)
@@ -46,13 +59,19 @@ public struct ResultNameView: View {
 
                 Text("타임라인 돌아보기")
                     .font(
-                        Font.custom("Apple SD Gothic Neo", size: 16.17978 * (geometry.size.width/1512))
+                        Font.custom("Apple SD Gothic Neo", size: 16.17978 * (geometry.size.height/892))
                             .weight(.semibold)
                     )
                     .multilineTextAlignment(.center)
                     .foregroundColor(.white)
             }
-            .background(Color(red: 0.13, green: 0.13, blue: 0.13))
         }
+        .background(Color(red: 0.13, green: 0.13, blue: 0.13))
     }
 }
+
+// struct ResultNameView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ResultNameView(projectResult: .from(entity: ProjectResultEntity.sample))
+//    }
+// }

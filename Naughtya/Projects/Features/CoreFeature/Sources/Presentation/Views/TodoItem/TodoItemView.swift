@@ -156,6 +156,7 @@ public struct TodoItemView: View {
                 )
         ) { _ in
             updateTitle()
+            appendMultiLineTodosIfNeeded()
         }
         .onSubmit {
             updateTitle()
@@ -277,12 +278,26 @@ public struct TodoItemView: View {
         }
     }
 
-    private func appendNextTodo() {
-        guard !title.isEmpty else {
+    private func appendMultiLineTodosIfNeeded() {
+        guard title.contains("\n") else {
             return
         }
+        var titles = title
+            .split(separator: "\n")
+            .map { String($0) }
+        title = titles.removeFirst()
+        titles
+            .forEach {
+                appendNextTodo(title: $0)
+            }
+    }
+
+    private func appendNextTodo(title: String? = nil) {
         Task {
-            try await Self.todoUseCase.createAfterTodo(todo.entity)
+            try await Self.todoUseCase.createAfterTodo(
+                todo.entity,
+                title: title
+            )
         }
     }
 

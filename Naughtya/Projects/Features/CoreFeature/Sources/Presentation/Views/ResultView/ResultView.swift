@@ -1,46 +1,78 @@
 import SwiftUI
 
 public struct ResultView: View {
-    public init() {
-        // Initialization code here
+    public let projectResult: ProjectResultModel
+
+    public init(projectResult: ProjectResultModel) {
+        self.projectResult = projectResult
     }
 
     public var body: some View {
         GeometryReader { geometry in
-            VStack {
 
-                ResultNameView(geometry: geometry)
-
-                HStack {
-                    Divider()
-                        .frame(width: 2, height: 635 * geometry.size.height / 892)
-                        .overlay(.gray)
-                        .padding(.trailing, 50 * (geometry.size.width / 1512))
-                    VStack {
-
-                        ResultCompleteTodoView(geometry: geometry)
-                        ResultCardView(geometry: geometry)
-
-                        HStack {
-                            ResultDelayTodoView(geometry: geometry)
-                            Spacer(minLength: 80 * (geometry.size.width / 1512))
-                            ResultIncompleteTodoView(geometry: geometry)
+            if projectResult.isGenerated {
+                VStack {
+                    ResultNameView(
+                        projectResult: projectResult,
+                        geometry: geometry
+                    )
+                    HStack {
+                        Divider()
+                            .frame(width: 2, height: 635 * geometry.size.height / 892)
+                            .overlay(.gray)
+                            .padding(.trailing, 50 * (geometry.size.width / 1512))
+                        VStack {
+                            ResultCompleteTodoView(
+                                projectResult: projectResult,
+                                geometry: geometry
+                            )
+                            ResultCardView(
+                                projectResult: projectResult,
+                                geometry: geometry
+                            )
+                            HStack(spacing: 80 * (geometry.size.width / 1512)) {
+                                ResultDelayTodoView(
+                                    projectResult: projectResult,
+                                    geometry: geometry
+                                )
+                                //                                    Spacer(minLength: 80 * (geometry.size.width / 1512))
+                                ResultIncompleteTodoView(
+                                    projectResult: projectResult,
+                                    geometry: geometry
+                                )
+                            }
                         }
                     }
+                    .background(Color(red: 0.13, green: 0.13, blue: 0.13))
                 }
-            }
-            .padding(.leading, 50)
-            .padding(.top, 35 * geometry.size.height / 892)
-            .padding(.trailing, 70)
-            .frame(minWidth: 911, maxWidth: 1512, minHeight: 756, maxHeight: 892, alignment: .topLeading)
-            .background(Color(red: 0.13, green: 0.13, blue: 0.13))
 
+                .padding(.leading, 50)
+                .padding(.top, 35 * geometry.size.height / 892)
+                .padding(.trailing, 70)
+                .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
+                .background(Color(red: 0.13, green: 0.13, blue: 0.13))
+            } else {
+                emptyView
+            }
+        }
+    }
+
+    private var emptyView: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                Text("리포트 생성중 🙂")
+                    .font(.largeTitle)
+                Spacer()
+            }
+            Spacer()
         }
     }
 }
 
-struct ResultView_Previews: PreviewProvider {
-    static var previews: some View {
-        ResultView()
-    }
-}
+// struct ResultView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ResultView(projectResult: .from(entity: ProjectResultEntity.sample))
+//    }
+// }

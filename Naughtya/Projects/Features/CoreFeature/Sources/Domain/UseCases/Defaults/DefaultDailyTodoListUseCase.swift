@@ -46,7 +46,7 @@ struct DefaultDailyTodoListUseCase: DailyTodoListUseCase {
         todo.dailyTodoList.value = nil
     }
 
-    func removeUncompletedTodosFromDaily() async throws {
+    func removeIncompletedTodosFromDaily() async throws {
         let todos = Self.localStore.dailyTodoLists
             .flatMap { $0.todos.value }
             .filter { !$0.isCompleted }

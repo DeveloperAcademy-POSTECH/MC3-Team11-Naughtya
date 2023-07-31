@@ -15,6 +15,16 @@ public struct DailyTodoListModel: Modelable {
     public let dateTitle: String
     public let todos: [TodoModel]
 
+    public var allTodosCount: Int {
+        todos.count
+    }
+
+    public var incompletedTodosCount: Int {
+        todos
+            .filter { !$0.isCompleted }
+            .count
+    }
+
     public static func from(entity: DailyTodoListEntity) -> Self {
         DailyTodoListModel(
             entity: entity,
