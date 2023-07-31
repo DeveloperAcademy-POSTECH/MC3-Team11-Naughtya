@@ -25,7 +25,7 @@ public struct ResultCardView: View {
 
                 }
             }
-            case 4: HStack(spacing: 50 * (geometry.size.width / 1512)) {
+            case 4: HStack(spacing: 50 * (geometry.size.width / 1214)) {
                 ForEach(items[currentIndex..<currentIndex + 4], id: \.self) { item in
 
                         Text("\(item)")
@@ -35,7 +35,7 @@ public struct ResultCardView: View {
                 }
             }
             default:
-                HStack(spacing: 50 * (geometry.size.width / 1512)) {
+                HStack(spacing: 50 * (geometry.size.width / 920)) {
                     ForEach(items[currentIndex..<currentIndex + 3], id: \.self) { item in
 
                             Text("\(item)")
