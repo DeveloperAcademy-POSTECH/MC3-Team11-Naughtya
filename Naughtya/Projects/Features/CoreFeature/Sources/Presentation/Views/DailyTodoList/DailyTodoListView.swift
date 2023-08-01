@@ -36,6 +36,9 @@ public struct DailyTodoListView: View {
         .onAppear {
             viewModel.fetchTodayIfNeeded()
         }
+        .onChange(of: dateForPicker) {
+            viewModel.gotoDate($0)
+        }
     }
 
     private var dateHeader: some View {
@@ -87,7 +90,7 @@ public struct DailyTodoListView: View {
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color.customGray1)
                         .frame(width: 48, height: 8, alignment: .center)
-                    Text("9")
+                    Text(String(viewModel.dailyTodoList?.allTodosCount ?? 0))
                         .font(
                             Font.custom("Apple SD Gothic Neo", size: 20)
                                 .weight(.medium)
@@ -106,7 +109,7 @@ public struct DailyTodoListView: View {
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color.customGray1)
                         .frame(width: 48, height: 8, alignment: .center)
-                    Text("2")
+                    Text(String(viewModel.dailyTodoList?.incompletedTodosCount ?? 0))
                         .font(
                             Font.custom("Apple SD Gothic Neo", size: 20)
                                 .weight(.medium)
@@ -125,11 +128,15 @@ public struct DailyTodoListView: View {
     }
 
     private var calendarPopup: some View {
-            VStack {
-                DatePicker("", selection: $dateForPicker, in: ...dateForPicker, displayedComponents: [.date])
-                    .datePickerStyle(.graphical)
-            }
-            .frame(width: 150, height: 170)
+        VStack {
+            DatePicker(
+                "",
+                selection: $dateForPicker,
+                displayedComponents: [.date]
+            )
+            .datePickerStyle(.graphical)
+        }
+        .frame(width: 150, height: 170)
     }
 }
 

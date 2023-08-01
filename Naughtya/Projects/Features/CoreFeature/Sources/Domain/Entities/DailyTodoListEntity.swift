@@ -13,12 +13,6 @@ import CloudKit
 public class DailyTodoListEntity: Equatable, Identifiable {
     private static let localStore: LocalStore = .shared
     private static let cloudKitManager: CloudKitManager = .shared
-    private static let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ko_KR")
-        dateFormatter.dateFormat = "yyyy. MM. dd. (E)"
-        return dateFormatter
-    }()
 
     public internal(set) var recordId: CKRecord.ID?
     public let dateString: String
@@ -45,7 +39,7 @@ public class DailyTodoListEntity: Equatable, Identifiable {
     }
 
     public var dateTitle: String {
-        Self.dateFormatter.string(from: date)
+        date.getDateString("yyyy.MM.dd")
     }
 
     private func setupUpdatingStore() {

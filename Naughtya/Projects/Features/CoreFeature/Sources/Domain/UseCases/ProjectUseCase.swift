@@ -42,7 +42,7 @@ public protocol ProjectUseCase {
         isSelected: Bool
     ) async throws -> ProjectEntity
 
-    func toggleIsBookmarked(
+    func toggleBookmarked(
         _ project: ProjectEntity,
         isBookmarked: Bool
     ) async throws -> ProjectEntity

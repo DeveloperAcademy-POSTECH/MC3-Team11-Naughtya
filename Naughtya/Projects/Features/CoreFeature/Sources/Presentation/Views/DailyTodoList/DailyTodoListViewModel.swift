@@ -51,6 +51,11 @@ public final class DailyTodoListViewModel: ObservableObject {
         fetchDailyTodoList(dateString: oneDayAfter.getDateString())
     }
 
+    public func gotoDate(_ date: Date) {
+        let dateString = date.getDateString()
+        fetchDailyTodoList(dateString: dateString)
+    }
+
     private func setupFetchingData() {
         Self.localStore.objectWillChange
             .debounce(

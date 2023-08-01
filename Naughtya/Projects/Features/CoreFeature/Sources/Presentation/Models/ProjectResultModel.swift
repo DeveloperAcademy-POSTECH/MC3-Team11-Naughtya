@@ -55,9 +55,22 @@ public struct ProjectResultModel: Modelable {
         )
     }
 
-    public var uncompletedTodos: [TodoModel] {
+    public var incompletedTodos: [TodoModel] {
         project.todos
             .filter { !$0.isCompleted }
+    }
+
+    public func getAbilityTitleFromTodo(
+        _ todo: TodoModel,
+        category: AbilityCategory
+    ) -> String? {
+        abilities
+            .filter { $0.category == category }
+            .first(where: {
+                $0.todos
+                    .contains(where: { $0.title.value == todo.title })
+            })?
+            .title
     }
 
     public static func from(entity: ProjectResultEntity) -> Self {

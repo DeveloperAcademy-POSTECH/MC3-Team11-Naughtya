@@ -15,7 +15,10 @@ public protocol TodoUseCase {
         dailyTodoList: DailyTodoListEntity?
     ) async throws -> TodoEntity
 
-    func createAfterTodo(_ todo: TodoEntity) async throws
+    func createAfterTodo(
+        _ todo: TodoEntity,
+        title: String?
+    ) async throws
 
     func readList(searchedText: String) async throws -> [TodoEntity]
 
