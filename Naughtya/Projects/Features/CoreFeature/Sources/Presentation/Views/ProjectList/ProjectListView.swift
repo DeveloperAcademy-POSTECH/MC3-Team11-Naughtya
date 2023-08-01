@@ -62,7 +62,7 @@ public struct ProjectListView: View {
     private var headerView: some View {
         HStack {
             Text("All My Projects")
-                .font(.system(size: 14).weight(.medium))
+                .font(.appleSDGothicNeo(size: 14, weight: .medium))
                 .foregroundColor(Color.customGray4)
             Spacer()
             Button {
@@ -88,7 +88,7 @@ public struct ProjectListView: View {
             Spacer()
             Text("프로젝트가 없어요.")
                 .multilineTextAlignment(.center)
-                .font(.system(size: 16))
+                .font(.appleSDGothicNeo(size: 16))
                 .foregroundColor(.customGray3)
             Spacer()
         }
@@ -109,7 +109,7 @@ public struct ProjectListView: View {
                     .frame(width: 44, height: 44)
                     .overlay {
                         Image(systemName: "plus")
-                            .font(.system(size: 24))
+                            .font(.appleSDGothicNeo(size: 24))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.white)
                     }

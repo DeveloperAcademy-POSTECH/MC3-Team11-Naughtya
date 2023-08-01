@@ -93,17 +93,14 @@ public struct ResultCardView: View {
                         }
                     }) {
                         Text("􀯷")
-                            .font(
-                                Font.custom("SF Pro", size: 16)
-                                    .weight(.light)
-                            )
+                            .font(.appleSDGothicNeo(size: 16, weight: .light))
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                     }
                     .buttonStyle(.borderless)
                     Text("\((currentIndex + cardCount) / cardCount)/\(Int(ceil((Double(maxLength) / Double(cardCount)))))")
                         .font(
-                            Font.custom("Apple SD Gothic Neo", size: 23  * (geometry.size.width/1512))
+                            .appleSDGothicNeo(size: 23 * (geometry.size.width/1512))
                                 .weight(.semibold)
                         )
                         .kerning(0.46)
@@ -118,10 +115,7 @@ public struct ResultCardView: View {
                         }
                     }) {
                         Text("􀁴")
-                            .font(
-                                Font.custom("SF Pro", size: 16)
-                                    .weight(.light)
-                            )
+                            .font(.appleSDGothicNeo(size: 16, weight: .light))
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                     }
@@ -158,7 +152,7 @@ public struct ResultCardView: View {
                 Spacer()
                 Text("총 \(ability.todos.count)개")
                     .foregroundColor(.pointColor)
-                    .font(.system(size: 10  * (geometry.size.height / 892)))
+                    .font(.appleSDGothicNeo(size: 10  * (geometry.size.height / 892)))
                     .padding(.horizontal, 7  * (geometry.size.height / 892))
                     .frame(height: 16 * (geometry.size.height / 892))
                     .overlay(
@@ -171,7 +165,7 @@ public struct ResultCardView: View {
                     HStack {
                         Text(ability.title)
                             .multilineTextAlignment(.leading)
-                            .font(.system(size: 18  * (geometry.size.height / 892)))
+                            .font(.appleSDGothicNeo(size: 18  * (geometry.size.height / 892)))
                             .lineLimit(2)
                             .lineSpacing(14)
                         Spacer()
@@ -183,9 +177,9 @@ public struct ResultCardView: View {
                     ForEach(Array(ability.todos.enumerated()).prefix(3), id: \.offset) { todoIndex, todo in
                         HStack(spacing: 4) {
                             Image(systemName: "checkmark.sqaure.fill")
-                                .font(.system(size: 18  * (geometry.size.height / 892)))
+                                .font(.appleSDGothicNeo(size: 18  * (geometry.size.height / 892)))
                             Text(todo.title.value)
-                                .font(.system(size: 14  * (geometry.size.height / 892)))
+                                .font(.appleSDGothicNeo(size: 14  * (geometry.size.height / 892)))
                                 .lineLimit(1)
                         }
                         .foregroundColor(colors[todoIndex])
@@ -199,7 +193,7 @@ public struct ResultCardView: View {
                 HStack {
                     Spacer()
                     Text("더보기")
-                        .font(.system(size: 14  * (geometry.size.height / 892)))
+                        .font(.appleSDGothicNeo(size: 14  * (geometry.size.height / 892)))
                     Spacer()
                 }
                 .foregroundColor(.customGray2)

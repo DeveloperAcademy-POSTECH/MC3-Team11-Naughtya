@@ -24,14 +24,14 @@ public struct ResultDelayTodoView: View {
 
     var delayResult1: AttributedString {
         var result = AttributedString("미뤘어도 이루어낸 당신! ")
-        result.font = .system(size: 16  * (geometry.size.height/892))
+        result.font = .appleSDGothicNeo(size: 16  * (geometry.size.height/892))
         result.foregroundColor = .customGray1
         return result
     }
 
     var delayResult3: AttributedString {
         var result = AttributedString("이/가 기록됐어요.")
-        result.font = .system(size: 16  * (geometry.size.height/892))
+        result.font = .appleSDGothicNeo(size: 16  * (geometry.size.height/892))
         result.foregroundColor = .customGray1
         return result
     }
@@ -40,7 +40,7 @@ public struct ResultDelayTodoView: View {
         VStack(alignment: .leading, spacing: 27 * geometry.size.height / 892) {
             Text("미룬 할 일 Top3")
                 .font(
-                    Font.custom("Apple SD Gothic Neo", size: 24  * (geometry.size.height/892))
+                    .appleSDGothicNeo(size: 24  * (geometry.size.height/892))
                         .weight(.bold)
                 )
                 .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
@@ -50,7 +50,7 @@ public struct ResultDelayTodoView: View {
                     VStack {
                         Text("\(currentIndex + 1)")
                             .font(
-                                Font.custom("Apple SD Gothic Neo", size: 13.83245  * (geometry.size.height/892))
+                                .appleSDGothicNeo(size: 13.83245  * (geometry.size.height/892))
                                     .weight(.semibold)
                             )
                             .foregroundColor(Color(red: 0.77, green: 0.77, blue: 0.77))
@@ -62,7 +62,7 @@ public struct ResultDelayTodoView: View {
                     .cornerRadius(5)
                     Text(todo.title)
                         .font(
-                            Font.custom("Apple SD Gothic Neo", size: 18  * (geometry.size.height/892))
+                            .appleSDGothicNeo(size: 18  * (geometry.size.height/892))
                                 .weight(.semibold)
                         )
                         .offset(y: offsetY)
@@ -71,7 +71,7 @@ public struct ResultDelayTodoView: View {
                     Spacer()
                     Text("총 \(todo.delayedCount)회")
                         .font(
-                            Font.custom("Apple SD Gothic Neo", size: 18  * (geometry.size.height/892))
+                            .appleSDGothicNeo(size: 18  * (geometry.size.height/892))
                                 .weight(.semibold)
                         )
                         .multilineTextAlignment(.center)
@@ -86,12 +86,12 @@ public struct ResultDelayTodoView: View {
                     var delayResult2: AttributedString {
                         var result = AttributedString(abilityTitle)
                         result.foregroundColor = .white
-                        result.font = .system(size: 16  * (geometry.size.height/892), weight: .bold)
+                        result.font = .appleSDGothicNeo(size: 16  * (geometry.size.height/892), weight: .bold)
                         return result
                     }
 
                         Text(delayResult1 + delayResult2 + delayResult3)
-                            .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                            .font(.appleSDGothicNeo(size: 16))
                             .lineLimit(1)
 
                 }

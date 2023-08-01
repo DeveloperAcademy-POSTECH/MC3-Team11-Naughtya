@@ -114,14 +114,14 @@ public struct TodoItemView: View {
         } label: {
             Image(systemName: todo.isCompleted ? "checkmark.square" : "square")
                 .foregroundColor(todo.isCompleted ? .customGray4 : .pointColor)
-                .font(.system(size: 18))
+                .font(.appleSDGothicNeo(size: 18))
         }
         .buttonStyle(.borderless)
     }
 
     private var categoryText: some View {
         Text("[\(todo.category)]")
-            .font(.system(size: 16))
+            .font(.appleSDGothicNeo(size: 16))
             .fontWeight(.bold)
     }
 
@@ -132,7 +132,7 @@ public struct TodoItemView: View {
                 titleText
             }
         }
-        .font(.system(size: 16))
+        .font(.appleSDGothicNeo(size: 16))
     }
 
     private var titleTextField: some View {
@@ -181,7 +181,7 @@ public struct TodoItemView: View {
             delete()
         } label: {
             Image(systemName: isDeleting ? "xmark.square" : "trash")
-                .font(.system(size: 20))
+                .font(.appleSDGothicNeo(size: 20))
                 .foregroundColor(isDeleting ? .red : Color.customGray4)
         }
         .padding(.trailing, 10)

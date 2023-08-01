@@ -81,7 +81,7 @@ public struct TodoListView: View {
              Text("프로젝트 할 일을 드래그 해주세요.")
                  .multilineTextAlignment(.center)
                  .foregroundColor(Color.customGray3)
-                 .font(.system(size: 16))
+                 .font(.appleSDGothicNeo(size: 16))
              Spacer()
          }
          .frame(height: 42)

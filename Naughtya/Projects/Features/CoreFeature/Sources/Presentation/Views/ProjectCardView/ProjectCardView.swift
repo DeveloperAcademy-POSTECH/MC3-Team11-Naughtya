@@ -140,11 +140,11 @@ struct ProjectCardView: View {
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 1) {
             Text("\(Date().dDayCalculater(projectEndDay: projectEndDay))")
-                .font(.system(size: 12))
+                .font(.appleSDGothicNeo(size: 12))
                 .fontWeight(.semibold)
                 .foregroundColor(Color.customGray1)
             Text(project.category)
-                .font(.system(size: 24))
+                .font(.appleSDGothicNeo(size: 24))
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
         }
@@ -153,11 +153,11 @@ struct ProjectCardView: View {
     private var todosCountView: some View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text("\(project.completedTodos.count)")
-                .font(.system(size: 24))
+                .font(.appleSDGothicNeo(size: 24))
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
             Text("/\(project.todos.count)")
-                .font(.system(size: 16))
+                .font(.appleSDGothicNeo(size: 16))
                 .fontWeight(.regular)
                 .foregroundColor(.customGray2)
         }
@@ -165,7 +165,7 @@ struct ProjectCardView: View {
 
     private var bookmarkIndicator: some View {
         Image(systemName: project.isBookmarked ? "star.fill" : "star")
-            .font(.system(size: 15))
+            .font(.appleSDGothicNeo(size: 15))
             .foregroundColor(project.isBookmarked ? .pointColor : .customGray2)
             .onTapGesture {
                 toggleBookmarked()
@@ -212,14 +212,14 @@ struct ProjectCardView: View {
                 }
             } label: {
                 Label("즐겨찾기", systemImage: "star.fill")
-                    .font(.system(size: 12))
+                    .font(.appleSDGothicNeo(size: 12))
                     .labelStyle(.titleAndIcon)
             }
             Button {
                 showModal = true
             } label: {
                 Label("수정하기", systemImage: "square.and.pencil")
-                    .font(.system(size: 12))
+                    .font(.appleSDGothicNeo(size: 12))
                     .labelStyle(.titleAndIcon)
             }
             Divider()
@@ -229,7 +229,7 @@ struct ProjectCardView: View {
                 }
             } label: {
                 Label("삭제하기", systemImage: "x.square")
-                    .font(.system(size: 12))
+                    .font(.appleSDGothicNeo(size: 12))
                     .labelStyle(.titleAndIcon)
             }
         }

@@ -43,7 +43,7 @@ public struct DailyTodoListView: View {
                 }
                 Text(viewModel.dateTitle)
                     .foregroundColor(Color.customGray1)
-                    .font(.system(size: 32).weight(.semibold).monospacedDigit())
+                    .font(.appleSDGothicNeo(size: 32, weight: .semibold).monospacedDigit())
                     .frame(height: 23)
                     .onTapGesture {
                         isPopoverVisible = true
@@ -104,10 +104,10 @@ public struct DailyTodoListView: View {
     ) -> some View {
         HStack(alignment: .center, spacing: 10) {
             Text(title)
-                .font(.system(size: 12).weight(.medium))
+                .font(.appleSDGothicNeo(size: 12, weight: .medium))
                 .foregroundColor(.customGray1)
             Text(String(viewModel.dailyTodoList?.incompletedTodosCount ?? 0))
-                .font(.system(size: 20).weight(.medium))
+                .font(.appleSDGothicNeo(size: 20, weight: .medium))
                 .foregroundColor(.pointColor)
         }
         .padding(.horizontal, 10)

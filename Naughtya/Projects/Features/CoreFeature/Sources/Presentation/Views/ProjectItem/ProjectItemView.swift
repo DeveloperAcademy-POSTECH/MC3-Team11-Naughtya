@@ -26,13 +26,13 @@ public struct ProjectItemView: View {
             VStack(alignment: .leading, spacing: 9) {
                 Text(project.category)
                     .lineLimit(1)
-                    .font(.system(size: 32).weight(.semibold))
+                    .font(.appleSDGothicNeo(size: 32, weight: .semibold))
                     .foregroundColor(.customGray1)
                     .frame(height: 23)
                 if let startedAt = project.startedAt?.getDateString("yyyy.MM.dd"),
                    let endedAt = project.endedAt?.getDateString("yyyy.MM.dd") {
                     Text("\(startedAt) -\(endedAt)")
-                        .font(.system(size: 16))
+                        .font(.appleSDGothicNeo(size: 16))
                         .foregroundColor(Color.customGray3)
                         .frame(height: 11)
                 }
@@ -45,7 +45,7 @@ public struct ProjectItemView: View {
                     }
                 }
                 .foregroundColor(.customGray2)
-                .font(.system(size: 14))
+                .font(.appleSDGothicNeo(size: 14))
                 .padding(.horizontal, 16)
                 .frame(height: 26)
                 .background(
@@ -66,10 +66,10 @@ public struct ProjectItemView: View {
             )
             HStack(alignment: .center, spacing: 4) {
                 Text("􀅼")
-                    .font(.system(size: 16))
+                    .font(.appleSDGothicNeo(size: 16))
                     .fontWeight(.light)
                 Text("여기를 클릭해서 할 일을 추가해요.")
-                    .font(.system(size: 14))
+                    .font(.appleSDGothicNeo(size: 14))
                     .frame(height: 16, alignment: .leading)
             }
             .foregroundColor(isHovered ? Color.pointColor : Color.customGray2)

@@ -44,12 +44,12 @@ struct ProjectSetModalView: View {
                 )
                 VStack(alignment: .leading, spacing: 10) {
                     Text("프로젝트 기간")
-                        .font(.system(size: 14).weight(.bold))
+                        .font(.appleSDGothicNeo(size: 14, weight: .bold))
                         .foregroundColor(.white)
                     HStack(alignment: .bottom, spacing: 17) {
                         buildDatePicker(isStarting: true)
                         Text("~")
-                            .font(.system(size: 20).weight(.bold))
+                            .font(.appleSDGothicNeo(size: 20, weight: .bold))
                             .foregroundColor(.customGray6)
                             .frame(height: 43)
                         buildDatePicker(isStarting: false)
@@ -119,13 +119,13 @@ struct ProjectSetModalView: View {
                     .fill(Color.customGray7)
             )
         }
-        .font(.system(size: 14))
+        .font(.appleSDGothicNeo(size: 14))
     }
 
     private func buildDatePicker(isStarting: Bool) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(isStarting ? "시작" : "종료")
-                .font(.system(size: 12))
+                .font(.appleSDGothicNeo(size: 12))
                 .foregroundColor(.customGray1)
             Group {
                 if isStarting {

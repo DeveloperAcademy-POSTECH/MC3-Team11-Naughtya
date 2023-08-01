@@ -19,14 +19,14 @@ public struct SearchView: View {
     public var body: some View {
         HStack(spacing: 5) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 13))
+                .font(.appleSDGothicNeo(size: 13))
                 .foregroundColor(.customGray4)
             TextField(text: $viewModel.searchedText) {
                 Text("프로젝트 할 일을 검색해봐요.")
                     .foregroundColor(.customGray1)
             }
             .textFieldStyle(.plain)
-            .font(.system(size: 12))
+            .font(.appleSDGothicNeo(size: 12))
             .onExitCommand {
                 viewModel.searchedText = ""
             }
