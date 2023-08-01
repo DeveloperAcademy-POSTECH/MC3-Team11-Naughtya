@@ -9,7 +9,7 @@
 import SwiftUI
 
  // 원하는 컬러 생성
-extension Color {
+public extension Color {
     static let customBlack = Color(red: 0.1, green: 0.1, blue: 0.1)
     static let customGray1 = Color(red: 0.88, green: 0.88, blue: 0.88)
     static let customGray2 = Color(red: 0.51, green: 0.51, blue: 0.51)
@@ -19,6 +19,6 @@ extension Color {
     static let customGray6 = Color(red: 0.23, green: 0.23, blue: 0.23)
     static let customGray7 = Color(red: 0.18, green: 0.18, blue: 0.18)
     static let customGray8 = Color(red: 0.13, green: 0.13, blue: 0.13)
+    static let customGray9 = Color(red: 0.12, green: 0.12, blue: 0.12)
     static let pointColor = Color(red: 0.02, green: 0.32, blue: 0.98)
-
 }

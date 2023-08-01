@@ -45,7 +45,7 @@ public struct TodoListView: View {
             if section is DailyTodoListEntity, todos.isEmpty {
                 VStack(spacing: 0) {
                     HStack(alignment: .center, spacing: 4) {
-                        Text("데일리 투두에 오늘 할일을 드래그 해주세요.")
+                        Text("프로젝트 할 일을 드래그 해주세요.")
                             .font(.system(size: 16))
                             .foregroundColor(Color.customGray3)
                             .multilineTextAlignment(.center)
@@ -57,7 +57,8 @@ public struct TodoListView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .background(Color(red: 0.18, green: 0.18, blue: 0.18))
                     .cornerRadius(5)
-                }.padding(.bottom, 500)
+                }
+                .padding(.bottom, 500)
             } else if section is DailyTodoListEntity, !todos.isEmpty {
                 VStack(spacing: 0) {
                     ForEach(todos) { todo in
@@ -67,47 +68,48 @@ public struct TodoListView: View {
                             isBlockedToEdit: isBlockedToEdit
                         )
                     }
-                }.padding(.bottom, 500)
+                }
+                .padding(.bottom, 500)
             } else {
                 VStack(spacing: 0) {
-                        ForEach(todos) { todo in
-                            TodoItemView(
-                                todo: todo,
-                                isBacklog: section is ProjectEntity,
-                                isBlockedToEdit: isBlockedToEdit
-                            )
-                        }
+                    ForEach(todos) { todo in
+                        TodoItemView(
+                            todo: todo,
+                            isBacklog: section is ProjectEntity,
+                            isBlockedToEdit: isBlockedToEdit
+                        )
+                    }
                 }
             }
-                // MARK: - 원래코드
-//            VStack(spacing: 0) {
-//                if section is DailyTodoListEntity,
-//                   todos.isEmpty {
-//                    HStack(alignment: .center, spacing: 4) {
-//                        Text("데일리 투두에 오늘 할일을 드래그 해주세요.")
-//                          .font(Font.custom("Apple SD Gothic Neo", size: 16))
-//                          .foregroundColor(Color.customGray3)
-//                          .multilineTextAlignment(.center)
-//                          .frame(width: 277, height: 16, alignment: .center)
-//
-//                    }
-//                    .padding(.leading, 4)
-//                    .padding(.trailing, 18)
-//                    .padding(.vertical, 8)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-//                    .background(Color(red: 0.18, green: 0.18, blue: 0.18))
-//                    .cornerRadius(5)
-//                } else {
-//                    ForEach(todos) { todo in
-//                        TodoItemView(
-//                            todo: todo,
-//                            isBacklog: section is ProjectEntity,
-//                            isBlockedToEdit: isBlockedToEdit
-//                        )
-//                    }
-//                }
-//            }
-//            .padding(.bottom, 100)
+            // MARK: - 원래코드
+            //            VStack(spacing: 0) {
+            //                if section is DailyTodoListEntity,
+            //                   todos.isEmpty {
+            //                    HStack(alignment: .center, spacing: 4) {
+            //                        Text("데일리 투두에 오늘 할일을 드래그 해주세요.")
+            //                          .font(Font.custom("Apple SD Gothic Neo", size: 16))
+            //                          .foregroundColor(Color.customGray3)
+            //                          .multilineTextAlignment(.center)
+            //                          .frame(width: 277, height: 16, alignment: .center)
+            //
+            //                    }
+            //                    .padding(.leading, 4)
+            //                    .padding(.trailing, 18)
+            //                    .padding(.vertical, 8)
+            //                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            //                    .background(Color(red: 0.18, green: 0.18, blue: 0.18))
+            //                    .cornerRadius(5)
+            //                } else {
+            //                    ForEach(todos) { todo in
+            //                        TodoItemView(
+            //                            todo: todo,
+            //                            isBacklog: section is ProjectEntity,
+            //                            isBlockedToEdit: isBlockedToEdit
+            //                        )
+            //                    }
+            //                }
+            //            }
+            //            .padding(.bottom, 100)
         }
         .onDisappear {
             unregisterAbsoluteRect()

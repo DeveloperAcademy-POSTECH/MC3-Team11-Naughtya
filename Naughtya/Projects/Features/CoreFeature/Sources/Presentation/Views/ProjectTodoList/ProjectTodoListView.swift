@@ -16,22 +16,21 @@ public struct ProjectTodoListView: View {
     }
 
     public var body: some View {
-//        ZStack {
-//            Color.customGray8
-            VStack {
-                if projects.isEmpty {
-                    Spacer().frame(height: 150)
-                    MacOSCoreFeatureAsset.projecttodolistempty.swiftUIImage
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } else {
-                    ForEach(projects) { project in
-                        ProjectItemView(project: project)
-                    }
+        VStack {
+            if projects.isEmpty {
+                Spacer().frame(height: 150)
+                MacOSCoreFeatureAsset.projecttodolistempty.swiftUIImage
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .opacity(0.3)
+            } else {
+                ForEach(projects) { project in
+                    ProjectItemView(project: project)
                 }
             }
-            .padding(0)
-//        }
+            Spacer()
+        }
+        .padding(0)
     }
 }
 
