@@ -80,7 +80,7 @@ public struct ResultCompleteTodoView: View {
 
                     Text("\(projectResult.allTodosCount)")
                         .font(
-                            Font.custom("Apple SD Gothic Neo", size: 10   * (geometry.size.width/1512))
+                            Font.custom("Apple SD Gothic Neo", size: 12   * (geometry.size.width/1512))
                                 .weight(.semibold)
                         )
                         .foregroundColor(.customGray1)

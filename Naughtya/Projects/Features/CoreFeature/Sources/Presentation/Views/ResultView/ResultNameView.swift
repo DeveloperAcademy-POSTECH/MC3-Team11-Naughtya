@@ -10,6 +10,9 @@ import SwiftUI
 public struct ResultNameView: View {
     public let projectResult: ProjectResultModel
     private let geometry: GeometryProxy
+    @State private var rotationAngle: Double = 0
+
+    @State private var isHovered: Bool = false
 
     public init(
         projectResult: ProjectResultModel,
@@ -45,17 +48,23 @@ public struct ResultNameView: View {
             Spacer()
 
             VStack {
+
                 Rectangle()
                     .foregroundColor(.clear)
                     .frame(width: 79, height: 79)
                     .background(
-                        MacOSCoreFeatureAsset.circle.swiftUIImage // 이미지 변경
+                        MacOSCoreFeatureAsset.circle.swiftUIImage
+
+                        // 이미지 변경
                             .resizable()
-                            .aspectRatio(contentMode: .fill)
-//                            .frame(width: 79, height: 79)
-                            .clipped()
-                    )
-                    .padding(.bottom, 10 * (geometry.size.height/892))
+                            .frame(width: (isHovered ? 85 : 79), height: (isHovered ? 85 : 79))
+                            .animation(.easeIn(duration: 0.3), value: isHovered)
+                            .aspectRatio(contentMode: .fill))
+                        .onHover { hovered in
+                            isHovered = hovered
+                        }
+
+                        .clipped()
 
                 Text("에필로그")
                     .font(
@@ -64,8 +73,10 @@ public struct ResultNameView: View {
                     )
                     .multilineTextAlignment(.center)
                     .foregroundColor(.white)
+                    .padding(.top, 5 * (geometry.size.height/892))
             }
         }
+        .padding(.horizontal, 6)
 
     }
 }

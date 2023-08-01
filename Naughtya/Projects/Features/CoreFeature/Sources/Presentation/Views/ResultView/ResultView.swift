@@ -50,16 +50,15 @@ public struct ResultView: View {
                 .padding(.top, 35 * geometry.size.height / 892)
                 .padding(.trailing, 70)
                 .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
+                .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable().aspectRatio(contentMode: .fill))
 
             } else {
                 emptyView
 
                 .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
-                .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable())
 
             }
         }
-        .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable())
 
     }
 
