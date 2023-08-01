@@ -18,14 +18,8 @@ public struct DailyTodoListView: View {
     }
 
     public var body: some View {
-        VStack(alignment: .center, spacing: 6) {
-            VStack(alignment: .center) {
-                dateHeader
-            }
-            .padding(.horizontal, 40)
-            .padding(.top, 50)
-            .padding(.bottom, 41)
-            .frame(alignment: .top)
+        VStack(spacing: 0) {
+            dateHeader
             if let dailyTodoList = viewModel.dailyTodoList {
                 TodoListView(
                     section: dailyTodoList.entity,
@@ -43,81 +37,37 @@ public struct DailyTodoListView: View {
 
     private var dateHeader: some View {
         VStack(alignment: .center, spacing: 17) {
-            HStack {
-                Button {
+            HStack(alignment: .center, spacing: 2) {
+                buildDateButton(imageName: "triangle_left") {
                     viewModel.gotoOneDayBefore()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(Color.customGray2)
                 }
-                .frame(width: 20, height: 23)
-                .buttonStyle(.borderless)
-                if !viewModel.isTodayFetched {
-                    Button("Today") {
-                        viewModel.fetchTodayIfNeeded()
+                Text(viewModel.dateTitle)
+                    .foregroundColor(Color.customGray1)
+                    .font(.system(size: 32).weight(.semibold).monospacedDigit())
+                    .frame(height: 23)
+                    .onTapGesture {
+                        isPopoverVisible = true
                     }
-                    .buttonStyle(.borderless)
-                } else {
-                    Text(viewModel.dateTitle)
-                        .padding(0)
-                        .font(.system(size: 32))
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.customGray1)
-                        .frame(width: 180, height: 25)
-                        .onTapGesture {
-                            isPopoverVisible = true
-                        }
-                        .popover(isPresented: $isPopoverVisible) {
-                            calendarPopup
-                        }
-
-                }
-                Button {
+                    .popover(isPresented: $isPopoverVisible) {
+                        calendarPopup
+                    }
+                buildDateButton(imageName: "triangle_right") {
                     viewModel.gotoOneDayAfter()
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(Color.customGray2)
                 }
-                .frame(width: 20, height: 23)
-                .buttonStyle(.borderless)
             }
-            HStack(alignment: .top, spacing: 9) {
-                HStack(alignment: .center, spacing: 10) {
-                    Text("전체 할 일")
-                        .font(.system(size: 12))
-                        .fontWeight(.medium)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(Color.customGray1)
-                        .frame(width: 50, height: 8, alignment: .center)
-                    Text(String(viewModel.dailyTodoList?.allTodosCount ?? 0))
-                        .font(.system(size: 20))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color.pointColor)
-                }
-                .frame(width: 91.5, height: 26, alignment: .center)
-                .background(Color.customGray7)
-                .cornerRadius(5)
-                HStack(alignment: .center, spacing: 10) {
-                    Text("남은 할 일")
-                        .font(.system(size: 12))
-                        .fontWeight(.medium)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(Color.customGray1)
-                        .frame(width: 50, height: 8, alignment: .center)
-                    Text(String(viewModel.dailyTodoList?.incompletedTodosCount ?? 0))
-                        .font(.system(size: 20))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color.pointColor)
-                }
-                .frame(width: 91.5, height: 26, alignment: .center)
-                .background(Color.customGray7)
-                .cornerRadius(5)
+            HStack(alignment: .center, spacing: 10) {
+                buildCountLabel(
+                    title: "전체 할 일",
+                    count: viewModel.dailyTodoList?.allTodosCount ?? 0
+                )
+                buildCountLabel(
+                    title: "남은 할 일",
+                    count: viewModel.dailyTodoList?.incompletedTodosCount ?? 0
+                )
             }
-            .padding(0)
-            .frame(maxWidth: .infinity, alignment: .top)
         }
-        .frame(height: 62)
-        .padding(0)
+        .padding(.top, 40)
+        .padding(.bottom, 32)
     }
 
     private var calendarPopup: some View {
@@ -130,6 +80,42 @@ public struct DailyTodoListView: View {
             .datePickerStyle(.graphical)
         }
         .frame(width: 150, height: 170)
+    }
+
+    private func buildDateButton(
+        imageName: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            action()
+        } label: {
+            MacOSCoreFeatureImages(name: imageName).swiftUIImage
+        }
+        .buttonStyle(.borderless)
+        .frame(
+            width: 22,
+            height: 22
+        )
+    }
+
+    private func buildCountLabel(
+        title: String,
+        count: Int
+    ) -> some View {
+        HStack(alignment: .center, spacing: 10) {
+            Text(title)
+                .font(.system(size: 12).weight(.medium))
+                .foregroundColor(.customGray1)
+            Text(String(viewModel.dailyTodoList?.incompletedTodosCount ?? 0))
+                .font(.system(size: 20).weight(.medium))
+                .foregroundColor(.pointColor)
+        }
+        .padding(.horizontal, 10)
+        .frame(height: 26)
+        .background(
+            RoundedRectangle(cornerRadius: 5)
+                .fill(Color.customGray7)
+        )
     }
 }
 

@@ -19,7 +19,7 @@ public struct ProjectTodoListView: View {
         VStack {
             if projects.isEmpty {
                 Spacer()
-                    .frame(height: 150)
+                    .frame(height: 250)
                 MacOSCoreFeatureAsset.projecttodolistempty.swiftUIImage
                     .resizable()
                     .frame(maxWidth: 539)

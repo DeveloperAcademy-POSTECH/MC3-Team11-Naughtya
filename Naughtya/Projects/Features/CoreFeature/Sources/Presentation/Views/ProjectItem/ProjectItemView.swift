@@ -26,42 +26,38 @@ public struct ProjectItemView: View {
             VStack(alignment: .leading, spacing: 9) {
                 Text(project.category)
                     .lineLimit(1)
-                    .font(.system(size: 32))
-                    .fontWeight(.semibold)
-                    .foregroundColor(Color.customGray1)
-                HStack(spacing: 0) {
-                    Text(project.startedAt?.getDateString("yyyy.MM.dd") ?? "")
+                    .font(.system(size: 32).weight(.semibold))
+                    .foregroundColor(.customGray1)
+                    .frame(height: 23)
+                if let startedAt = project.startedAt?.getDateString("yyyy.MM.dd"),
+                   let endedAt = project.endedAt?.getDateString("yyyy.MM.dd") {
+                    Text("\(startedAt) -\(endedAt)")
                         .font(.system(size: 16))
                         .foregroundColor(Color.customGray3)
-                    Text(" -")
-                        .font(.system(size: 16))
-                        .foregroundColor(Color.customGray3)
-                    Text(project.endedAt?.getDateString("yyyy.MM.dd") ?? "")
-                        .font(.system(size: 16))
-                        .foregroundColor(Color.customGray3)
+                        .frame(height: 11)
                 }
-                HStack(spacing: 10) {
-                    Text("#")
+                Group {
                     if let goals = project.goals,
                        !goals.isEmpty {
-                        Text(goals)
+                        Text("# \(goals)")
                     } else {
-                        Text("(선택) 목표를 입력해 보세요.")
+                        Text("# \(project.category) 할 일 완료해서 에필로그 기록하기")
                     }
                 }
+                .foregroundColor(.customGray2)
                 .font(.system(size: 14))
-                .foregroundColor(Color.customGray2)
+                .padding(.horizontal, 16)
                 .frame(height: 26)
-                .padding(.horizontal, 10)
-                .background(Color.customGray7)
-                .cornerRadius(5)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(Color.customGray8)
+                )
             }
-            .padding(.horizontal, 26)
             .padding(.top, 40)
-            .padding(.bottom, 10)
-            .frame(alignment: .topLeading)
+            .padding(.bottom, 20)
             Spacer()
         }
+        .padding(.horizontal, 20)
         VStack {
             TodoListView(
                 section: project.entity,
