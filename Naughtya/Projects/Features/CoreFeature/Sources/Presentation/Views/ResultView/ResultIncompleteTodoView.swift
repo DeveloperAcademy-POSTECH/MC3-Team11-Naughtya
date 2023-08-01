@@ -22,37 +22,95 @@ public struct ResultIncompleteTodoView: View {
         self.geometry = geometry
     }
 
+    var incompleteMessage1: AttributedString {
+        var result = AttributedString("이번에 ")
+        result.foregroundColor = .customGray2
+        result.font = .system(size: 18  * (geometry.size.height/892), weight: .semibold)
+        return result
+    }
+
+    var incompleteMessage3: AttributedString {
+        var result = AttributedString("은/는 이루지 못했어도,")
+        result.foregroundColor = .customGray2
+        result.font = .system(size: 18  * (geometry.size.height/892), weight: .semibold)
+        return result
+    }
+    var incompleteResult1: AttributedString {
+        var result = AttributedString("다음에 성공하면 ")
+        result.font = .system(size: 16  * (geometry.size.height/892))
+        result.foregroundColor = .customGray1
+        return result
+    }
+
+    var incompleteResult3: AttributedString {
+        var result = AttributedString("을/를 기록 할 수 있어요!")
+        result.font = .system(size: 16  * (geometry.size.height/892))
+        result.foregroundColor = .customGray1
+        return result
+    }
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 27 * geometry.size.height / 892) {
-            Text("미완료 To-Do")
+            Text("미완료 한 일")
                 .font(
                     Font.custom("Apple SD Gothic Neo", size: 24  * (geometry.size.height/892))
                         .weight(.bold)
                 )
                 .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
             VStack(alignment: .leading, spacing: 23) {
-                let todo = projectResult.incompletedTodos[currentIndex]
-                HStack {
 
-                    Text(todo.title)
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 18  * (geometry.size.height/892))
-                                .weight(.semibold)
-                        )
-                        .offset(y: offsetY)
-                        .padding(.vertical, 5)
-                        .foregroundColor(Color(red: 0.97, green: 0.97, blue: 0.97))
-                    Spacer()
-                }
+                if projectResult.incompletedTodos.isEmpty {
+                    HStack {
 
-                if let abilityTitle = projectResult.getAbilityTitleFromTodo(
-                    todo,
-                    category: .incompleted
-                ) {
-                    Text("다음번에 성공한다면 \(abilityTitle)을 획득 할 수 있어요!")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16  * (geometry.size.height/892)))
-                        .foregroundColor(Color(red: 0.86, green: 0.86, blue: 0.86))
-                        .lineLimit(1)
+                            Text("모두 달성했습니다! 대단해용")
+                                .font(
+                                    Font.custom("Apple SD Gothic Neo", size: 18)
+                                        .weight(.bold)
+                                )
+                                .offset(y: offsetY)
+                                .padding(.vertical, 5)
+                                .lineLimit(1)
+                            Spacer()
+                    }
+                } else {
+
+                    let todo = projectResult.incompletedTodos[currentIndex]
+
+                    var incompleteMessage2: AttributedString {
+                        var result = AttributedString(todo.title)
+                        result.foregroundColor = .white
+                        result.font = .system(size: 18  * (geometry.size.height/892), weight: .bold)
+                        return result
+                    }
+                    HStack {
+
+                            Text(incompleteMessage1 + incompleteMessage2 + incompleteMessage3)
+                                .font(
+                                    Font.custom("Apple SD Gothic Neo", size: 18)
+                                        .weight(.bold)
+                                )
+                                .offset(y: offsetY)
+                                .padding(.vertical, 5)
+                                .lineLimit(1)
+                            Spacer()
+                    }
+
+                    if let abilityTitle = projectResult.getAbilityTitleFromTodo(
+                        todo,
+                        category: .incompleted
+                    ) {
+                        var incompleteResult2: AttributedString {
+                            var result = AttributedString(abilityTitle)
+                            result.foregroundColor = .white
+                            result.font = .system(size: 16  * (geometry.size.height/892), weight: .bold)
+                            return result
+                        }
+
+                            Text(incompleteResult1 + incompleteResult2 + incompleteResult3)
+                            .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                                .lineLimit(1)
+
+                    }
                 }
             }
             .padding(.leading, 50)

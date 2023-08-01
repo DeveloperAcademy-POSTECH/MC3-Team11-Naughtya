@@ -43,18 +43,23 @@ public struct ResultView: View {
                             }
                         }
                     }
-                    .background(Color(red: 0.13, green: 0.13, blue: 0.13))
+
                 }
 
                 .padding(.leading, 50)
                 .padding(.top, 35 * geometry.size.height / 892)
                 .padding(.trailing, 70)
                 .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
-                .background(Color(red: 0.13, green: 0.13, blue: 0.13))
+                .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable().aspectRatio(contentMode: .fill))
+
             } else {
                 emptyView
+
+                .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
+
             }
         }
+
     }
 
     private var emptyView: some View {
