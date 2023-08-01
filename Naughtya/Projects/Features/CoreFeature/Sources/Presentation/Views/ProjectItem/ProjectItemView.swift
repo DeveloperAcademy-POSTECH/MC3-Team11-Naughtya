@@ -26,20 +26,18 @@ public struct ProjectItemView: View {
             VStack(alignment: .leading, spacing: 9) {
                 Text(project.category)
                     .lineLimit(1)
-                    .font(
-                        Font.custom("Apple SD Gothic Neo", size: 32)
-                            .weight(.semibold)
-                    )
+                    .font(.system(size: 32))
+                    .fontWeight(.semibold)
                     .foregroundColor(Color.customGray1)
                 HStack(spacing: 0) {
                     Text(project.startedAt?.getDateString("yyyy.MM.dd") ?? "")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                        .font(.system(size: 16))
                         .foregroundColor(Color.customGray3)
                     Text(" -")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                        .font(.system(size: 16))
                         .foregroundColor(Color.customGray3)
                     Text(project.endedAt?.getDateString("yyyy.MM.dd") ?? "")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                        .font(.system(size: 16))
                         .foregroundColor(Color.customGray3)
                 }
                 HStack(spacing: 10) {
@@ -51,11 +49,11 @@ public struct ProjectItemView: View {
                         Text("(선택) 목표를 입력해 보세요.")
                     }
                 }
-                .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                .font(.system(size: 14))
                 .foregroundColor(Color.customGray2)
                 .frame(height: 26)
                 .padding(.horizontal, 10)
-                .background(Color.customGray8)
+                .background(Color.customGray7)
                 .cornerRadius(5)
             }
             .padding(.horizontal, 26)
@@ -72,9 +70,10 @@ public struct ProjectItemView: View {
             )
             HStack(alignment: .center, spacing: 4) {
                 Text("􀅼")
-                    .font(Font.custom("SF Pro", size: 20).weight(.light))
-                Text("여기를 클릭해서 할 일을 추가해보세요.")
-                    .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                    .font(.system(size: 16))
+                    .fontWeight(.light)
+                Text("여기를 클릭해서 할 일을 추가해요.")
+                    .font(.system(size: 14))
                     .frame(height: 16, alignment: .leading)
             }
             .foregroundColor(isHovered ? Color.pointColor : Color.customGray2)

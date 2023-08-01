@@ -34,7 +34,7 @@ public struct ResultCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                                    .fill(Color.customGray7) // TODO: figma 업데이트 필요
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -54,7 +54,7 @@ public struct ResultCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                                    .fill(Color.customGray7) // TODO: figma 업데이트 필요
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -73,7 +73,7 @@ public struct ResultCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                                    .fill(Color.customGray7) // TODO: figma 업데이트 필요
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -96,10 +96,8 @@ public struct ResultCardView: View {
                     }
                 }) {
                     Text("􀯷")
-                        .font(
-                            Font.custom("SF Pro", size: 16)
-                                .weight(.light)
-                        )
+                        .font(.system(size: 16))
+                        .fontWeight(.light)
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                 }
@@ -120,10 +118,8 @@ public struct ResultCardView: View {
                     }
                 }) {
                     Text("􀁴")
-                        .font(
-                            Font.custom("SF Pro", size: 16)
-                                .weight(.light)
-                        )
+                        .font(.system(size: 16))
+                        .fontWeight(.light)
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                 }
@@ -182,7 +178,7 @@ public struct ResultCardView: View {
                     let colors: [Color] = [.customGray4, .customGray5, .customGray6]
                     ForEach(Array(ability.todos.enumerated()).prefix(3), id: \.offset) { todoIndex, todo in
                         HStack(spacing: 4) {
-                            Image(systemName: "checkmark.square.fill")
+                            Image(systemName: "checkmark.sqaure.fill")
                                 .font(.system(size: 18  * (geometry.size.height / 892)))
                             Text(todo.title.value)
                                 .font(.system(size: 14  * (geometry.size.height / 892)))
@@ -221,7 +217,7 @@ public struct ResultCardView: View {
         )
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                .fill(Color.customGray7) // TODO: figma 업데이트 필요
 
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))
