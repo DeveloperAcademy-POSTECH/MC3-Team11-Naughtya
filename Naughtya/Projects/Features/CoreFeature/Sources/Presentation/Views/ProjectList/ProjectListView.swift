@@ -27,7 +27,7 @@ public struct ProjectListView: View {
 
     public var body: some View {
         ZStack {
-            Color.customGray8
+            Color.customGray7
             VStack(spacing: 15) {
                 headerView
                 if projects.isEmpty {
@@ -63,7 +63,8 @@ public struct ProjectListView: View {
     private var headerView: some View {
         HStack {
             Text("All My Projects")
-                .font(Font.custom("SF Pro", size: 14).weight(.medium))
+                .font(.system(size: 14))
+                .fontWeight(.medium)
                 .foregroundColor(Color.customGray4)
             Spacer()
             Button {
@@ -89,7 +90,8 @@ public struct ProjectListView: View {
             Spacer()
             Text("프로젝트가 없습니다.")
                 .multilineTextAlignment(.center)
-                .font(Font.custom("SF Pro", size: 12).weight(.semibold))
+                .font(.system(size: 12))
+                .fontWeight(.semibold)
                 .foregroundColor(.customGray2)
             Spacer()
         }
@@ -113,14 +115,14 @@ public struct ProjectListView: View {
                         .frame(width: 44, height: 44)
                     HStack(alignment: .center) {
                         Image(systemName: "plus")
-                            .font(Font.custom("SF Pro", size: 24))
+                            .font(.system(size: 24))
                             .multilineTextAlignment(.center)
                     }
                     .foregroundColor(.white)
                 }
             }
             .buttonStyle(.borderless)
-//            .padding(.horizontal, 81)
+            //            .padding(.horizontal, 81)
             .padding(.bottom, 103)
             .sheet(isPresented: self.$showModal) {
                 ProjectSetModalView()

@@ -22,11 +22,11 @@ public struct SearchView: View {
                 .font(.system(size: 13))
                 .foregroundColor(.customGray4)
             TextField(text: $viewModel.searchedText) {
-                Text("오늘 할 일을 검색해보세요.")
+                Text("프로젝트 할 일을 검색해봐요.")
                     .foregroundColor(.customGray1)
             }
             .textFieldStyle(.plain)
-            .font(Font.custom("SF Pro", size: 12))
+            .font(.system(size: 12))
         }
         .padding(.horizontal, 7)
         .frame(width: 222, height: 27)

@@ -7,8 +7,8 @@ struct DashboardView: View {
     var body: some View {
         NavigationSplitView {
 
-                projectListView
-                    .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
+              projectListView
+                  .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
 
         } detail: {
             if viewModel.isResultTab {
@@ -52,7 +52,7 @@ struct DashboardView: View {
         .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         .toolbar {
             ToolbarItem(placement: .secondaryAction) {
-                    FilterButton()
+                FilterButton()
             }
         }
     }

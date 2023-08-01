@@ -43,7 +43,7 @@ public struct ResultCompleteTodoView: View {
 
             HStack(alignment: .firstTextBaseline, spacing: 20  * (geometry.size.width/1512)) {
                 Text("􀁜")
-                    .font(Font.custom("SF Pro", size: 20 * (geometry.size.width/1512)))
+                    .font(Font.custom("Apple SD Gothic Neo", size: 20 * (geometry.size.width/1512)))
                     .fontWeight(.semibold)
                 //                    .multilineTextAlignment(.center)
                     .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
@@ -55,7 +55,7 @@ public struct ResultCompleteTodoView: View {
                     .foregroundColor(.white)
                 Text("\(projectResult.completedPercent)%")
                     .font(
-                        Font.custom("SF Pro", size: 20   * (geometry.size.width/1512))
+                        Font.custom("Apple SD Gothic Neo", size: 20   * (geometry.size.width/1512))
                             .weight(.semibold)
                     )
 

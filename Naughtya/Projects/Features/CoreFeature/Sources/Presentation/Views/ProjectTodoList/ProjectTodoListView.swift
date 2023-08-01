@@ -16,23 +16,27 @@ public struct ProjectTodoListView: View {
     }
 
     public var body: some View {
-        VStack {
-            if projects.isEmpty {
-                Spacer(minLength: 300)
-                HStack {
-                    Spacer()
-                    Text("프로젝트를 선택해주세요!")
-                        .font(Font.custom("SF Pro", size: 24).weight(.semibold))
-                        .foregroundColor(.pointColor)
-                    Spacer()
-                }
-            } else {
-                ForEach(projects) { project in
-                    ProjectItemView(project: project)
+//        ZStack {
+//            Color.customGray8
+            VStack {
+                if projects.isEmpty {
+                    Spacer(minLength: 300)
+                    HStack {
+                        Spacer()
+                        Text("프로젝트를 선택해주세요!")
+                            .font(.system(size: 24))
+                            .fontWeight(.semibold)
+                            .foregroundColor(.pointColor)
+                        Spacer()
+                    }
+                } else {
+                    ForEach(projects) { project in
+                        ProjectItemView(project: project)
+                    }
                 }
             }
-        }
-        .padding(0)
+            .padding(0)
+//        }
     }
 }
 

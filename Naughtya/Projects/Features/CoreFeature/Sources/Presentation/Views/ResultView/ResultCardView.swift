@@ -59,6 +59,7 @@ public struct ResultCardView: View {
                         } else {
                             // Your code here for the else block
                         }
+
                     }
     //                .frame(minWidth: 1114)
                 default:
@@ -113,6 +114,7 @@ public struct ResultCardView: View {
                             if self.currentIndex >= maxLength {
                                 self.currentIndex = 0
                             }
+
                         }
                     }) {
                         Text("􀁴")
@@ -124,6 +126,7 @@ public struct ResultCardView: View {
                             .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                     }
                     .buttonStyle(.borderless)
+
                 }
                 .padding(.vertical, 27 * geometry.size.height / 892)
                 //                .padding(.vertical, 55 * (geometry.size.width / 1512))
@@ -179,7 +182,7 @@ public struct ResultCardView: View {
                     let colors: [Color] = [.customGray4, .customGray5, .customGray6]
                     ForEach(Array(ability.todos.enumerated()).prefix(3), id: \.offset) { todoIndex, todo in
                         HStack(spacing: 4) {
-                            Image(systemName: "checkmark.square.fill")
+                            Image(systemName: "checkmark.sqaure.fill")
                                 .font(.system(size: 18  * (geometry.size.height / 892)))
                             Text(todo.title.value)
                                 .font(.system(size: 14  * (geometry.size.height / 892)))
@@ -218,9 +221,11 @@ public struct ResultCardView: View {
         )
         .background(
             RoundedRectangle(cornerRadius: 8)
+
                 .fill(Color.customGray8.opacity(0.5)
 
                      ) // TODO: figma 업데이트 필요
+
 
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))
