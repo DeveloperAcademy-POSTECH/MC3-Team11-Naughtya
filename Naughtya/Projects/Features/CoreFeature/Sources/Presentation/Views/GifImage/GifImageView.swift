@@ -22,7 +22,7 @@ public struct GifImageView: NSViewRepresentable {
               let data = try? Data(contentsOf: url) else {
             return webView
         }
-        
+
         webView.load(
             data,
             mimeType: "image/gif",

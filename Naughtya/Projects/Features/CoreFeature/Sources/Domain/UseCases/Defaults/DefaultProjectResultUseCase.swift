@@ -10,10 +10,13 @@ import Foundation
 
 struct DefaultProjectResultUseCase: ProjectResultUseCase {
     private static let localStore: LocalStore = .shared
+    private static let cloudKitManager: CloudKitManager = .shared
 
     func create(project: ProjectEntity) async throws -> ProjectResultEntity {
         let projectResult = ProjectResultEntity(project: project)
         Task {
+            let record = try? await Self.cloudKitManager.create(projectResult.record)
+            projectResult.recordId = record?.id
             let generator = AbilitiesGenerator(projectResult: projectResult)
             let abilities = try await generator.generate()
             projectResult.abilities.value = abilities

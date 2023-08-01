@@ -22,9 +22,23 @@ public struct ResultDelayTodoView: View {
         self.geometry = geometry
     }
 
+    var delayResult1: AttributedString {
+        var result = AttributedString("미뤘어도 이루어낸 당신! ")
+        result.font = .system(size: 16  * (geometry.size.height/892))
+        result.foregroundColor = .customGray1
+        return result
+    }
+
+    var delayResult3: AttributedString {
+        var result = AttributedString("이/가 기록됐어요.")
+        result.font = .system(size: 16  * (geometry.size.height/892))
+        result.foregroundColor = .customGray1
+        return result
+    }
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 27 * geometry.size.height / 892) {
-            Text("Top3 미룬 To-Do")
+            Text("미룬 할 일 Top3")
                 .font(
                     Font.custom("Apple SD Gothic Neo", size: 24  * (geometry.size.height/892))
                         .weight(.bold)
@@ -68,10 +82,21 @@ public struct ResultDelayTodoView: View {
                     todo,
                     category: .performance
                 ) {
-                    Text("미뤘지만 성공해서 \(abilityTitle)을 획득했어요!")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16  * (geometry.size.height/892)))
-                        .foregroundColor(Color(red: 0.86, green: 0.86, blue: 0.86))
-                        .lineLimit(1)
+
+
+
+                    var delayResult2: AttributedString {
+                        var result = AttributedString(abilityTitle)
+                        result.foregroundColor = .white
+                        result.font = .system(size: 16  * (geometry.size.height/892), weight: .bold)
+                        return result
+                    }
+
+                        Text(delayResult1 + delayResult2 + delayResult3)
+                            .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                            .lineLimit(1)
+
+
 
                 }
             }
@@ -92,7 +117,7 @@ public struct ResultDelayTodoView: View {
         // Schedule a repeating timer with 5-second interval
         Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
             // Update the current index to show the next item in the list
-            withAnimation {
+            withAnimation(.easeInOut(duration: 0.3)) {
                 offsetY = -30 // Move the current item upward
             }
 

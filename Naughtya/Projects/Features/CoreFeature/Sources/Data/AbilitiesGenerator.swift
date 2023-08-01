@@ -9,7 +9,8 @@
 import Foundation
 
 struct AbilitiesGenerator {
-    private static let openAIService = OpenAIService()
+    private static let abilityUseCase: AbilityUseCase = DefaultAbilityUseCase()
+    private static let openAIService: OpenAIService = .init()
 
     let projectResult: ProjectResultEntity
 
@@ -21,23 +22,26 @@ struct AbilitiesGenerator {
     }
 
     private func fetchAbilities(category: AbilityCategory) async throws -> [AbilityEntity] {
+        var abilities: [AbilityEntity] = []
         let answer = try await fetchAnswerFromOpenAI(category: category)
         let lines = answer
             .split(separator: "\n")
             .filter { !$0.isEmpty }
             .map { String($0) }
         let titleTodoStringsMap = getTitleTodoStringsMap(lines: lines)
-        return titleTodoStringsMap
-            .reduce([AbilityEntity]()) {
-                $0 + [
-                    AbilityEntity(
-                        category: category,
-                        title: $1.key,
-                        todos: getTodos(titles: $1.value)
-                    )
-                ]
+        for (title, todoStrings) in titleTodoStringsMap {
+            let todos = getTodos(titles: todoStrings)
+            guard !todos.isEmpty else {
+                continue
             }
-            .filter { !$0.todos.isEmpty }
+            let ability = try await Self.abilityUseCase.create(
+                category: category,
+                title: title,
+                todos: todos
+            )
+            abilities.append(ability)
+        }
+        return abilities
     }
 
     private func fetchAnswerFromOpenAI(category: AbilityCategory) async throws -> String {
@@ -73,6 +77,8 @@ struct AbilitiesGenerator {
             return projectResult.completedTodosSummary
         case .incompleted:
             return projectResult.incompletedTodosSummary
+        case .sample:
+            return ""
         }
     }
 
