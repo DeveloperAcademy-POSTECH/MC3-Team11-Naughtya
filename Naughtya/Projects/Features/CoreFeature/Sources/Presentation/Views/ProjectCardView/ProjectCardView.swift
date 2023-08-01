@@ -74,7 +74,7 @@ struct ProjectCardView: View {
                         }
                     }
                     RoundedRectangle(cornerRadius: 5)
-                        .fill(project.isSelected ? Color.customGray4 : Color.customGray8)
+                        .fill(project.isSelected ? Color.customGray4 : Color.customGray7)
                         .frame(width: geometry.size.width - 6, height: geometry.size.height - 6)
                     VStack {
                         HStack(alignment: .lastTextBaseline) {
@@ -162,7 +162,7 @@ struct ProjectCardView: View {
 
     private var bookmarkIndicator: some View {
         Image(systemName: project.isBookmarked ? "star.fill" : "star")
-            .font(Font.custom("SF Pro", size: 15))
+            .font(Font.custom("Apple SD Gothic Neo", size: 15))
             .foregroundColor(project.isBookmarked ? .pointColor : .customGray2)
             .onTapGesture {
                 toggleBookmarked()
@@ -209,14 +209,14 @@ struct ProjectCardView: View {
                 }
             } label: {
                 Label("즐겨찾기", systemImage: "star.fill")
-                    .font(Font.custom("SF Pro", size: 12))
+                    .font(Font.custom("Apple SD Gothic Neo", size: 12))
                     .labelStyle(.titleAndIcon)
             }
             Button {
                 showModal = true
             } label: {
                 Label("수정하기", systemImage: "pencil.circle")
-                    .font(Font.custom("SF Pro", size: 12))
+                    .font(Font.custom("Apple SD Gothic Neo", size: 12))
                     .labelStyle(.titleAndIcon)
             }
             Divider()
@@ -226,7 +226,7 @@ struct ProjectCardView: View {
                 }
             } label: {
                 Label("삭제하기", systemImage: "x.circle")
-                    .font(Font.custom("SF Pro", size: 12))
+                    .font(Font.custom("Apple SD Gothic Neo", size: 12))
                     .labelStyle(.titleAndIcon)
             }
         }

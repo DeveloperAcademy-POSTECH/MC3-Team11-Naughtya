@@ -34,7 +34,7 @@ public struct ResultCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                                    .fill(Color.customGray7) // TODO: figma 업데이트 필요
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -54,7 +54,7 @@ public struct ResultCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                                    .fill(Color.customGray7) // TODO: figma 업데이트 필요
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -73,7 +73,7 @@ public struct ResultCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                                    .fill(Color.customGray7) // TODO: figma 업데이트 필요
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -97,7 +97,7 @@ public struct ResultCardView: View {
                 }) {
                     Text("􀯷")
                         .font(
-                            Font.custom("SF Pro", size: 16)
+                            Font.custom("Apple SD Gothic Neo", size: 16)
                                 .weight(.light)
                         )
                         .multilineTextAlignment(.center)
@@ -121,7 +121,7 @@ public struct ResultCardView: View {
                 }) {
                     Text("􀁴")
                         .font(
-                            Font.custom("SF Pro", size: 16)
+                            Font.custom("Apple SD Gothic Neo", size: 16)
                                 .weight(.light)
                         )
                         .multilineTextAlignment(.center)
@@ -221,7 +221,7 @@ public struct ResultCardView: View {
         )
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color.customGray8) // TODO: figma 업데이트 필요
+                .fill(Color.customGray7) // TODO: figma 업데이트 필요
 
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))

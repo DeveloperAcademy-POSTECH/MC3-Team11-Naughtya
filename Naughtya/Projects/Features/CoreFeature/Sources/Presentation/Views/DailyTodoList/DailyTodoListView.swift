@@ -64,12 +64,14 @@ public struct DailyTodoListView: View {
                                 .weight(.semibold)
                         )
                         .foregroundColor(Color.customGray1)
+                        .frame(width: 170, height: 25)
                         .onTapGesture {
                             isPopoverVisible = true
                         }
                         .popover(isPresented: $isPopoverVisible) {
                             calendarPopup
                         }
+
                 }
                 Button {
                     viewModel.gotoOneDayAfter()
@@ -98,7 +100,7 @@ public struct DailyTodoListView: View {
                         .foregroundColor(Color.pointColor)
                 }
                 .frame(width: 91.5, height: 26, alignment: .center)
-                .background(Color.customGray8)
+                .background(Color.customGray7)
                 .cornerRadius(5)
                 HStack(alignment: .center, spacing: 10) {
                     Text("남은 할 일")
@@ -117,7 +119,7 @@ public struct DailyTodoListView: View {
                         .foregroundColor(Color.pointColor)
                 }
                 .frame(width: 91.5, height: 26, alignment: .center)
-                .background(Color.customGray8)
+                .background(Color.customGray7)
                 .cornerRadius(5)
             }
             .padding(0)

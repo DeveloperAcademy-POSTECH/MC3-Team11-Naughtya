@@ -53,7 +53,7 @@ public struct TodoItemView: View {
                 Spacer()
                 ZStack {
                     if isHovered {
-                        Color.customGray8
+                        Color.customGray7
                     }
                     contentView
                 }
@@ -121,7 +121,7 @@ public struct TodoItemView: View {
 
     private var categoryText: some View {
         Text("[\(todo.category)]")
-            .font(Font.custom("SF Pro", size: 16).weight(.bold))
+            .font(Font.custom("Apple SD Gothic Neo", size: 16).weight(.bold))
     }
 
     private var titleView: some View {
@@ -131,13 +131,13 @@ public struct TodoItemView: View {
                 titleText
             }
         }
-        .font(Font.custom("SF Pro", size: 16))
+        .font(Font.custom("Apple SD Gothic Neo", size: 16))
     }
 
     private var titleTextField: some View {
         TextField(text: $title) {
             if focusedField == .textField {
-                Text("프로젝트에 할 일을 적어주세요.")
+                Text("프로젝트에 할 일을 적어봐요.")
                     .foregroundColor(.customGray4)
             }
         }
@@ -181,7 +181,7 @@ public struct TodoItemView: View {
             delete()
         } label: {
             Image(systemName: isDeleting ? "xmark.circle" : "trash")
-                .font(Font.custom("SF Pro", size: 20))
+                .font(Font.custom("Apple SD Gothic Neo", size: 20))
                 .foregroundColor(isDeleting ? .red : Color.customGray4)
         }
         .padding(.trailing, 10)

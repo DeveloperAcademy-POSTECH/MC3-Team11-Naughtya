@@ -55,7 +55,7 @@ public struct ProjectItemView: View {
                 .foregroundColor(Color.customGray2)
                 .frame(height: 26)
                 .padding(.horizontal, 10)
-                .background(Color.customGray8)
+                .background(Color.customGray7)
                 .cornerRadius(5)
             }
             .padding(.horizontal, 26)
@@ -72,8 +72,8 @@ public struct ProjectItemView: View {
             )
             HStack(alignment: .center, spacing: 4) {
                 Text("􀅼")
-                    .font(Font.custom("SF Pro", size: 20).weight(.light))
-                Text("여기를 클릭해서 할 일을 추가해보세요.")
+                    .font(Font.custom("Apple SD Gothic Neo", size: 16).weight(.light))
+                Text("여기를 클릭해서 할 일을 추가해요.")
                     .font(Font.custom("Apple SD Gothic Neo", size: 14))
                     .frame(height: 16, alignment: .leading)
             }

@@ -17,8 +17,8 @@ extension Color {
     static let customGray4 = Color(red: 0.31, green: 0.31, blue: 0.31)
     static let customGray5 = Color(red: 0.28, green: 0.28, blue: 0.28)
     static let customGray6 = Color(red: 0.23, green: 0.23, blue: 0.23)
-    static let customGray8 = Color(red: 0.18, green: 0.18, blue: 0.18)
-    static let customGray9 = Color(red: 0.13, green: 0.13, blue: 0.13)
+    static let customGray7 = Color(red: 0.18, green: 0.18, blue: 0.18)
+    static let customGray8 = Color(red: 0.13, green: 0.13, blue: 0.13)
     static let pointColor = Color(red: 0.02, green: 0.32, blue: 0.98)
 
 }
