@@ -112,7 +112,7 @@ public struct TodoItemView: View {
         Button {
             toggleCompleted()
         } label: {
-            Image(systemName: todo.isCompleted ? "checkmark.circle" : "circle")
+            Image(systemName: todo.isCompleted ? "checkmark.square" : "square")
                 .foregroundColor(todo.isCompleted ? .customGray4 : .pointColor)
                 .font(.system(size: 18))
         }
@@ -181,7 +181,7 @@ public struct TodoItemView: View {
         Button {
             delete()
         } label: {
-            Image(systemName: isDeleting ? "xmark.circle" : "trash")
+            Image(systemName: isDeleting ? "xmark.square" : "trash")
                 .font(.system(size: 20))
                 .foregroundColor(isDeleting ? .red : Color.customGray4)
         }

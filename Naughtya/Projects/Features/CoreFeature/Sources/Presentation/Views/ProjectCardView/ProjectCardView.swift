@@ -218,7 +218,7 @@ struct ProjectCardView: View {
             Button {
                 showModal = true
             } label: {
-                Label("수정하기", systemImage: "pencil.circle")
+                Label("수정하기", systemImage: "square.and.pencil")
                     .font(.system(size: 12))
                     .labelStyle(.titleAndIcon)
             }
@@ -228,7 +228,7 @@ struct ProjectCardView: View {
                     try await Self.projectUseCase.delete(project.entity)
                 }
             } label: {
-                Label("삭제하기", systemImage: "x.circle")
+                Label("삭제하기", systemImage: "x.square")
                     .font(.system(size: 12))
                     .labelStyle(.titleAndIcon)
             }

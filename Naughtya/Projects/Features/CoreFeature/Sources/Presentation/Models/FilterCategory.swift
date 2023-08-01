@@ -16,9 +16,9 @@ public enum FilterCategory: String, CaseIterable {
     public var title: String {
         switch self {
         case .incompleted:
-            return "􀀀 미완료 to do"
+            return "􀂒 미완료 to do"
         case .completed:
-            return "􀁢 완료 to do"
+            return "􀃲 완료 to do"
         case .all:
             return "전체보기"
         }
