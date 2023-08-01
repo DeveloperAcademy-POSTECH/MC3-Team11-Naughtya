@@ -53,6 +53,7 @@ public final class DailyTodoListViewModel: ObservableObject {
 
     public func gotoDate(_ date: Date) {
         let dateString = date.getDateString()
+        dailyTodoList = nil
         fetchDailyTodoList(dateString: dateString)
     }
 

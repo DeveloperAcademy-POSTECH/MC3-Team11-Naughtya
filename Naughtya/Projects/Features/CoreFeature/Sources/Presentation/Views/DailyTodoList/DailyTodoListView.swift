@@ -43,12 +43,14 @@ public struct DailyTodoListView: View {
     private var dateHeader: some View {
         VStack(spacing: 17) {
             HStack(alignment: .center, spacing: 2) {
-                buildDateButton(imageName: "triangle_left") {
+                buildDateButton(imageName: "chevron.left") {
                     viewModel.gotoOneDayBefore()
                 }
                 Text(viewModel.dateTitle)
+                    .multilineTextAlignment(.center)
                     .foregroundColor(Color.customGray1)
                     .font(.appleSDGothicNeo(size: 32, weight: .semibold).monospacedDigit())
+                    .frame(minWidth: 170)
                     .frame(height: 23)
                     .onTapGesture {
                         isPopoverVisible = true
@@ -56,7 +58,7 @@ public struct DailyTodoListView: View {
                     .popover(isPresented: $isPopoverVisible) {
                         calendarPopup
                     }
-                buildDateButton(imageName: "triangle_right") {
+                buildDateButton(imageName: "chevron.right") {
                     viewModel.gotoOneDayAfter()
                 }
             }
@@ -94,13 +96,14 @@ public struct DailyTodoListView: View {
         Button {
             action()
         } label: {
-            MacOSCoreFeatureImages(name: imageName).swiftUIImage
+            Image(systemName: imageName)
         }
         .buttonStyle(.borderless)
         .frame(
             width: 22,
             height: 22
         )
+        .offset(y: -2)
     }
 
     private func buildCountLabel(
