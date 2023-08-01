@@ -121,7 +121,8 @@ public struct TodoItemView: View {
 
     private var categoryText: some View {
         Text("[\(todo.category)]")
-            .font(Font.custom("Apple SD Gothic Neo", size: 16).weight(.bold))
+            .font(.system(size: 16))
+            .fontWeight(.bold)
     }
 
     private var titleView: some View {
@@ -131,7 +132,7 @@ public struct TodoItemView: View {
                 titleText
             }
         }
-        .font(Font.custom("Apple SD Gothic Neo", size: 16))
+        .font(.system(size: 16))
     }
 
     private var titleTextField: some View {
@@ -181,7 +182,7 @@ public struct TodoItemView: View {
             delete()
         } label: {
             Image(systemName: isDeleting ? "xmark.circle" : "trash")
-                .font(Font.custom("Apple SD Gothic Neo", size: 20))
+                .font(.system(size: 20))
                 .foregroundColor(isDeleting ? .red : Color.customGray4)
         }
         .padding(.trailing, 10)

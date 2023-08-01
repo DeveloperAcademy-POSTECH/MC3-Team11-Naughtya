@@ -96,10 +96,8 @@ public struct ResultCardView: View {
                     }
                 }) {
                     Text("􀯷")
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 16)
-                                .weight(.light)
-                        )
+                        .font(.system(size: 16))
+                        .fontWeight(.light)
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                 }
@@ -120,10 +118,8 @@ public struct ResultCardView: View {
                     }
                 }) {
                     Text("􀁴")
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 16)
-                                .weight(.light)
-                        )
+                        .font(.system(size: 16))
+                        .fontWeight(.light)
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                 }

@@ -24,7 +24,8 @@ public struct ProjectTodoListView: View {
                     HStack {
                         Spacer()
                         Text("프로젝트를 선택해주세요!")
-                            .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
+                            .font(.system(size: 24))
+                            .fontWeight(.semibold)
                             .foregroundColor(.pointColor)
                         Spacer()
                     }

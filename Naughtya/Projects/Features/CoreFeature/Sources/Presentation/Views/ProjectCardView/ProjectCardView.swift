@@ -140,11 +140,12 @@ struct ProjectCardView: View {
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 1) {
             Text("\(Date().dDayCalculater(projectEndDay: projectEndDay))")
-                .font(Font.custom("Apple SD Gothic Neo", size: 12).weight(.semibold)
-                )
+                .font(.system(size: 12))
+                .fontWeight(.semibold)
                 .foregroundColor(Color.customGray1)
             Text(project.category)
-                .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
+                .font(.system(size: 24))
+                .fontWeight(.semibold)
                 .foregroundColor(.white)
         }
     }
@@ -152,17 +153,19 @@ struct ProjectCardView: View {
     private var todosCountView: some View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text("\(project.completedTodos.count)")
-                .font(Font.custom("Apple SD Gothic Neo", size: 24).weight(.semibold))
+                .font(.system(size: 24))
+                .fontWeight(.semibold)
                 .foregroundColor(.white)
             Text("/\(project.todos.count)")
-                .font(Font.custom("Apple SD Gothic Neo", size: 16).weight(.regular))
+                .font(.system(size: 16))
+                .fontWeight(.regular)
                 .foregroundColor(.customGray2)
         }
     }
 
     private var bookmarkIndicator: some View {
         Image(systemName: project.isBookmarked ? "star.fill" : "star")
-            .font(Font.custom("Apple SD Gothic Neo", size: 15))
+            .font(.system(size: 15))
             .foregroundColor(project.isBookmarked ? .pointColor : .customGray2)
             .onTapGesture {
                 toggleBookmarked()
@@ -209,14 +212,14 @@ struct ProjectCardView: View {
                 }
             } label: {
                 Label("즐겨찾기", systemImage: "star.fill")
-                    .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                    .font(.system(size: 12))
                     .labelStyle(.titleAndIcon)
             }
             Button {
                 showModal = true
             } label: {
                 Label("수정하기", systemImage: "pencil.circle")
-                    .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                    .font(.system(size: 12))
                     .labelStyle(.titleAndIcon)
             }
             Divider()
@@ -226,7 +229,7 @@ struct ProjectCardView: View {
                 }
             } label: {
                 Label("삭제하기", systemImage: "x.circle")
-                    .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                    .font(.system(size: 12))
                     .labelStyle(.titleAndIcon)
             }
         }

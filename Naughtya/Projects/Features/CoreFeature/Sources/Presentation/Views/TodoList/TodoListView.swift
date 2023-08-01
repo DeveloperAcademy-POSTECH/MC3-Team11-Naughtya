@@ -46,7 +46,7 @@ public struct TodoListView: View {
                 VStack(spacing: 0) {
                     HStack(alignment: .center, spacing: 4) {
                         Text("데일리 투두에 오늘 할일을 드래그 해주세요.")
-                            .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                            .font(.system(size: 16))
                             .foregroundColor(Color.customGray3)
                             .multilineTextAlignment(.center)
                             .frame(width: 277, height: 16, alignment: .center)

@@ -59,12 +59,11 @@ public struct DailyTodoListView: View {
                     .buttonStyle(.borderless)
                 } else {
                     Text(viewModel.dateTitle)
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 32)
-                                .weight(.semibold)
-                        )
+                        .padding(0)
+                        .font(.system(size: 32))
+                        .fontWeight(.semibold)
                         .foregroundColor(Color.customGray1)
-                        .frame(width: 170, height: 25)
+                        .frame(width: 180, height: 25)
                         .onTapGesture {
                             isPopoverVisible = true
                         }
@@ -85,18 +84,14 @@ public struct DailyTodoListView: View {
             HStack(alignment: .top, spacing: 9) {
                 HStack(alignment: .center, spacing: 10) {
                     Text("전체 할 일")
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 12)
-                                .weight(.medium)
-                        )
+                        .font(.system(size: 12))
+                        .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color.customGray1)
-                        .frame(width: 48, height: 8, alignment: .center)
+                        .frame(width: 50, height: 8, alignment: .center)
                     Text(String(viewModel.dailyTodoList?.allTodosCount ?? 0))
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 20)
-                                .weight(.medium)
-                        )
+                        .font(.system(size: 20))
+                        .fontWeight(.medium)
                         .foregroundColor(Color.pointColor)
                 }
                 .frame(width: 91.5, height: 26, alignment: .center)
@@ -104,18 +99,14 @@ public struct DailyTodoListView: View {
                 .cornerRadius(5)
                 HStack(alignment: .center, spacing: 10) {
                     Text("남은 할 일")
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 12)
-                                .weight(.medium)
-                        )
+                        .font(.system(size: 12))
+                        .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color.customGray1)
-                        .frame(width: 48, height: 8, alignment: .center)
+                        .frame(width: 50, height: 8, alignment: .center)
                     Text(String(viewModel.dailyTodoList?.incompletedTodosCount ?? 0))
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 20)
-                                .weight(.medium)
-                        )
+                        .font(.system(size: 20))
+                        .fontWeight(.medium)
                         .foregroundColor(Color.pointColor)
                 }
                 .frame(width: 91.5, height: 26, alignment: .center)

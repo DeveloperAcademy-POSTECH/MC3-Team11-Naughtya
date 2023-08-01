@@ -26,7 +26,7 @@ public struct SearchView: View {
                     .foregroundColor(.customGray1)
             }
             .textFieldStyle(.plain)
-            .font(Font.custom("Apple SD Gothic Neo", size: 12))
+            .font(.system(size: 12))
         }
         .padding(.horizontal, 7)
         .frame(width: 222, height: 27)

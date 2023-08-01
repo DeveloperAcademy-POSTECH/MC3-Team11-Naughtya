@@ -40,56 +40,54 @@ struct ProjectSetModalView: View {
             VStack(spacing: 20) {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("프로젝트 이름")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                        .font(.system(size: 14))
                         .foregroundColor(.white)
                     TextField(text: $newProjectCategory) {
                         Text("나의 프로젝트 이름 생성하기 (10자 이내)")
                             .foregroundColor(Color.customGray2)
                     }
-                    .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                    .font(.system(size: 14))
                     .foregroundColor(Color.white)
                     .cornerRadius(6.38361)
                 }
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 0) {
                         Text("프로젝트 목표")
-                            .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                            .font(.system(size: 14))
                             .foregroundColor(.white)
                         Text("(선택)")
-                            .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                            .font(.system(size: 14))
                             .foregroundColor(Color.customGray6)
                     }
                     TextField(text: $newProjectGoal) {
                         Text("나의 프로젝트 목표 생성하기 (50자 이내)")
                             .foregroundColor(Color.customGray2)
                     }
-                    .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                    .font(.system(size: 14))
                     .foregroundColor(Color.white)
                     .cornerRadius(6.38361)
                 }
                 VStack(alignment: .leading, spacing: 10) {
                     Text("프로젝트 기간")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 14))
+                        .font(.system(size: 14))
                         .foregroundColor(.white)
                     HStack(alignment: .bottom, spacing: 17) {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("시작")
-                                .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                                .font(.system(size: 14))
                                 .foregroundColor(Color.customGray1)
                             DatePicker("", selection: $projectStartDay, in: ...projectEndDay, displayedComponents: [.date])
                                 .datePickerStyle(.field)
                         }
                         VStack {
                             Text("~")
-                                .font(
-                                    Font.custom("Apple SD Gothic Neo", size: 20)
-                                        .weight(.bold)
-                                )
+                                .font(.system(size: 20))
+                                .fontWeight(.bold)
                                 .foregroundColor(Color.customGray6)
                         }
                         VStack(alignment: .leading, spacing: 6) {
                             Text("종료")
-                                .font(Font.custom("Apple SD Gothic Neo", size: 12))
+                                .font(.system(size: 12))
                                 .foregroundColor(Color.customGray1)
                             DatePicker("", selection: $projectEndDay, in: projectStartDay..., displayedComponents: [.date])
                                 .datePickerStyle(.field)
