@@ -11,7 +11,8 @@ struct DashboardView: View {
         } detail: {
             if viewModel.isResultTab {
                 if let projectResult = viewModel.selectedProjectResult {
-                    ResultView(projectResult: projectResult)
+//                    ResultView(projectResult: projectResult)
+                    CreditsView(projectResult: projectResult)
                 }
             } else {
                 defaultView

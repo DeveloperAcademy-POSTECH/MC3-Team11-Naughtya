@@ -38,7 +38,6 @@ public struct ProjectResultListView: View {
                         } else {
                             Text("리포트 생성중 🙂")
                         }
-                        CreditsTodoListView(projectResult: projectResult)
                     }
                 }
             }
