@@ -8,17 +8,7 @@ public struct ResultView: View {
     }
 
     public var body: some View {
-
-        let selectedNum: Int = 1
         GeometryReader { geometry in
-            VStack {
-                ResultNameView(geometry: geometry, selectedNum: selectedNum)
-                HStack {
-                    Divider()
-                        .frame(width: 2, height: 635 * geometry.size.height / 892)
-                        .overlay(.gray)
-                        .padding(.trailing, 50 * (geometry.size.width / 1512))
-                    VStack {
 
             if projectResult.isGenerated {
                 VStack {
