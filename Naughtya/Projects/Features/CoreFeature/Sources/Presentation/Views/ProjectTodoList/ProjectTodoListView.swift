@@ -20,15 +20,8 @@ public struct ProjectTodoListView: View {
 //            Color.customGray8
             VStack {
                 if projects.isEmpty {
-                    Spacer(minLength: 300)
-                    HStack {
-                        Spacer()
-                        Text("프로젝트를 선택해주세요!")
-                            .font(.system(size: 24))
-                            .fontWeight(.semibold)
-                            .foregroundColor(.pointColor)
-                        Spacer()
-                    }
+                    MacOSCoreFeatureAsset.projecttodolistempty.swiftUIImage
+                        .resizable()
                 } else {
                     ForEach(projects) { project in
                         ProjectItemView(project: project)
