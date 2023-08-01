@@ -5,10 +5,15 @@ struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
 
     var body: some View {
-        NavigationSplitView {
 
-              projectListView
-                  .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
+        NavigationSplitView {
+            if viewModel.isResultTab {
+                resultSideView
+                    .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
+            } else {
+                projectListView
+                    .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
+            }
 
         } detail: {
             if viewModel.isResultTab {
@@ -35,6 +40,13 @@ struct DashboardView: View {
                     .frame(minWidth: 424)
             }
         }
+    }
+
+    private var resultSideView: some View {
+        ResultSideView(
+            projects: viewModel.projectsInSidebar,
+            projectSelector: viewModel.isResultTab ? viewModel : nil
+        )
     }
 
     private var projectListView: some View {

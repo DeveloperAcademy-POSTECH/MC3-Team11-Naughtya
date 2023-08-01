@@ -41,7 +41,7 @@ public struct ResultCardView: View {
                         }
 
                     }
-    //                .frame(minWidth: 1412)
+                    //                .frame(minWidth: 1412)
                 case 4:
                     HStack(spacing: 50 * (geometry.size.width / 1214)) {
                         ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 4, maxLength)]) { ability in
@@ -61,7 +61,7 @@ public struct ResultCardView: View {
                         }
 
                     }
-    //                .frame(minWidth: 1114)
+                    //                .frame(minWidth: 1114)
                 default:
                     HStack(spacing: 50 * (geometry.size.width / 920)) {
                         ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 3, maxLength)]) { ability in
@@ -80,7 +80,7 @@ public struct ResultCardView: View {
                             // Your code here for the else block
                         }
                     }
-    //                .frame(minWidth: 820)
+                    //                .frame(minWidth: 820)
                 }
 
                 HStack(alignment: .center, spacing: 8) {
@@ -94,8 +94,8 @@ public struct ResultCardView: View {
                     }) {
                         Text("􀯷")
                             .font(
-                                Font.custom("SF Pro", size: 16)
-                                    .weight(.light)
+                                .system(size: 16)
+                                .weight(.light)
                             )
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
@@ -103,8 +103,8 @@ public struct ResultCardView: View {
                     .buttonStyle(.borderless)
                     Text("\((currentIndex + cardCount) / cardCount)/\(Int(ceil((Double(maxLength) / Double(cardCount)))))")
                         .font(
-                            Font.custom("Apple SD Gothic Neo", size: 23  * (geometry.size.width/1512))
-                                .weight(.semibold)
+                            .system(size: 23  * (geometry.size.width/1512))
+                            .weight(.semibold)
                         )
                         .kerning(0.46)
                         .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
@@ -119,8 +119,8 @@ public struct ResultCardView: View {
                     }) {
                         Text("􀁴")
                             .font(
-                                Font.custom("SF Pro", size: 16)
-                                    .weight(.light)
+                                .system(size: 16)
+                                .weight(.light)
                             )
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
@@ -171,7 +171,7 @@ public struct ResultCardView: View {
                     HStack {
                         Text(ability.title)
                             .multilineTextAlignment(.leading)
-                            .font(.system(size: 18  * (geometry.size.height / 892)))
+                            .font(Font.custom("DungGeunMo", size: 18  * (geometry.size.height / 892)))
                             .lineLimit(2)
                             .lineSpacing(14)
                         Spacer()
@@ -182,7 +182,7 @@ public struct ResultCardView: View {
                     let colors: [Color] = [.customGray4, .customGray5, .customGray6]
                     ForEach(Array(ability.todos.enumerated()).prefix(3), id: \.offset) { todoIndex, todo in
                         HStack(spacing: 4) {
-                            Image(systemName: "checkmark.sqaure.fill")
+                            Image(systemName: "checkmark.square.fill")
                                 .font(.system(size: 18  * (geometry.size.height / 892)))
                             Text(todo.title.value)
                                 .font(.system(size: 14  * (geometry.size.height / 892)))

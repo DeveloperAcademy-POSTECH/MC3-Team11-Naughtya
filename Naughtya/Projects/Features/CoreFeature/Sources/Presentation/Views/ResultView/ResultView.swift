@@ -11,68 +11,68 @@ public struct ResultView: View {
 
         let selectedNum: Int = 1
         GeometryReader { geometry in
-                        if projectResult.isGenerated {
-                            VStack {
-                                ResultNameView(projectResult: projectResult,
-                                               geometry: geometry,
-                                               selectedNum: selectedNum)
+            if projectResult.isGenerated {
+                VStack {
+                    ResultNameView(projectResult: projectResult,
+                                   geometry: geometry,
+                                   selectedNum: selectedNum)
 
-                                HStack {
-                                    Divider()
-                                        .frame(width: 2, height: 635 * geometry.size.height / 892)
-                                        .overlay(.gray)
-                                        .padding(.trailing, 50 * (geometry.size.width / 1512))
-                                    VStack {
-                                        ResultCompleteTodoView(
-                                            projectResult: projectResult,
-                                            geometry: geometry
-                                        )
-                                        ResultCardView(
-                                            projectResult: projectResult,
-                                            geometry: geometry
-                                        )
-                                        HStack(spacing: 80 * (geometry.size.width / 1512)) {
-                                            ResultDelayTodoView(
-                                                projectResult: projectResult,
-                                                geometry: geometry
-                                            )
-                                            //                                    Spacer(minLength: 80 * (geometry.size.width / 1512))
-                                            ResultIncompleteTodoView(
-                                                projectResult: projectResult,
-                                                geometry: geometry
-                                            )
-                                        }
-                                    }
-                                }
-
+                    HStack {
+                        Divider()
+                            .frame(width: 2, height: 635 * geometry.size.height / 892)
+                            .overlay(.gray)
+                            .padding(.trailing, 50 * (geometry.size.width / 1512))
+                        VStack {
+                            ResultCompleteTodoView(
+                                projectResult: projectResult,
+                                geometry: geometry
+                            )
+                            ResultCardView(
+                                projectResult: projectResult,
+                                geometry: geometry
+                            )
+                            HStack(spacing: 80 * (geometry.size.width / 1512)) {
+                                ResultDelayTodoView(
+                                    projectResult: projectResult,
+                                    geometry: geometry
+                                )
+                                //                                    Spacer(minLength: 80 * (geometry.size.width / 1512))
+                                ResultIncompleteTodoView(
+                                    projectResult: projectResult,
+                                    geometry: geometry
+                                )
                             }
-
-                            .padding(.leading, 50)
-                            .padding(.top, 35 * geometry.size.height / 892)
-                            .padding(.trailing, 70)
-                            .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
-                            .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable().aspectRatio(contentMode: .fill))
-
-                        } else {
-                            emptyView
-
-                                .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
-
                         }
                     }
 
                 }
-            }
 
-            private var emptyView: some View {
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Text("리포트 생성중 🙂")
-                            .font(.largeTitle)
-                        Spacer()
-                    }
-                    Spacer()
-                }
+                .padding(.leading, 50)
+                .padding(.top, 35 * geometry.size.height / 892)
+                .padding(.trailing, 70)
+                .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
+                .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable().aspectRatio(contentMode: .fill))
+
+            } else {
+                emptyView
+
+                    .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
+
             }
+        }
+
+    }
+}
+
+private var emptyView: some View {
+    VStack {
+        Spacer()
+        HStack {
+            Spacer()
+            Text("리포트 생성중 🙂")
+                .font(.largeTitle)
+            Spacer()
+        }
+        Spacer()
+    }
+}

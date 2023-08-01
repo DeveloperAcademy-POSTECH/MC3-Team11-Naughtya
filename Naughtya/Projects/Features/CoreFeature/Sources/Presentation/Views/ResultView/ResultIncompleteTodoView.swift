@@ -53,7 +53,7 @@ public struct ResultIncompleteTodoView: View {
         VStack(alignment: .leading, spacing: 27 * geometry.size.height / 892) {
             Text("미완료 한 일")
                 .font(
-                    Font.custom("Apple SD Gothic Neo", size: 24  * (geometry.size.height/892))
+                    .system(size: 24  * (geometry.size.height/892))
                         .weight(.bold)
                 )
                 .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
@@ -64,7 +64,7 @@ public struct ResultIncompleteTodoView: View {
 
                             Text("모두 달성했습니다! 대단해용")
                                 .font(
-                                    Font.custom("Apple SD Gothic Neo", size: 18)
+                                    .system(size: 18)
                                         .weight(.bold)
                                 )
                                 .offset(y: offsetY)
@@ -86,7 +86,7 @@ public struct ResultIncompleteTodoView: View {
 
                             Text(incompleteMessage1 + incompleteMessage2 + incompleteMessage3)
                                 .font(
-                                    Font.custom("Apple SD Gothic Neo", size: 18)
+                                    .system(size: 18)
                                         .weight(.bold)
                                 )
                                 .offset(y: offsetY)
@@ -107,7 +107,7 @@ public struct ResultIncompleteTodoView: View {
                         }
 
                             Text(incompleteResult1 + incompleteResult2 + incompleteResult3)
-                            .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                            .font(.system(size: 16))
                                 .lineLimit(1)
 
                     }

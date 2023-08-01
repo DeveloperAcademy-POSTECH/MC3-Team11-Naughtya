@@ -8,7 +8,7 @@ struct ResultBoardView: View {
 
     var body: some View {
         NavigationSplitView {
-            projectListView
+            resultSideView
                 .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
         } detail: {
         }
@@ -20,8 +20,11 @@ struct ResultBoardView: View {
         }
     }
 
-    private var projectListView: some View {
-        ProjectListView(projects: viewModel.projectsInSidebar)
+//    private var projectListView: some View {
+//        ProjectListView(projects: viewModel.projectsInSidebar)
+//    }
+    private var resultSideView: some View {
+        ResultSideView(projects: viewModel.projectsInSidebar)
     }
 
     private var projectTodoListView: some View {
@@ -61,6 +64,6 @@ struct ResultBoardView: View {
 
 struct ResultBoardView_Previews: PreviewProvider {
     static var previews: some View {
-        DashboardView()
+        ResultBoardView()
     }
 }
