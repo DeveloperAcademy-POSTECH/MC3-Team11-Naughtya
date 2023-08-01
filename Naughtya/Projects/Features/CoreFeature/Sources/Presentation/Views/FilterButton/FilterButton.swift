@@ -23,6 +23,7 @@ public struct FilterButton: View {
         }
         .opacity(filterManager.filter == .all ? 0.7 : 1)
         .menuButtonStyle(BorderlessButtonMenuButtonStyle())
+        .animation(.easeOut, value: filterManager.filter)
     }
 
     private func buildButton(filter: FilterCategory) -> some View {

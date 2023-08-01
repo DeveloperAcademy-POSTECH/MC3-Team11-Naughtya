@@ -27,18 +27,26 @@ public struct SearchView: View {
             }
             .textFieldStyle(.plain)
             .font(.system(size: 12))
+            .onExitCommand {
+                viewModel.searchedText = ""
+            }
         }
         .padding(.horizontal, 7)
         .frame(width: 222, height: 27)
         .overlay(
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(Color.customGray4, lineWidth: 1)
+            Group {
+                if viewModel.isSearching {
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color.pointColor, lineWidth: 2)
+                } else {
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color.customGray4, lineWidth: 1)
+                }
+            }
         )
+        .animation(.easeOut, value: viewModel.isSearching)
         .onChange(of: viewModel.searchedText) {
             viewModel.searchGlobally(text: $0)
-        }
-        .onExitCommand {
-            viewModel.searchedText = ""
         }
     }
 }

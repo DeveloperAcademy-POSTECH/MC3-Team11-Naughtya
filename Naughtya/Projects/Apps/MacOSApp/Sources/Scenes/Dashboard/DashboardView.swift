@@ -7,28 +7,27 @@ struct DashboardView: View {
     var body: some View {
         NavigationSplitView {
             projectListView
+        } content: {
+            if !viewModel.isResultTab {
+                projectTodoListView
+            }
         } detail: {
             if viewModel.isResultTab {
                 if let projectResult = viewModel.selectedProjectResult {
                     ResultView(projectResult: projectResult)
                 }
             } else {
-                defaultView
+                dailyTodoListView
             }
         }
         .navigationTitle("")
+        .toolbarBackground(
+            Color.customGray7,
+            for: .automatic
+        )
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 tabPicker
-            }
-        }
-    }
-
-    private var defaultView: some View {
-        NavigationStack {
-            NavigationView {
-                projectTodoListView
-                dailyTodoListView
             }
         }
     }
@@ -54,9 +53,9 @@ struct DashboardView: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         }
-        .frame(minWidth: 462, minHeight: 756)
+        .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         .toolbar {
-            ToolbarItem(placement: .secondaryAction) {
+            ToolbarItem(placement: .automatic) {
                 FilterButton()
             }
         }
@@ -83,7 +82,10 @@ struct DashboardView: View {
     }
 
     private var tabPicker: some View {
-        Picker(selection: $viewModel.selectedTabIndex, label: Text("")) {
+        Picker(
+            selection: $viewModel.selectedTabIndex,
+            label: Text("")
+        ) {
             Image(systemName: "house")
                 .tag(0)
             Image(systemName: "list.bullet")
