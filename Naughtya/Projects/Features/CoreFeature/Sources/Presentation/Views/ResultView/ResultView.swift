@@ -53,10 +53,13 @@ public struct ResultView: View {
 
             } else {
                 emptyView
-                    .background(MacOSCoreFeatureAsset.back.swiftUIImage)
+
+                .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
+                .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable())
+
             }
         }
-        .background(MacOSCoreFeatureAsset.back.swiftUIImage)
+        .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable())
 
     }
 

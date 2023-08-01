@@ -30,7 +30,7 @@ public struct ResultNameView: View {
                     )
                     .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
 
-                Text("\(projectResult.daysInProject)일간의 여정") // 종료된 프로젝트와 데이터 연결
+                Text("\(projectResult.daysInProject)일간의 능력로그") // 종료된 프로젝트와 데이터 연결
                     .lineLimit(1)
                     .font(
                         Font.custom("Apple SD Gothic Neo", size: 28 * (geometry.size.width/1512))
@@ -55,7 +55,7 @@ public struct ResultNameView: View {
 //                            .frame(width: 79, height: 79)
                             .clipped()
                     )
-                    .padding(.bottom, 15)
+                    .padding(.bottom, 10 * (geometry.size.height/892))
 
                 Text("에필로그")
                     .font(
