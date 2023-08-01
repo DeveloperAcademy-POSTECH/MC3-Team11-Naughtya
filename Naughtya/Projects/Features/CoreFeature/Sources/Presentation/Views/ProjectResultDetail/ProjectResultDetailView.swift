@@ -24,26 +24,28 @@ public struct ProjectResultDetailView: View {
         GeometryReader { geometry in
             HStack {
                 VStack {
-                    NavigationSplitView {
-                        ResultNameView(geometry: geometry, selectedNum: selectedNum)
-                        ScrollView(.vertical) {
-                            LazyVGrid(columns: gridItemLayout, alignment: .leading, spacing: 10) {
+                    NavigationStack {
+                        NavigationView {
 
-                                ForEach((0...1000), id: \.self) { _ in
-                                    ProjectDetailCard(geometry: geometry)
+                            VStack {
+                                ResultNameView(geometry: geometry, selectedNum: selectedNum)
+                                ScrollView(.vertical) {
+                                    LazyVGrid(columns: gridItemLayout, alignment: .leading, spacing: 10) {
 
+                                        ForEach((0...1000), id: \.self) { _ in
+                                            ProjectDetailCard(geometry: geometry)
+
+                                        }
+                                        .padding(EdgeInsets(top: 0, leading: 30, bottom: 30, trailing: 25))
+                                    }
                                 }
-                                .padding(EdgeInsets(top: 0, leading: 30, bottom: 30, trailing: 25))
                             }
+                            .frame(minWidth: 800)
+                            ProjectDoneList(geometry: geometry)
+                                .frame(minWidth: 250)
+
                         }
                     }
-                detail: {
-                    ProjectDoneList(geometry: geometry)
-                        .navigationSplitViewColumnWidth(
-                            min: 250, ideal: 400, max: 500)
-
-                }
-
                 }
 
             }

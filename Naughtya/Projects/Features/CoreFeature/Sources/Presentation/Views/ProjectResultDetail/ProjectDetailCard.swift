@@ -17,10 +17,10 @@ struct ProjectDetailCard: View {
 
     var body: some View {
         Rectangle()
+            .cornerRadius(14)
             .frame(minWidth: 200, minHeight: 130)
-            .cornerRadius(9)
             .foregroundColor(.clear)
-            .background(Color.customGray9)
+            .background(Color.customGray8)
             .border(Color.customGray8)
             .overlay(
                 HStack(spacing: 0) {
@@ -29,10 +29,10 @@ struct ProjectDetailCard: View {
                         .fontWeight(.medium)
                         .padding(.leading, 30)
                     Spacer()
-                    Text(">")
-
+                    Image(systemName: "chevron.right")
                             .font(.custom("dungeunmo", size: 18))
                             .fontWeight(.medium)
+                            .foregroundColor(Color.customGray3)
 
                         .padding(.trailing, 30)
                 }
