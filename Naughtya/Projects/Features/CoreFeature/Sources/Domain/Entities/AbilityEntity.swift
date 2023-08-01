@@ -9,10 +9,29 @@
 import Foundation
 import CloudKit
 
-public struct AbilityEntity: Equatable, Identifiable {
+public class AbilityEntity: Equatable, Identifiable {
     public internal(set) var recordId: CKRecord.ID?
-    public let id: UUID = .init()
     public let category: AbilityCategory
     public let title: String
-    public var todos: [TodoEntity]
+    public internal(set) var todos: [TodoEntity]
+
+    public init(
+        recordId: CKRecord.ID? = nil,
+        category: AbilityCategory,
+        title: String,
+        todos: [TodoEntity]
+    ) {
+        self.recordId = recordId
+        self.category = category
+        self.title = title
+        self.todos = todos
+    }
+
+    public var id: ObjectIdentifier {
+        ObjectIdentifier(self)
+    }
+
+    public static func == (lhs: AbilityEntity, rhs: AbilityEntity) -> Bool {
+        lhs === rhs
+    }
 }

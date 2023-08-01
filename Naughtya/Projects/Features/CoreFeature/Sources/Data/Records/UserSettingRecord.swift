@@ -24,6 +24,14 @@ struct UserSettingRecord: Recordable {
         ]
     }
 
+    var entity: UserSettingEntity {
+        UserSettingEntity(
+            recordId: id,
+            timeToReset: timeToReset,
+            projects: []
+        )
+    }
+
     static func build(ckRecord: CKRecord) -> UserSettingRecord {
         UserSettingRecord(
             id: ckRecord.recordID,

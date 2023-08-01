@@ -20,11 +20,13 @@ public class UserSettingEntity: Equatable, Identifiable {
     private var cancellable = Set<AnyCancellable>()
 
     public init(
+        recordId: CKRecord.ID? = nil,
         timeToReset: Time,
         projects: [ProjectEntity]
     ) {
         self.timeToReset = .init(timeToReset)
         self.projects = .init(projects)
+        setupUpdatingStore()
     }
 
     public var id: ObjectIdentifier {
@@ -49,18 +51,6 @@ public class UserSettingEntity: Equatable, Identifiable {
             )
             .sink {
                 Self.localStore.update()
-            }
-            .store(in: &cancellable)
-
-        publisher
-            .debounce(
-                for: .seconds(3),
-                scheduler: DispatchQueue.global(qos: .userInitiated)
-            )
-            .sink { [unowned self] in
-                Task {
-                    try? await Self.cloudKitManager.update(record)
-                }
             }
             .store(in: &cancellable)
     }

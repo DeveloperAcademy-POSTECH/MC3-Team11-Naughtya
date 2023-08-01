@@ -9,11 +9,12 @@
 import Foundation
 import CloudKit
 
-public final class CloudKitManager {
-    public static let shared: CloudKitManager = .init()
+final class CloudKitManager {
+    static let shared: CloudKitManager = .init()
     private static let localStore: LocalStore = .shared
 
-    public let isEnabled = false
+    let isEnabled = false
+    private(set) var isSynchronized = false
 
     private lazy var container: CKContainer? = {
         guard isEnabled else {
@@ -30,7 +31,7 @@ public final class CloudKitManager {
     }
 
     @discardableResult
-    public func create<T: Recordable>(_ record: T) async throws -> T {
+    func create<T: Recordable>(_ record: T) async throws -> T {
         do {
             guard isEnabled else {
                 throw DataError.cloudKitDisabled
@@ -49,7 +50,7 @@ public final class CloudKitManager {
         }
     }
 
-    public func readList<T: Recordable>(
+    func readList<T: Recordable>(
         _ recordType: T.Type,
         predicate: NSPredicate = .init(value: true)
     ) async throws -> [T] {
@@ -72,7 +73,7 @@ public final class CloudKitManager {
         }
     }
 
-    public func readItem<T: Recordable>(
+    func readItem<T: Recordable>(
         _ recordType: T.Type,
         id: CKRecord.ID
     ) async throws -> T {
@@ -89,12 +90,13 @@ public final class CloudKitManager {
         }
     }
 
-    public func update<T: Recordable>(_ record: T) async throws {
+    func update<T: Recordable>(_ record: T) async throws {
         do {
             guard isEnabled else {
                 throw DataError.cloudKitDisabled
             }
-            guard let id = record.id else {
+            guard isSynchronized,
+                  let id = record.id else {
                 return
             }
             let fetchedRecord = try await database.record(for: id)
@@ -110,7 +112,7 @@ public final class CloudKitManager {
         }
     }
 
-    public func delete(_ id: CKRecord.ID?) async throws {
+    func delete(_ id: CKRecord.ID?) async throws {
         do {
             guard isEnabled else {
                 throw DataError.cloudKitDisabled
@@ -127,63 +129,84 @@ public final class CloudKitManager {
     }
 
     // 메서드가 매시브해서 ㅈㅅ
-    public func syncWithLocalStore() async throws {
+    func syncWithLocalStore() async throws {
         guard isEnabled else {
             throw DataError.cloudKitDisabled
         }
 
-        let projectRecords = try await readList(ProjectRecord.self)
-        let dailyTodoListRecords = try await readList(DailyTodoListRecord.self)
-        let todoRecords = try await readList(TodoRecord.self)
-        let projectIdRecordMap = getIdRecordMap(records: projectRecords)
-        let dailyTodoListIdRecordMap = getIdRecordMap(records: dailyTodoListRecords)
-        let todoIdRecordMap = getIdRecordMap(records: todoRecords)
-        let projectIdEntityMap = getIdEntityMap(entities: projectRecords.map { $0.entity })
-        let dailyTodoListIdEntityMap = getIdEntityMap(entities: dailyTodoListRecords.map { $0.entity })
-        let todoIdEntityMap = getIdEntityMap(entities: todoRecords.map { $0.entity })
+        let projectsObject = CloudKitObject(records: try await readList(ProjectRecord.self))
+        let dailyTodoListsObject = CloudKitObject(records: try await readList(DailyTodoListRecord.self))
+        let todosObject = CloudKitObject(records: try await readList(TodoRecord.self))
+        let todoHistoriesObject = CloudKitObject(records: try await readList(TodoHistoryRecord.self))
+        let projectResultsObject = CloudKitObject(records: try await readList(ProjectResultRecord.self))
+        let abilitiesObject = CloudKitObject(records: try await readList(AbilityRecord.self))
 
-        projectIdEntityMap
-            .forEach { id, entity in
-                guard let record = projectIdRecordMap[id] else {
+        projectsObject.records
+            .forEach { record in
+                guard let entity = projectsObject.getEntity(id: record.id) else {
                     return
                 }
                 entity.todos.value = record.todos
-                    .compactMap { todoIdEntityMap[$0.recordID] }
+                    .compactMap { todosObject.getEntity(id: $0.recordID) }
                 entity.deletedTodos.value = record.deletedTodos
-                    .compactMap { todoIdEntityMap[$0.recordID] }
+                    .compactMap { todosObject.getEntity(id: $0.recordID) }
             }
 
-        dailyTodoListIdEntityMap
-            .forEach { id, entity in
-                guard let record = dailyTodoListIdRecordMap[id] else {
+        dailyTodoListsObject.records
+            .forEach { record in
+                guard let entity = dailyTodoListsObject.getEntity(id: record.id) else {
                     return
                 }
                 entity.todos.value = record.todos
-                    .compactMap { todoIdEntityMap[$0.recordID] }
+                    .compactMap { todosObject.getEntity(id: $0.recordID) }
             }
 
-        todoIdEntityMap
-            .forEach { id, entity in
-                guard let record = todoIdRecordMap[id] else {
+        todosObject.records
+            .forEach { record in
+                guard let entity = todosObject.getEntity(id: record.id) else {
                     return
                 }
-                if let projectId = record.project?.recordID,
-                   let project = projectIdEntityMap[projectId] {
+                if let project = projectsObject.getEntity(id: record.project?.recordID) {
                     entity.project.value = project
                 }
-                if let dailyTodoListId = record.dailyTodoList?.recordID,
-                   let dailyTodoList = dailyTodoListIdEntityMap[dailyTodoListId] {
+                if let dailyTodoList = dailyTodoListsObject.getEntity(id: record.dailyTodoList?.recordID) {
                     entity.dailyTodoList.value = dailyTodoList
                 }
+                entity.histories.value = record.histories
+                    .compactMap { todoHistoriesObject.getEntity(id: $0.recordID) }
             }
 
-        Self.localStore.projects = projectRecords
-            .compactMap { $0.id }
-            .compactMap { projectIdEntityMap[$0] }
+        projectResultsObject.records
+            .forEach { record in
+                guard let entity = projectResultsObject.getEntity(id: record.id) else {
+                    return
+                }
+                if let project = projectsObject.getEntity(id: record.project?.recordID) {
+                    entity.project = project
+                }
+                entity.abilities.value = record.abilities
+                    .compactMap { abilitiesObject.getEntity(id: $0.recordID) }
+            }
 
-        Self.localStore.dailyTodoLists = dailyTodoListRecords
-            .compactMap { $0.id }
-            .compactMap { dailyTodoListIdEntityMap[$0] }
+        abilitiesObject.records
+            .forEach { record in
+                guard let entity = abilitiesObject.getEntity(id: record.id) else {
+                    return
+                }
+                entity.todos = record.todos
+                    .compactMap { todosObject.getEntity(id: $0.recordID) }
+            }
+
+        Self.localStore.projects = projectsObject.records
+            .compactMap { projectsObject.getEntity(id: $0.id) }
+
+        Self.localStore.dailyTodoLists = dailyTodoListsObject.records
+            .compactMap { dailyTodoListsObject.getEntity(id: $0.id) }
+
+        Self.localStore.projectResults = projectResultsObject.records
+            .compactMap { projectResultsObject.getEntity(id: $0.id) }
+
+        isSynchronized = true
     }
 
     private func printLog(_ item: Any) {
