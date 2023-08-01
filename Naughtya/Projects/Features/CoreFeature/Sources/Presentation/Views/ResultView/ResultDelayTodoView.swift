@@ -84,6 +84,7 @@ public struct ResultDelayTodoView: View {
                 ) {
 
 
+
                     var delayResult2: AttributedString {
                         var result = AttributedString(abilityTitle)
                         result.foregroundColor = .white
@@ -94,6 +95,7 @@ public struct ResultDelayTodoView: View {
                         Text(delayResult1 + delayResult2 + delayResult3)
                             .font(Font.custom("Apple SD Gothic Neo", size: 16))
                             .lineLimit(1)
+
 
 
                 }

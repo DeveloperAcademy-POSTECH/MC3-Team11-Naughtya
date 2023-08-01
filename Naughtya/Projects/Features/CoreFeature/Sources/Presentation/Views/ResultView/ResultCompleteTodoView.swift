@@ -21,7 +21,8 @@ public struct ResultCompleteTodoView: View {
     }
 
     public var body: some View {
-        HStack {
+        GeometryReader { geometry in
+           HStack {
             HStack {
                 Text("\(projectResult.abilitiesCount)개의 능력을 기록했어요")
                     .font(
@@ -30,7 +31,15 @@ public struct ResultCompleteTodoView: View {
                     )
                     .foregroundColor(.white)
                     .lineLimit(1)
-                Image(systemName: "chevron.forward")
+                NavigationLink {
+                        ProjectResultDetailView()
+                    } label: {
+                        Image(systemName: "chevron.compact.right")
+                            .renderingMode(.original)
+                            .frame(width: 33, height: 19)
+                            .foregroundColor(.white)
+
+                    
 
                     .padding(.bottom, 3)
 
@@ -38,6 +47,7 @@ public struct ResultCompleteTodoView: View {
                         Font.custom("Apple SD Gothic Neo", size: 35  * (geometry.size.width/1512))
                     )
                     .foregroundColor(.white)
+                }
             }
             Spacer()
 
