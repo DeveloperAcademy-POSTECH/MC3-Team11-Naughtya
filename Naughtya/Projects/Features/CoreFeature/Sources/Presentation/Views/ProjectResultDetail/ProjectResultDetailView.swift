@@ -28,9 +28,9 @@ public struct ProjectResultDetailView: View {
                 VStack {
                     NavigationStack {
                         NavigationView {
-
                             VStack {
                                 ResultNameView(projectResult: projectResult, geometry: geometry, selectedNum: selectedNum)
+                                    .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                                 ScrollView(.vertical) {
                                     LazyVGrid(columns: gridItemLayout, alignment: .leading, spacing: 10) {
 
@@ -38,10 +38,11 @@ public struct ProjectResultDetailView: View {
                                             ProjectDetailCard(geometry: geometry)
 
                                         }
-                                        .padding(EdgeInsets(top: 0, leading: 30, bottom: 30, trailing: 25))
+                                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 25))
                                     }
                                 }
                             }
+                            .padding(.leading, 30)
                             .frame(minWidth: 800)
                             ProjectDoneList(geometry: geometry)
                                 .frame(minWidth: 250)
