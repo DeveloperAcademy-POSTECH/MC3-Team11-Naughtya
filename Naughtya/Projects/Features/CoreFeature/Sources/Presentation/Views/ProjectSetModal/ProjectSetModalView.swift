@@ -9,101 +9,67 @@
 import SwiftUI
 
 struct ProjectSetModalView: View {
-
     private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
 
-    @Environment(\.dismiss) private var dismiss
-
-    @State private var newProjectCategory: String
-    @State private var newProjectGoal: String
+    let project: ProjectModel?
+    @State private var newProjectCategory: String = ""
+    @State private var newProjectGoal: String = ""
     @State private var projectStartDay = Date()
     @State private var projectEndDay = Date()
-
-    private let project: ProjectModel?
+    @Environment(\.dismiss) private var dismiss
 
     init(project: ProjectModel? = nil) {
         self.project = project
         if let project = project {
-            self._newProjectCategory = State(initialValue: project.category)
-            self._newProjectGoal = State(initialValue: project.goals ?? "")
-            self._projectStartDay = State(initialValue: project.startedAt ?? Date())
-            self._projectEndDay = State(initialValue: project.endedAt ?? Date())
-        } else {
-            self._newProjectCategory = State(initialValue: "")
-            self._newProjectGoal = State(initialValue: "")
-            self._projectStartDay = State(initialValue: Date())
-            self._projectEndDay = State(initialValue: Date())
+            self.newProjectCategory = project.category
+            self.newProjectGoal = project.goals ?? ""
+            self.projectStartDay = project.startedAt ?? Date()
+            self.projectEndDay = project.endedAt ?? Date()
         }
     }
 
     var body: some View {
-        VStack(spacing: 20) {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("프로젝트 이름")
-                    .font(.system(size: 14))
-                    .foregroundColor(.white)
-                TextField(text: $newProjectCategory) {
-                    Text("나의 프로젝트 이름 생성하기 (10자 이내)")
-                        .foregroundColor(Color.customGray2)
-                }
-                .font(.system(size: 14))
-                .foregroundColor(Color.white)
-                .cornerRadius(6.38361)
-            }
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 0) {
-                    Text("프로젝트 목표")
-                        .font(.system(size: 14))
+        VStack(spacing: 55) {
+            VStack(spacing: 20) {
+                buildTextView(
+                    title: "프로젝트 이름",
+                    placeholder: "나의 프로젝트 이름 생성하기 (10자 이내)",
+                    text: $newProjectCategory
+                )
+                buildTextView(
+                    title: "프로젝트 목표",
+                    subtitle: "(선택)",
+                    placeholder: "나의 프로젝트 목표 생성하기 (50자 이내)",
+                    text: $newProjectGoal
+                )
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("프로젝트 기간")
+                        .font(.system(size: 14).weight(.bold))
                         .foregroundColor(.white)
-                    Text("(선택)")
-                        .font(.system(size: 14))
-                        .foregroundColor(Color.customGray6)
-                }
-                TextField(text: $newProjectGoal) {
-                    Text("나의 프로젝트 목표 생성하기 (50자 이내)")
-                        .foregroundColor(Color.customGray2)
-                }
-                .font(.system(size: 14))
-                .foregroundColor(Color.white)
-                .cornerRadius(6.38361)
-            }
-            VStack(alignment: .leading, spacing: 10) {
-                Text("프로젝트 기간")
-                    .font(.system(size: 14))
-                    .foregroundColor(.white)
-                HStack(alignment: .bottom, spacing: 17) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("시작")
-                            .font(.system(size: 12))
-                            .foregroundColor(Color.customGray1)
-                        DatePicker("", selection: $projectStartDay, in: ...projectEndDay, displayedComponents: [.date])
-                            .datePickerStyle(.field)
-                            .padding(.leading, -10)
-                    }
-                    VStack {
+                    HStack(alignment: .bottom, spacing: 17) {
+                        buildDatePicker(isStarting: true)
                         Text("~")
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                            .foregroundColor(Color.customGray6)
+                            .font(.system(size: 20).weight(.bold))
+                            .foregroundColor(.customGray6)
+                            .frame(height: 43)
+                        buildDatePicker(isStarting: false)
                     }
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("종료")
-                            .font(.system(size: 12))
-                            .foregroundColor(Color.customGray1)
-                        DatePicker("", selection: $projectEndDay, in: projectStartDay..., displayedComponents: [.date])
-                            .datePickerStyle(.field)
-                            .padding(.leading, -10)
-                    }
-                }.padding(0)
-
+                }
             }
-            Spacer().frame(height: 15)
-            HStack {
+            HStack(spacing: 12) {
                 Spacer()
-                Button("Cancel") {
+                buildButton(
+                    title: "취소",
+                    foregroundColor: .black,
+                    backgroundColor: .customGray2
+                ) {
                     dismiss()
                 }
-                Button("Save") {
+                buildButton(
+                    title: "저장",
+                    foregroundColor: .white,
+                    backgroundColor: .pointColor
+                ) {
                     if project == nil {
                         appendNewProject()
                     } else {
@@ -113,14 +79,103 @@ struct ProjectSetModalView: View {
                     }
                     dismiss()
                 }
-                .buttonStyle(.borderedProminent)
             }
         }
         .padding(.horizontal, 20)
         .padding(.top, 52)
-        .padding(.bottom, 32)
-        .frame(width: 350, height: 350)
-        .cornerRadius(15)
+        .padding(.bottom, 23)
+        .frame(width: 413, height: 407)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.customGray9)
+        )
+    }
+
+    private func buildTextView(
+        title: String,
+        subtitle: String? = nil,
+        placeholder: String,
+        text: Binding<String>
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 0) {
+                Text(title)
+                    .foregroundColor(.white)
+                    .fontWeight(.bold)
+                if let subtitle = subtitle {
+                    Text(subtitle)
+                        .foregroundColor(Color.customGray6)
+                }
+            }
+            TextField(text: text) {
+                Text(placeholder)
+                    .foregroundColor(Color.customGray2)
+            }
+            .textFieldStyle(.plain)
+            .padding(.horizontal, 20)
+            .frame(height: 36)
+            .background(
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(Color.customGray7)
+            )
+        }
+        .font(.system(size: 14))
+    }
+
+    private func buildDatePicker(isStarting: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(isStarting ? "시작" : "종료")
+                .font(.system(size: 12))
+                .foregroundColor(.customGray1)
+            Group {
+                if isStarting {
+                    DatePicker(
+                        "",
+                        selection: $projectStartDay,
+                        in: ...projectEndDay,
+                        displayedComponents: [.date]
+                    )
+                } else {
+                    DatePicker(
+                        "",
+                        selection: $projectEndDay,
+                        in: projectStartDay...,
+                        displayedComponents: [.date]
+                    )
+                }
+            }
+            .datePickerStyle(.field)
+            .labelsHidden()
+            .padding(.horizontal, 16)
+            .frame(height: 43)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.customGray6, lineWidth: 1)
+            )
+        }
+    }
+
+    private func buildButton(
+        title: String,
+        foregroundColor: Color,
+        backgroundColor: Color,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            action()
+        } label: {
+            Text(title)
+                .foregroundColor(foregroundColor)
+                .frame(
+                    width: 60,
+                    height: 24
+                )
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(backgroundColor)
+                )
+        }
+        .buttonStyle(.plain)
     }
 
     private func appendNewProject() {
