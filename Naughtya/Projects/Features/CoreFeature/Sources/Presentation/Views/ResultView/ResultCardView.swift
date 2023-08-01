@@ -182,7 +182,7 @@ public struct ResultCardView: View {
                     let colors: [Color] = [.customGray4, .customGray5, .customGray6]
                     ForEach(Array(ability.todos.enumerated()).prefix(3), id: \.offset) { todoIndex, todo in
                         HStack(spacing: 4) {
-                            Image(systemName: "checkmark.sqaure.fill")
+                            Image(systemName: "checkmark.square.fill")
                                 .font(.system(size: 18  * (geometry.size.height / 892)))
                             Text(todo.title.value)
                                 .font(.system(size: 14  * (geometry.size.height / 892)))
