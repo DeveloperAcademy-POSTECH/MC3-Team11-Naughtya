@@ -61,6 +61,7 @@ struct DashboardView: View {
         List {
             DailyTodoListView()
         }
+        .frame(minWidth: 462, minHeight: 756)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Spacer()

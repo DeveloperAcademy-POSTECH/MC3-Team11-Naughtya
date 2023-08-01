@@ -9,18 +9,18 @@
 import SwiftUI
 
 struct ProjectSetModalView: View {
-    
+
     private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
-    
+
     @Environment(\.dismiss) private var dismiss
-    
+
     @State private var newProjectCategory: String
     @State private var newProjectGoal: String
     @State private var projectStartDay = Date()
     @State private var projectEndDay = Date()
-    
+
     private let project: ProjectModel?
-    
+
     init(project: ProjectModel? = nil) {
         self.project = project
         if let project = project {
@@ -35,7 +35,7 @@ struct ProjectSetModalView: View {
             self._projectEndDay = State(initialValue: Date())
         }
     }
-    
+
     var body: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 10) {
@@ -95,7 +95,7 @@ struct ProjectSetModalView: View {
                             .padding(.leading, -10)
                     }
                 }.padding(0)
-                
+
             }
             Spacer().frame(height: 15)
             HStack {
@@ -122,7 +122,7 @@ struct ProjectSetModalView: View {
         .frame(width: 350, height: 350)
         .cornerRadius(15)
     }
-    
+
     private func appendNewProject() {
         Task {
             try await Self.projectUseCase.create(
@@ -135,7 +135,7 @@ struct ProjectSetModalView: View {
             newProjectGoal = ""
         }
     }
-    
+
     private func update(_ project: ProjectEntity) {
         Task {
             try await Self.projectUseCase.update(

@@ -20,8 +20,10 @@ public struct ProjectTodoListView: View {
 //            Color.customGray8
             VStack {
                 if projects.isEmpty {
+                    Spacer().frame(height: 150)
                     MacOSCoreFeatureAsset.projecttodolistempty.swiftUIImage
                         .resizable()
+                        .aspectRatio(contentMode: .fill)
                 } else {
                     ForEach(projects) { project in
                         ProjectItemView(project: project)
