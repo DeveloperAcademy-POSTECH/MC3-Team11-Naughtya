@@ -7,33 +7,80 @@
 //
 
 import SwiftUI
+import Combine
+
+final class CreditsViewModel: ObservableObject {
+    @Published var rootViewHeight: Int = 0
+    @Published var todoListViewHeight: Int = 0
+    @Published var offsetY: Int = 0
+    @Published var offsetReadOnly: CGPoint = .zero
+    @Published var isManualScrolling: Bool = false
+
+    deinit {
+        print("@LOG ah deinit")
+    }
+
+    func setupAutoScrolling() {
+        Timer.scheduledTimer(withTimeInterval: 0.005, repeats: true) { [weak self] _ in
+            guard let `self` = self else {
+                return
+            }
+            guard offsetY <= Int(todoListViewHeight - rootViewHeight) else {
+                return
+            }
+            offsetY += 1
+        }
+    }
+}
 
 public struct CreditsView: View {
     let projectResult: ProjectResultModel
-    @State private var offset: CGPoint = .zero
+    @StateObject private var viewModel = CreditsViewModel()
 
     public init(projectResult: ProjectResultModel) {
         self.projectResult = projectResult
     }
 
     public var body: some View {
-        GeometryReader { geometry in
-            OffsetObservingScrollView(offset: $offset) {
-                ZStack(alignment: .bottom) {
-                    bottomObjectView
-                    todoListView
+        GeometryReader { rootGeometry in
+            ScrollViewReader { _ in
+                OffsetObservingScrollView(offset: $viewModel.offsetReadOnly) {
+                    ZStack(alignment: .top) {
+                        VStack(spacing: 0) {
+                            ForEach(0 ..< viewModel.todoListViewHeight) { id in
+                                Color.clear
+                                    .frame(height: 1)
+                                    .id(id)
+                            }
+                        }
+                        todoListView
+                            .padding(.top, CGFloat(rootGeometry.size.height))
+                            .background(
+                                GeometryReader { todoListGeometry in
+                                    ZStack(alignment: .bottom) {
+                                        backgroundView
+                                            .overlay(alignment: .top) {
+                                                buildObjectsView(width: rootGeometry.size.width)
+                                                    .offset(y: (-CGFloat(viewModel.offsetY) + viewModel.offsetReadOnly.y / 2) / -2)
+                                            }
+                                            .onAppear {
+                                                viewModel.todoListViewHeight = Int(todoListGeometry.size.height)
+                                            }
+                                        bottomObjectView
+                                    }
+                                }
+                            )
+                    }
+                    .offset(y: -CGFloat(viewModel.offsetY) + viewModel.offsetReadOnly.y * 2)
                 }
+                .frame(
+                    width: rootGeometry.size.width,
+                    height: rootGeometry.size.height
+                )
             }
-            .frame(
-                width: geometry.size.width,
-                height: geometry.size.height
-            )
-            .background {
-                ZStack {
-                    backgroundView
-                    buildObjectsView(width: geometry.size.width)
-                }
-                .offset(y: -offset.y / 2)
+            .onAppear {
+                viewModel.rootViewHeight = Int(rootGeometry.size.height)
+                viewModel.setupAutoScrolling()
             }
         }
     }
@@ -42,7 +89,7 @@ public struct CreditsView: View {
         VStack(spacing: 100) {
             VStack(spacing: 26) {
                 Text(projectResult.projectName)
-                    .font(.system(size: 80).weight(.bold))
+                    .font(.system(size: 80, weight: .bold))
                 VStack(spacing: 5) {
                     Text("2023.01.01 ~ 2024.01.01")
                         .fontWeight(.medium)
@@ -59,17 +106,7 @@ public struct CreditsView: View {
                 Spacer()
             }
         }
-        .padding(.top, 100)
         .padding(.bottom, 200)
-    }
-
-    private var bottomObjectView: some View {
-        Circle()
-            .frame(
-                width: 400,
-                height: 400
-            )
-            .offset(y: 300)
     }
 
     private var backgroundView: some View {
@@ -83,20 +120,22 @@ public struct CreditsView: View {
         )
     }
 
-    private func buildObjectsView(width: CGFloat) -> some View {
-        VStack(spacing: 200) {
-            ForEach(0 ..< 10) { _ in
-                CreditsObjectView(offsetX: .random(in: -width / 2 ... width / 2))
-            }
-        }
+    private var bottomObjectView: some View {
+        Circle()
+            .frame(
+                width: 800,
+                height: 400
+            )
+            .offset(y: 200)
     }
 
-    private func setupAutoScrolling() {
-        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
-            offset = CGPoint(
-                x: 0,
-                y: offset.y + 1
-            )
+    private func buildObjectsView(width: CGFloat) -> some View {
+        let spacing: CGFloat = 200
+        let count = Int(width / spacing)
+        return VStack(spacing: spacing) {
+            ForEach(0 ..< count) { _ in
+                CreditsObjectView(offsetX: .random(in: -width / 2 ... width / 2))
+            }
         }
     }
 }
