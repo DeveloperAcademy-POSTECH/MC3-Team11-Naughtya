@@ -3,9 +3,10 @@ import MacOSCoreFeature
 
 struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
+    @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             projectListView
         } content: {
             if !viewModel.isResultTab {

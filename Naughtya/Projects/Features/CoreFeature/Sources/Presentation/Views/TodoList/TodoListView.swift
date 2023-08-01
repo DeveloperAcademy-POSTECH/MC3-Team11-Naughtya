@@ -44,7 +44,7 @@ public struct TodoListView: View {
             if section is DailyTodoListEntity,
                todos.isEmpty {
                 emptyView
-                    .padding(.top, 5)
+                    .padding(.top, 8)
                     .padding(.bottom, 500)
             } else if section is DailyTodoListEntity,
                       !todos.isEmpty {

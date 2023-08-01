@@ -34,20 +34,17 @@ public struct ProjectListView: View {
                 } else {
                     ScrollView {
                         ForEach(projects) { project in
-                            VStack {
-                                if let projectSelector = projectSelector {
-                                    ProjectCardView(
-                                        project: project,
-                                        projectSelector: projectSelector
-                                    )
-                                } else {
-                                    ProjectCardView(
-                                        project: project,
-                                        dragDropDelegate: DragDropManager.shared
-                                    )
-                                }
+                            if let projectSelector = projectSelector {
+                                ProjectCardView(
+                                    project: project,
+                                    projectSelector: projectSelector
+                                )
+                            } else {
+                                ProjectCardView(
+                                    project: project,
+                                    dragDropDelegate: DragDropManager.shared
+                                )
                             }
-                            .frame(height: 68)
                         }
                         Spacer()
                     }

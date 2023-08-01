@@ -18,14 +18,19 @@ public struct DailyTodoListView: View {
     }
 
     public var body: some View {
-        VStack(spacing: 0) {
-            dateHeader
-            if let dailyTodoList = viewModel.dailyTodoList {
-                TodoListView(
-                    section: dailyTodoList.entity,
-                    todos: dailyTodoList.todos
-                )
+        ZStack {
+            VStack(spacing: 0) {
+                dateHeader
+                if let dailyTodoList = viewModel.dailyTodoList {
+                    TodoListView(
+                        section: dailyTodoList.entity,
+                        todos: dailyTodoList.todos
+                    )
+                }
             }
+            Color.customGray9
+                .opacity(viewModel.dailyTodoList == nil ? 1 : 0)
+                .animation(.easeOut(duration: 0.1), value: viewModel.dailyTodoList)
         }
         .onAppear {
             viewModel.fetchTodayIfNeeded()
@@ -36,7 +41,7 @@ public struct DailyTodoListView: View {
     }
 
     private var dateHeader: some View {
-        VStack(alignment: .center, spacing: 17) {
+        VStack(spacing: 17) {
             HStack(alignment: .center, spacing: 2) {
                 buildDateButton(imageName: "triangle_left") {
                     viewModel.gotoOneDayBefore()
@@ -58,11 +63,11 @@ public struct DailyTodoListView: View {
             HStack(alignment: .center, spacing: 10) {
                 buildCountLabel(
                     title: "전체 할 일",
-                    count: viewModel.dailyTodoList?.allTodosCount ?? 0
+                    count: viewModel.dailyTodoList?.allTodosCount
                 )
                 buildCountLabel(
                     title: "남은 할 일",
-                    count: viewModel.dailyTodoList?.incompletedTodosCount ?? 0
+                    count: viewModel.dailyTodoList?.incompletedTodosCount
                 )
             }
         }
@@ -100,13 +105,13 @@ public struct DailyTodoListView: View {
 
     private func buildCountLabel(
         title: String,
-        count: Int
+        count: Int?
     ) -> some View {
         HStack(alignment: .center, spacing: 10) {
             Text(title)
                 .font(.appleSDGothicNeo(size: 12, weight: .medium))
                 .foregroundColor(.customGray1)
-            Text(String(viewModel.dailyTodoList?.incompletedTodosCount ?? 0))
+            Text(count.map { String($0) } ?? "-")
                 .font(.appleSDGothicNeo(size: 20, weight: .medium))
                 .foregroundColor(.pointColor)
         }

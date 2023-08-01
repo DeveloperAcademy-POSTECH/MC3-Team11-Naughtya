@@ -20,12 +20,6 @@ struct ProjectSetModalView: View {
 
     init(project: ProjectModel? = nil) {
         self.project = project
-        if let project = project {
-            self.newProjectCategory = project.category
-            self.newProjectGoal = project.goals ?? ""
-            self.projectStartDay = project.startedAt ?? Date()
-            self.projectEndDay = project.endedAt ?? Date()
-        }
     }
 
     var body: some View {
@@ -89,6 +83,9 @@ struct ProjectSetModalView: View {
             RoundedRectangle(cornerRadius: 15)
                 .fill(Color.customGray9)
         )
+        .onAppear {
+            setupProjectIfNeeded()
+        }
     }
 
     private func buildTextView(
@@ -176,6 +173,16 @@ struct ProjectSetModalView: View {
                 )
         }
         .buttonStyle(.plain)
+    }
+
+    private func setupProjectIfNeeded() {
+        guard let project = project else {
+            return
+        }
+        newProjectCategory = project.category
+        newProjectGoal = project.goals ?? ""
+        projectStartDay = project.startedAt ?? Date()
+        projectEndDay = project.endedAt ?? Date()
     }
 
     private func appendNewProject() {

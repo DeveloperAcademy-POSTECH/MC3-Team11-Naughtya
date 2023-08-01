@@ -16,7 +16,7 @@ public struct ProjectTodoListView: View {
     }
 
     public var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             if projects.isEmpty {
                 Spacer()
                     .frame(height: 250)

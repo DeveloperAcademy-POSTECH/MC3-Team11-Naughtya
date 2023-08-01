@@ -40,61 +40,54 @@ struct ProjectCardView: View {
     var body: some View {
         GeometryReader { geometry in
             let absoluteRect = geometry.frame(in: .global)
-            ZStack(alignment: .topLeading) {
                 // MARK: - 그라데이션
-                ZStack {
-                    if !hasAppeared {
-                        LinearGradient(
-                            gradient: Gradient(colors: [.pointColor, .pointColor]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                        .mask(
-                            Rectangle()
-                                .fill(
-                                    AngularGradient(
-                                        gradient: Gradient(colors: [.clear, .pointColor, .clear]),
-                                        center: .center,
-                                        angle: .degrees(gradientPosition)
-                                    )
+            ZStack {
+                if !hasAppeared {
+                    LinearGradient(
+                        gradient: Gradient(colors: [.pointColor, .pointColor]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .mask(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(
+                                AngularGradient(
+                                    gradient: Gradient(colors: [.clear, .pointColor, .clear]),
+                                    center: .center,
+                                    angle: .degrees(gradientPosition)
                                 )
-                                .cornerRadius(5)
-                        )
-                        .opacity(isAnimating ? 1 : 0) // 애니메이션 중에만 보이도록 투명도 조절
-                        .onAppear {
-                            registerAbsoluteRect(absoluteRect)
-                            withAnimation(.easeOut(duration: 2)) {
-                                gradientPosition = 360 * 2 // 360도 회전 (한 바퀴)
-                                isAnimating = false
-                            }
-                            if !hasAppeared {
-                                // 해당 카드 뷰의 애니메이션 상태를 UserDefaults에 저장합니다.
-                                UserDefaults.standard.set(true, forKey: cardViewUserDefaultsKey)
-                            }
+                            )
+                    )
+                    .opacity(isAnimating ? 1 : 0) // 애니메이션 중에만 보이도록 투명도 조절
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 2)) {
+                            gradientPosition = 360 * 2 // 360도 회전 (한 바퀴)
+                            isAnimating = false
+                        }
+                        if !hasAppeared {
+                            // 해당 카드 뷰의 애니메이션 상태를 UserDefaults에 저장합니다.
+                            UserDefaults.standard.set(true, forKey: cardViewUserDefaultsKey)
                         }
                     }
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(project.isSelected ? Color.customGray4 : Color.customGray7)
-                        .frame(width: geometry.size.width - 6, height: geometry.size.height - 6)
-                    VStack {
-                        HStack(alignment: .lastTextBaseline) {
-                            contentView
-                                .padding(0)
-                            Spacer()
-                            VStack(alignment: .trailing) {
-                                bookmarkIndicator
-                                todosCountView
-                                    .multilineTextAlignment(.trailing)
-                            }
-                        }
-                        .padding(.leading, 25)
-                        .padding(.trailing, 15)
-                        .padding(.top, 17)
-                        .padding(.bottom, 15)
-                    }
-                    .frame(height: 68)
                 }
-                .frame(width: geometry.size.width, height: geometry.size.height)
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(project.isSelected ? Color.customGray5 : Color.customGray7)
+                    .frame(width: geometry.size.width - 4, height: geometry.size.height - 4)
+                ZStack(alignment: .trailing) {
+                    HStack {
+                        contentView
+                        Spacer()
+                    }
+                    VStack(alignment: .trailing, spacing: 0) {
+                        bookmarkIndicator
+                            .offset(y: -3)
+                        todosCountView
+                    }
+                }
+                .padding(.top, 17)
+                .padding(.bottom, 15)
+                .padding(.leading, 25)
+                .padding(.trailing, 20)
             }
             .onAppear {
                 registerAbsoluteRect(absoluteRect)
@@ -112,6 +105,7 @@ struct ProjectCardView: View {
                 registerAbsoluteRect(absoluteRect)
             }
         }
+        .frame(height: 68)
         .opacity(isDummy || isBeingDragged ? 0.5 : 1)
         .gesture(dragGesture)
         .contextMenu {
@@ -138,29 +132,28 @@ struct ProjectCardView: View {
     }
 
     private var contentView: some View {
-        VStack(alignment: .leading, spacing: 1) {
+        VStack(alignment: .leading, spacing: 9) {
             Text("\(Date().dDayCalculater(projectEndDay: projectEndDay))")
-                .font(.appleSDGothicNeo(size: 12))
-                .fontWeight(.semibold)
+                .font(.appleSDGothicNeo(size: 14, weight: .semibold).monospacedDigit())
                 .foregroundColor(Color.customGray1)
+                .frame(height: 10)
             Text(project.category)
-                .font(.appleSDGothicNeo(size: 24))
-                .fontWeight(.semibold)
+                .font(.appleSDGothicNeo(size: 24, weight: .bold))
                 .foregroundColor(.white)
+                .frame(height: 17)
         }
     }
 
     private var todosCountView: some View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text("\(project.completedTodos.count)")
-                .font(.appleSDGothicNeo(size: 24))
-                .fontWeight(.semibold)
+                .font(.appleSDGothicNeo(size: 24, weight: .semibold).monospacedDigit())
                 .foregroundColor(.white)
             Text("/\(project.todos.count)")
-                .font(.appleSDGothicNeo(size: 16))
-                .fontWeight(.regular)
+                .font(.appleSDGothicNeo(size: 16).monospacedDigit())
                 .foregroundColor(.customGray2)
         }
+        .frame(height: 17)
     }
 
     private var bookmarkIndicator: some View {
