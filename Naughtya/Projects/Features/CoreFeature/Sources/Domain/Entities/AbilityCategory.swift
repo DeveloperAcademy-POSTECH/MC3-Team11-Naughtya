@@ -10,7 +10,7 @@ import Foundation
 
 public enum AbilityCategory: String {
     case performance
-    case uncompleted
+    case incompleted
 
     public var gaslighting: String {
         """
@@ -75,6 +75,9 @@ public enum AbilityCategory: String {
         - "UX학개론" 36p~89p 읽기
 
         이런 식으로 알려주면 된다.
+
+        그리고 최대한 하나의 능력에 많은 ToDo를 묶어야 한다.
+        ToDo의 개수가 20개라고 가정하면, 능력의 개수는 4개 정도가 적당해.
         """
 //        switch self {
 //        case .performance:
@@ -83,7 +86,7 @@ public enum AbilityCategory: String {
 //        case .delayed:
 //            return """
 //            """
-//        case .uncompleted:
+//        case .incompleted:
 //            return """
 //            """
 //        case .sample:

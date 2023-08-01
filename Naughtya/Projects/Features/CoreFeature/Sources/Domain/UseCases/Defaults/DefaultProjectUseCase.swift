@@ -74,7 +74,7 @@ struct DefaultProjectUseCase: ProjectUseCase {
         return project
     }
 
-    func toggleIsBookmarked(
+    func toggleBookmarked(
         _ project: ProjectEntity,
         isBookmarked: Bool
     ) async throws -> ProjectEntity {
@@ -111,6 +111,7 @@ struct DefaultProjectUseCase: ProjectUseCase {
     }
 
     private func validateUniqueCategory(_ category: String) -> Bool {
-        Self.localStore.projects.first { $0.category.value == category } == nil
+        Self.localStore.projects
+            .first { $0.category.value == category } == nil
     }
 }

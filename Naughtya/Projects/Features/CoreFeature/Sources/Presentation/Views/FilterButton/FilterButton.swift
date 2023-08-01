@@ -18,7 +18,7 @@ public struct FilterButton: View {
         MenuButton(label: Image(systemName: "slider.horizontal.3")) {
             buildButton(filter: .all)
             Divider()
-            buildButton(filter: .uncompleted)
+            buildButton(filter: .incompleted)
             buildButton(filter: .completed)
         }
         .opacity(filterManager.filter == .all ? 0.7 : 1)

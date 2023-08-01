@@ -3,27 +3,21 @@ import MacOSCoreFeature
 
 struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
-    @State private var selectedTabIndex = 0
-    private let tabs = ["folder", "list.clipboard"]
 
     var body: some View {
         NavigationSplitView {
-            projectListView
-                .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
-        } detail: {
-            switch selectedTabIndex {
-            case 0:
-                NavigationStack {
-                    NavigationView {
-                        projectTodoListView
-                        dailyTodoListView
-                            .frame(minWidth: 424)
-                    }
-                }
-            default:
-                ResultView()
+            VStack {
+                projectListView
+                    .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
             }
-
+        } detail: {
+            if viewModel.isResultTab {
+                if let projectResult = viewModel.selectedProjectResult {
+                    ResultView(projectResult: projectResult)
+                }
+            } else {
+                defaultView
+            }
         }
         .navigationTitle("")
         .toolbar {
@@ -33,13 +27,26 @@ struct DashboardView: View {
         }
     }
 
+    private var defaultView: some View {
+        NavigationStack {
+            NavigationView {
+                projectTodoListView
+                dailyTodoListView
+                    .frame(minWidth: 424)
+            }
+        }
+    }
+
     private var projectListView: some View {
-        ProjectListView(projects: viewModel.sortedProjects)
+        ProjectListView(
+            projects: viewModel.projectsInSidebar,
+            projectSelector: viewModel.isResultTab ? viewModel : nil
+        )
     }
 
     private var projectTodoListView: some View {
         List {
-            ProjectTodoListView(projects: viewModel.selectedProjects)
+            ProjectTodoListView(projects: viewModel.selectedProjectsInProgress)
         }
         .frame(minWidth: 462, minHeight: 756)
         .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
@@ -65,7 +72,7 @@ struct DashboardView: View {
     }
 
     private var tabPicker: some View {
-        Picker(selection: $selectedTabIndex, label: Text("")) {
+        Picker(selection: $viewModel.selectedTabIndex, label: Text("")) {
             Image(systemName: "house")
                 .tag(0)
             Image(systemName: "list.bullet")

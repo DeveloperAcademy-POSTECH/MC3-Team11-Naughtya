@@ -12,16 +12,16 @@ let project = Project(
             organizationName: Constants.organizationName,
             platform: .macOS,
             product: .framework,
-            deploymentTarget: Constants.DeploymentTarget.macOS
-
+            deploymentTarget: Constants.DeploymentTarget.macOS,
+            hasResources: true
         ),
         .build(
             name: "IOS" + projectName,
             organizationName: Constants.organizationName,
             platform: .iOS,
             product: .framework,
-            deploymentTarget: Constants.DeploymentTarget.iOS
-
+            deploymentTarget: Constants.DeploymentTarget.iOS,
+            hasResources: true
         )
     ]
 )

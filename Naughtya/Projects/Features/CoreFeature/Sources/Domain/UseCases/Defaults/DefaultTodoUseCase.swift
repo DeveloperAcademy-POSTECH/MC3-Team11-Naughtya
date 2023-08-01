@@ -26,7 +26,10 @@ struct DefaultTodoUseCase: TodoUseCase {
         return todo
     }
 
-    func createAfterTodo(_ todo: TodoEntity) async throws {
+    func createAfterTodo(
+        _ todo: TodoEntity,
+        title: String?
+    ) async throws {
         guard let indexInProject = todo.project.value.todos.value
             .firstIndex(of: todo) else {
             return
@@ -35,12 +38,13 @@ struct DefaultTodoUseCase: TodoUseCase {
             project: todo.project.value,
             dailyTodoList: todo.dailyTodoList.value
         )
-        newTodo.project.value.todos.value
-            .insert(newTodo, at: indexInProject + 1)
+        if let title = title {
+            newTodo.title.value = title
+        }
+        newTodo.project.value.todos.value.insert(newTodo, at: indexInProject + 1)
         if let indexInDaily = todo.dailyTodoList.value?.todos.value
             .firstIndex(of: todo) {
-            newTodo.dailyTodoList.value?.todos.value
-                .insert(newTodo, at: indexInDaily + 1)
+            newTodo.dailyTodoList.value?.todos.value.insert(newTodo, at: indexInDaily + 1)
         }
     }
 
