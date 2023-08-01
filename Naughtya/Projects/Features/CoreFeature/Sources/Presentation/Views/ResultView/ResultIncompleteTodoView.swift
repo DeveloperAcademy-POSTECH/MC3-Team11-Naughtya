@@ -58,41 +58,59 @@ public struct ResultIncompleteTodoView: View {
                 )
                 .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
             VStack(alignment: .leading, spacing: 23) {
-                let todo = projectResult.incompletedTodos[currentIndex]
-                var incompleteMessage2: AttributedString {
-                    var result = AttributedString(todo.title)
-                    result.foregroundColor = .white
-                    result.font = .system(size: 18  * (geometry.size.height/892), weight: .bold)
-                    return result
-                }
-                HStack {
 
-                        Text(incompleteMessage1 + incompleteMessage2 + incompleteMessage3)
-                            .font(
-                                Font.custom("Apple SD Gothic Neo", size: 18)
-                                    .weight(.bold)
-                            )
-                            .offset(y: offsetY)
-                            .padding(.vertical, 5)
-                            .lineLimit(1)
-                        Spacer()
-                }
+                if projectResult.incompletedTodos.isEmpty {
+                    HStack {
 
-                if let abilityTitle = projectResult.getAbilityTitleFromTodo(
-                    todo,
-                    category: .incompleted
-                ) {
-                    var incompleteResult2: AttributedString {
-                        var result = AttributedString(abilityTitle)
+                            Text("모두 달성했습니다! 대단해용")
+                                .font(
+                                    Font.custom("Apple SD Gothic Neo", size: 18)
+                                        .weight(.bold)
+                                )
+                                .offset(y: offsetY)
+                                .padding(.vertical, 5)
+                                .lineLimit(1)
+                            Spacer()
+                    }
+                } else {
+
+                    let todo = projectResult.incompletedTodos[currentIndex]
+
+                    var incompleteMessage2: AttributedString {
+                        var result = AttributedString(todo.title)
                         result.foregroundColor = .white
-                        result.font = .system(size: 16  * (geometry.size.height/892), weight: .bold)
+                        result.font = .system(size: 18  * (geometry.size.height/892), weight: .bold)
                         return result
                     }
+                    HStack {
 
-                        Text(incompleteResult1 + incompleteResult2 + incompleteResult3)
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16))
-                            .lineLimit(1)
+                            Text(incompleteMessage1 + incompleteMessage2 + incompleteMessage3)
+                                .font(
+                                    Font.custom("Apple SD Gothic Neo", size: 18)
+                                        .weight(.bold)
+                                )
+                                .offset(y: offsetY)
+                                .padding(.vertical, 5)
+                                .lineLimit(1)
+                            Spacer()
+                    }
 
+                    if let abilityTitle = projectResult.getAbilityTitleFromTodo(
+                        todo,
+                        category: .incompleted
+                    ) {
+                        var incompleteResult2: AttributedString {
+                            var result = AttributedString(abilityTitle)
+                            result.foregroundColor = .white
+                            result.font = .system(size: 16  * (geometry.size.height/892), weight: .bold)
+                            return result
+                        }
+
+                            Text(incompleteResult1 + incompleteResult2 + incompleteResult3)
+                            .font(Font.custom("Apple SD Gothic Neo", size: 16))
+                                .lineLimit(1)
+
+                    }
                 }
             }
             .padding(.leading, 50)
