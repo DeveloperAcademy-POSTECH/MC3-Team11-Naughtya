@@ -226,7 +226,6 @@ public struct ResultCardView: View {
 
                      ) // TODO: figma 업데이트 필요
 
-
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }

@@ -27,7 +27,6 @@ public struct ProjectListView: View {
 
     public var body: some View {
         ZStack {
-            Color.customGray7
             VStack(spacing: 15) {
                 headerView
                 if projects.isEmpty {
@@ -109,20 +108,17 @@ public struct ProjectListView: View {
             Button {
                 showModal = true
             } label: {
-                ZStack {
-                    Circle()
-                        .fill(Color.pointColor)
-                        .frame(width: 44, height: 44)
-                    HStack(alignment: .center) {
+                Circle()
+                    .frame(width: 44, height: 44)
+                    .overlay {
                         Image(systemName: "plus")
                             .font(.system(size: 24))
                             .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
                     }
-                    .foregroundColor(.white)
-                }
             }
             .buttonStyle(.borderless)
-            //            .padding(.horizontal, 81)
+            .tint(.pointColor)
             .padding(.bottom, 103)
             .sheet(isPresented: self.$showModal) {
                 ProjectSetModalView()

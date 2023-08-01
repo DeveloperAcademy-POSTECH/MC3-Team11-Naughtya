@@ -6,10 +6,7 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationSplitView {
-
-              projectListView
-                  .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
-
+            projectListView
         } detail: {
             if viewModel.isResultTab {
                 if let projectResult = viewModel.selectedProjectResult {
@@ -32,24 +29,32 @@ struct DashboardView: View {
             NavigationView {
                 projectTodoListView
                 dailyTodoListView
-                    .frame(minWidth: 424)
             }
         }
     }
 
     private var projectListView: some View {
-        ProjectListView(
-            projects: viewModel.projectsInSidebar,
-            projectSelector: viewModel.isResultTab ? viewModel : nil
-        )
+        ZStack {
+            Color.customGray7
+            ProjectListView(
+                projects: viewModel.projectsInSidebar,
+                projectSelector: viewModel.isResultTab ? viewModel : nil
+            )
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+        }
+        .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
     }
 
     private var projectTodoListView: some View {
-        List {
-            ProjectTodoListView(projects: viewModel.selectedProjectsInProgress)
+        ZStack {
+            Color.customGray9
+            ScrollView {
+                ProjectTodoListView(projects: viewModel.selectedProjectsInProgress)
+                    .padding(.horizontal, 20)
+            }
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         }
         .frame(minWidth: 462, minHeight: 756)
-        .navigationSplitViewColumnWidth(min: 462, ideal: 690, max: 900)
         .toolbar {
             ToolbarItem(placement: .secondaryAction) {
                 FilterButton()
@@ -58,9 +63,15 @@ struct DashboardView: View {
     }
 
     private var dailyTodoListView: some View {
-        List {
-            DailyTodoListView()
+        ZStack {
+            Color.customGray9
+            ScrollView {
+                DailyTodoListView()
+                    .padding(.horizontal, 20)
+            }
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         }
+        .frame(minWidth: 462, minHeight: 756)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Spacer()

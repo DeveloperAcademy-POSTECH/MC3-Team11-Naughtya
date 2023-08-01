@@ -143,7 +143,6 @@ public struct TodoItemView: View {
             }
         }
         .textFieldStyle(.plain)
-        .padding(.leading, -8)
         .focused($focusedField, equals: .textField)
         .opacity(isStatic ? 0 : 1)
         .onChange(of: title) {

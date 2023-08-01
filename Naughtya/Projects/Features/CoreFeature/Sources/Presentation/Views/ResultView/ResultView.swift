@@ -54,8 +54,7 @@ public struct ResultView: View {
 
             } else {
                 emptyView
-
-                .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
+                    .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
 
             }
         }
@@ -67,8 +66,9 @@ public struct ResultView: View {
             Spacer()
             HStack {
                 Spacer()
-                Text("리포트 생성중 🙂")
-                    .font(.largeTitle)
+                ProgressView("에필로그 생성중...")
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color.pointColor))
+                    .scaleEffect(1)
                 Spacer()
             }
             Spacer()

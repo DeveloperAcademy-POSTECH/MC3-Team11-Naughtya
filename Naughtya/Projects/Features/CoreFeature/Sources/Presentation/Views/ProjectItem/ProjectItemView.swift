@@ -91,6 +91,7 @@ public struct ProjectItemView: View {
             .onHover { hovered in
                 isHovered = hovered
             }
+            Spacer().frame(height: 70)
         }
     }
 
