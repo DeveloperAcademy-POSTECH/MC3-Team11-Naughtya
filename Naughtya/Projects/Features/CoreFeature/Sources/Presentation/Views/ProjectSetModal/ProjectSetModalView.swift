@@ -9,18 +9,18 @@
 import SwiftUI
 
 struct ProjectSetModalView: View {
-
+    
     private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
-
+    
     @Environment(\.dismiss) private var dismiss
-
+    
     @State private var newProjectCategory: String
     @State private var newProjectGoal: String
     @State private var projectStartDay = Date()
     @State private var projectEndDay = Date()
-
+    
     private let project: ProjectModel?
-
+    
     init(project: ProjectModel? = nil) {
         self.project = project
         if let project = project {
@@ -35,98 +35,94 @@ struct ProjectSetModalView: View {
             self._projectEndDay = State(initialValue: Date())
         }
     }
-
+    
     var body: some View {
-            VStack(spacing: 20) {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("프로젝트 이름")
+        VStack(spacing: 20) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("프로젝트 이름")
+                    .font(.system(size: 14))
+                    .foregroundColor(.white)
+                TextField(text: $newProjectCategory) {
+                    Text("나의 프로젝트 이름 생성하기 (10자 이내)")
+                        .foregroundColor(Color.customGray2)
+                }
+                .font(.system(size: 14))
+                .foregroundColor(Color.white)
+                .cornerRadius(6.38361)
+            }
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 0) {
+                    Text("프로젝트 목표")
                         .font(.system(size: 14))
                         .foregroundColor(.white)
-                    TextField(text: $newProjectCategory) {
-                        Text("나의 프로젝트 이름 생성하기 (10자 이내)")
-                            .foregroundColor(Color.customGray2)
-                    }
-                    .font(.system(size: 14))
-                    .foregroundColor(Color.white)
-                    .cornerRadius(6.38361)
+                    Text("(선택)")
+                        .font(.system(size: 14))
+                        .foregroundColor(Color.customGray6)
                 }
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(spacing: 0) {
-                        Text("프로젝트 목표")
-                            .font(.system(size: 14))
-                            .foregroundColor(.white)
-                        Text("(선택)")
-                            .font(.system(size: 14))
+                TextField(text: $newProjectGoal) {
+                    Text("나의 프로젝트 목표 생성하기 (50자 이내)")
+                        .foregroundColor(Color.customGray2)
+                }
+                .font(.system(size: 14))
+                .foregroundColor(Color.white)
+                .cornerRadius(6.38361)
+            }
+            VStack(alignment: .leading, spacing: 10) {
+                Text("프로젝트 기간")
+                    .font(.system(size: 14))
+                    .foregroundColor(.white)
+                HStack(alignment: .bottom, spacing: 17) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("시작")
+                            .font(.system(size: 12))
+                            .foregroundColor(Color.customGray1)
+                        DatePicker("", selection: $projectStartDay, in: ...projectEndDay, displayedComponents: [.date])
+                            .datePickerStyle(.field)
+                            .padding(.leading, -10)
+                    }
+                    VStack {
+                        Text("~")
+                            .font(.system(size: 20))
+                            .fontWeight(.bold)
                             .foregroundColor(Color.customGray6)
                     }
-                    TextField(text: $newProjectGoal) {
-                        Text("나의 프로젝트 목표 생성하기 (50자 이내)")
-                            .foregroundColor(Color.customGray2)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("종료")
+                            .font(.system(size: 12))
+                            .foregroundColor(Color.customGray1)
+                        DatePicker("", selection: $projectEndDay, in: projectStartDay..., displayedComponents: [.date])
+                            .datePickerStyle(.field)
+                            .padding(.leading, -10)
                     }
-                    .font(.system(size: 14))
-                    .foregroundColor(Color.white)
-                    .cornerRadius(6.38361)
-                }
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("프로젝트 기간")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white)
-                    HStack(alignment: .bottom, spacing: 17) {
-                        VStack(alignment: .leading, spacing: 6) {
-
-                                Text("시작")
-                                    .font(.system(size: 14))
-                                    .foregroundColor(Color.customGray1)
-
-                            DatePicker("", selection: $projectStartDay, in: ...projectEndDay, displayedComponents: [.date])
-                                .datePickerStyle(.field)
-                                .padding(.leading, -10)
-                        }
-                        VStack {
-                            Text("~")
-                                .font(.system(size: 20))
-                                .fontWeight(.bold)
-                                .foregroundColor(Color.customGray6)
-                        }
-                        VStack(alignment: .leading, spacing: 6) {
-
-                                Text("종료")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(Color.customGray1)
-
-                            DatePicker("", selection: $projectEndDay, in: projectStartDay..., displayedComponents: [.date])
-                                .datePickerStyle(.field)
-                                .padding(.leading, -10)
-                        }
-                    }.padding(0)
-
-                }
-                Spacer().frame(height: 15)
-                HStack {
-                    Spacer()
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    Button("Save") {
-                        if project == nil {
-                            appendNewProject()
-                        } else {
-                            if let project = project {
-                                update(project.entity)
-                            }
-                        }
-                        dismiss()
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
+                }.padding(0)
+                
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 52)
-            .padding(.bottom, 32)
-            .frame(width: 350, height: 350)
-            .cornerRadius(15)
+            Spacer().frame(height: 15)
+            HStack {
+                Spacer()
+                Button("Cancel") {
+                    dismiss()
+                }
+                Button("Save") {
+                    if project == nil {
+                        appendNewProject()
+                    } else {
+                        if let project = project {
+                            update(project.entity)
+                        }
+                    }
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 52)
+        .padding(.bottom, 32)
+        .frame(width: 350, height: 350)
+        .cornerRadius(15)
     }
-
+    
     private func appendNewProject() {
         Task {
             try await Self.projectUseCase.create(
@@ -139,7 +135,7 @@ struct ProjectSetModalView: View {
             newProjectGoal = ""
         }
     }
-
+    
     private func update(_ project: ProjectEntity) {
         Task {
             try await Self.projectUseCase.update(
