@@ -17,11 +17,10 @@ struct ProjectDetailCard: View {
 
     var body: some View {
         Rectangle()
-            .cornerRadius(14)
             .frame(minWidth: 200, minHeight: 130)
             .foregroundColor(.clear)
-            .background(Color.customGray8)
-            .border(Color.customGray8)
+            .background(Color.customGray7)
+            .cornerRadius(14.76642)
             .overlay(
                 HStack(spacing: 0) {
                     Text("포트폴리오 작성 능력 개선")
