@@ -6,11 +6,11 @@ public struct ResultView: View {
     }
 
     public var body: some View {
+
+        let selectedNum: Int = 1
         GeometryReader { geometry in
             VStack {
-
-                ResultNameView(geometry: geometry)
-
+                ResultNameView(geometry: geometry, selectedNum: selectedNum)
                 HStack {
                     Divider()
                         .frame(width: 2, height: 635 * geometry.size.height / 892)
