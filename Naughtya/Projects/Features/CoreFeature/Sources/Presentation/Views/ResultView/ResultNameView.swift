@@ -28,7 +28,7 @@ public struct ResultNameView: View {
                 Text("\(projectResult.projectName) 프로젝트")
                     .lineLimit(1)
                     .font(
-                        Font.custom("Apple SD Gothic Neo", size: 32 * (geometry.size.width/1512))
+                        .system(size: 32 * (geometry.size.width/1512))
                             .weight(.bold)
                     )
                     .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
@@ -36,7 +36,7 @@ public struct ResultNameView: View {
                 Text("\(projectResult.daysInProject)일간의 능력로그") // 종료된 프로젝트와 데이터 연결
                     .lineLimit(1)
                     .font(
-                        Font.custom("Apple SD Gothic Neo", size: 28 * (geometry.size.width/1512))
+                        .system(size: 28 * (geometry.size.width/1512))
                             .weight(.medium)
                     )
                     .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
@@ -68,7 +68,7 @@ public struct ResultNameView: View {
 
                 Text("에필로그")
                     .font(
-                        Font.custom("Apple SD Gothic Neo", size: 16.17978 * (geometry.size.height/892))
+                        .system(size: 16.17978 * (geometry.size.height/892))
                             .weight(.semibold)
                     )
                     .multilineTextAlignment(.center)

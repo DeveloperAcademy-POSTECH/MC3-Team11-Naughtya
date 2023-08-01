@@ -5,7 +5,7 @@ public struct ResultCardView: View {
     private let geometry: GeometryProxy
     @State private var currentIndex = 0
     @State private var cardCount = 5
-
+    
     public init(
         projectResult: ProjectResultModel,
         geometry: GeometryProxy
@@ -13,14 +13,14 @@ public struct ResultCardView: View {
         self.projectResult = projectResult
         self.geometry = geometry
     }
-
+    
     public var body: some View {
         VStack {
             let maxLength = projectResult.abilities.count
             if maxLength == 0 {
-
+                
             } else {
-
+                
                 switch cardCount {
                 case 5:
                     HStack(spacing: 50 * (geometry.size.width / 1512)) {
@@ -39,9 +39,9 @@ public struct ResultCardView: View {
                         } else {
                             // Your code here for the else block
                         }
-
+                        
                     }
-    //                .frame(minWidth: 1412)
+                    //                .frame(minWidth: 1412)
                 case 4:
                     HStack(spacing: 50 * (geometry.size.width / 1214)) {
                         ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 4, maxLength)]) { ability in
@@ -59,9 +59,9 @@ public struct ResultCardView: View {
                         } else {
                             // Your code here for the else block
                         }
-
+                        
                     }
-    //                .frame(minWidth: 1114)
+                    //                .frame(minWidth: 1114)
                 default:
                     HStack(spacing: 50 * (geometry.size.width / 920)) {
                         ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 3, maxLength)]) { ability in
@@ -80,9 +80,9 @@ public struct ResultCardView: View {
                             // Your code here for the else block
                         }
                     }
-    //                .frame(minWidth: 820)
+                    //                .frame(minWidth: 820)
                 }
-
+                
                 HStack(alignment: .center, spacing: 8) {
                     Button(action: {
                         withAnimation {
@@ -94,8 +94,8 @@ public struct ResultCardView: View {
                     }) {
                         Text("􀯷")
                             .font(
-                                Font.custom("SF Pro", size: 16)
-                                    .weight(.light)
+                                .system(size: 16)
+                                .weight(.light)
                             )
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
@@ -103,8 +103,8 @@ public struct ResultCardView: View {
                     .buttonStyle(.borderless)
                     Text("\((currentIndex + cardCount) / cardCount)/\(Int(ceil((Double(maxLength) / Double(cardCount)))))")
                         .font(
-                            Font.custom("Apple SD Gothic Neo", size: 23  * (geometry.size.width/1512))
-                                .weight(.semibold)
+                            .system(size: 23  * (geometry.size.width/1512))
+                            .weight(.semibold)
                         )
                         .kerning(0.46)
                         .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
@@ -114,19 +114,19 @@ public struct ResultCardView: View {
                             if self.currentIndex >= maxLength {
                                 self.currentIndex = 0
                             }
-
+                            
                         }
                     }) {
                         Text("􀁴")
                             .font(
-                                Font.custom("SF Pro", size: 16)
-                                    .weight(.light)
+                                .system(size: 16)
+                                .weight(.light)
                             )
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                     }
                     .buttonStyle(.borderless)
-
+                    
                 }
                 .padding(.vertical, 27 * geometry.size.height / 892)
                 //                .padding(.vertical, 55 * (geometry.size.width / 1512))
@@ -138,9 +138,9 @@ public struct ResultCardView: View {
         .onChange(of: geometry.size.width) { _ in
             self.updateCardCount(geometry)
         }
-
+        
     }
-
+    
     private func updateCardCount(_ geometry: GeometryProxy) {
         if geometry.size.width > 1214 {
             self.cardCount = 5
@@ -149,9 +149,9 @@ public struct ResultCardView: View {
         } else {
             self.cardCount = 3
         }
-
+        
     }
-
+    
     private func buildAbilityCardView(_ ability: AbilityEntity) -> some View {
         VStack(spacing: 8) {
             HStack {
@@ -221,12 +221,11 @@ public struct ResultCardView: View {
         )
         .background(
             RoundedRectangle(cornerRadius: 8)
-
+            
                 .fill(Color.customGray8.opacity(0.5)
-
+                      
                      ) // TODO: figma 업데이트 필요
-
-
+            
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
