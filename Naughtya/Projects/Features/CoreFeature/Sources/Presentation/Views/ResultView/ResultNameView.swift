@@ -105,8 +105,10 @@ public struct ResultNameView: View {
                         .padding(.vertical, 10)
 
                 }
+                Spacer()
             }
             .background(Color(red: 0.13, green: 0.13, blue: 0.13))
+
 //            default:
 //                Text("Default Page")
 

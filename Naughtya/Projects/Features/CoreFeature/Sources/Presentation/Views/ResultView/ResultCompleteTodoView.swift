@@ -21,6 +21,7 @@ public struct ResultCompleteTodoView: View {
     }
 
     public var body: some View {
+
         HStack {
 
             HStack {
@@ -31,13 +32,13 @@ public struct ResultCompleteTodoView: View {
                     )
                     .foregroundColor(.white)
                     .lineLimit(1)
-                NavigationLink {
-                    ProjectResultDetailView(projectResult: projectResult)
-                    } label: {
+                NavigationLink(destination: ProjectResultDetailView(projectResult: projectResult), label: {
                         Image(systemName: "chevron.compact.right")
                             .renderingMode(.original)
-                            .frame(width: 33, height: 19)
                             .foregroundColor(.white)
+
+                    })
+                .buttonStyle(.borderless)
 
                     .padding(.bottom, 3)
 
@@ -46,7 +47,7 @@ public struct ResultCompleteTodoView: View {
                     )
                     .foregroundColor(.white)
                 }
-            }
+
             Spacer()
 
             HStack(alignment: .firstTextBaseline, spacing: 20  * (geometry.size.width/1512)) {
