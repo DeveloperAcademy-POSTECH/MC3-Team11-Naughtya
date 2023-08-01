@@ -13,7 +13,7 @@ final class CloudKitManager {
     static let shared: CloudKitManager = .init()
     private static let localStore: LocalStore = .shared
 
-    let isEnabled = true
+    let isEnabled = false
     private(set) var isSynchronized = false
 
     private lazy var container: CKContainer? = {
