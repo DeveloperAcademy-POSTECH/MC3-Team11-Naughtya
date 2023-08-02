@@ -61,11 +61,6 @@ struct DashboardView: View {
             }
         }
         .frame(minWidth: 462, minHeight: 756)
-        .toolbar {
-            ToolbarItem(placement: .secondaryAction) {
-                FilterButton()
-            }
-        }
     }
 
     private var dailyTodoListView: some View {
