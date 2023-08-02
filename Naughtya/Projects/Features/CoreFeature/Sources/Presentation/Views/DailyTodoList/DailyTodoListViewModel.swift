@@ -53,6 +53,7 @@ public final class DailyTodoListViewModel: ObservableObject {
 
     public func gotoDate(_ date: Date) {
         let dateString = date.getDateString()
+        dailyTodoList = nil
         fetchDailyTodoList(dateString: dateString)
     }
 
@@ -74,13 +75,18 @@ public final class DailyTodoListViewModel: ObservableObject {
     }
 
     private func fetchDailyTodoList(dateString: String) {
-        Task {
-            if let existing = try await Self.dailyTodoListUseCase.readByDate(dateString: dateString) {
-                dailyTodoList = .from(entity: existing)
-            } else if let new = try await Self.dailyTodoListUseCase.create(dateString: dateString) {
-                dailyTodoList = .from(entity: new)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let `self` = self else {
+                return
             }
-            Self.localStore.currentDailyTodoList = dailyTodoList?.entity
+            Task {
+                if let existing = try await Self.dailyTodoListUseCase.readByDate(dateString: dateString) {
+                    self.dailyTodoList = .from(entity: existing)
+                } else if let new = try await Self.dailyTodoListUseCase.create(dateString: dateString) {
+                    self.dailyTodoList = .from(entity: new)
+                }
+                Self.localStore.currentDailyTodoList = self.dailyTodoList?.entity
+            }
         }
     }
 }

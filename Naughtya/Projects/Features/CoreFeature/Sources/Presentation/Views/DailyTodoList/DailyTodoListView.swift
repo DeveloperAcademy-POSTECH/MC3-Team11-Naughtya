@@ -18,20 +18,20 @@ public struct DailyTodoListView: View {
     }
 
     public var body: some View {
-        VStack(alignment: .center, spacing: 6) {
-            VStack(alignment: .center) {
+        ZStack {
+            VStack(spacing: 0) {
                 dateHeader
+                if let dailyTodoList = viewModel.dailyTodoList {
+                    TodoListView(
+                        section: dailyTodoList.entity,
+                        todos: dailyTodoList.todos
+                    )
+                }
             }
-            .padding(.horizontal, 40)
-            .padding(.top, 50)
-            .padding(.bottom, 41)
-            .frame(alignment: .top)
-            if let dailyTodoList = viewModel.dailyTodoList {
-                TodoListView(
-                    section: dailyTodoList.entity,
-                    todos: dailyTodoList.todos
-                )
-            }
+            .padding(.horizontal, 20)
+            Color.customGray9
+                .opacity(viewModel.dailyTodoList == nil ? 1 : 0)
+                .animation(.easeOut(duration: 0.1), value: viewModel.dailyTodoList)
         }
         .onAppear {
             viewModel.fetchTodayIfNeeded()
@@ -42,89 +42,40 @@ public struct DailyTodoListView: View {
     }
 
     private var dateHeader: some View {
-        VStack(alignment: .center, spacing: 17) {
-            HStack {
-                Button {
+        VStack(spacing: 17) {
+            HStack(alignment: .center, spacing: 2) {
+                buildDateButton(imageName: "chevron.left") {
                     viewModel.gotoOneDayBefore()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(Color.customGray2)
                 }
-                .frame(width: 20, height: 23)
-                .buttonStyle(.borderless)
-                if !viewModel.isTodayFetched {
-                    Button("Today") {
-                        viewModel.fetchTodayIfNeeded()
+                Text(viewModel.dateTitle)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(Color.customGray1)
+                    .font(.appleSDGothicNeo(size: 32, weight: .semibold).monospacedDigit())
+                    .frame(minWidth: 170)
+                    .frame(height: 23)
+                    .onTapGesture {
+                        isPopoverVisible = true
                     }
-                    .buttonStyle(.borderless)
-                } else {
-                    Text(viewModel.dateTitle)
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 32)
-                                .weight(.semibold)
-                        )
-                        .foregroundColor(Color.customGray1)
-                        .onTapGesture {
-                            isPopoverVisible = true
-                        }
-                        .popover(isPresented: $isPopoverVisible) {
-                            calendarPopup
-                        }
-                }
-                Button {
+                    .popover(isPresented: $isPopoverVisible) {
+                        calendarPopup
+                    }
+                buildDateButton(imageName: "chevron.right") {
                     viewModel.gotoOneDayAfter()
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(Color.customGray2)
                 }
-                .frame(width: 20, height: 23)
-                .buttonStyle(.borderless)
             }
-            HStack(alignment: .top, spacing: 9) {
-                HStack(alignment: .center, spacing: 10) {
-                    Text("전체 할 일")
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 12)
-                                .weight(.medium)
-                        )
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(Color.customGray1)
-                        .frame(width: 48, height: 8, alignment: .center)
-                    Text(String(viewModel.dailyTodoList?.allTodosCount ?? 0))
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 20)
-                                .weight(.medium)
-                        )
-                        .foregroundColor(Color.pointColor)
-                }
-                .frame(width: 91.5, height: 26, alignment: .center)
-                .background(Color.customGray8)
-                .cornerRadius(5)
-                HStack(alignment: .center, spacing: 10) {
-                    Text("남은 할 일")
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 12)
-                                .weight(.medium)
-                        )
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(Color.customGray1)
-                        .frame(width: 48, height: 8, alignment: .center)
-                    Text(String(viewModel.dailyTodoList?.incompletedTodosCount ?? 0))
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 20)
-                                .weight(.medium)
-                        )
-                        .foregroundColor(Color.pointColor)
-                }
-                .frame(width: 91.5, height: 26, alignment: .center)
-                .background(Color.customGray8)
-                .cornerRadius(5)
+            HStack(alignment: .center, spacing: 10) {
+                buildCountLabel(
+                    title: "전체 할 일",
+                    count: viewModel.dailyTodoList?.allTodosCount
+                )
+                buildCountLabel(
+                    title: "남은 할 일",
+                    count: viewModel.dailyTodoList?.incompletedTodosCount
+                )
             }
-            .padding(0)
-            .frame(maxWidth: .infinity, alignment: .top)
         }
-        .frame(height: 62)
-        .padding(0)
+        .padding(.top, 40)
+        .padding(.bottom, 32)
     }
 
     private var calendarPopup: some View {
@@ -137,6 +88,43 @@ public struct DailyTodoListView: View {
             .datePickerStyle(.graphical)
         }
         .frame(width: 150, height: 170)
+    }
+
+    private func buildDateButton(
+        imageName: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            action()
+        } label: {
+            Image(systemName: imageName)
+        }
+        .buttonStyle(.borderless)
+        .frame(
+            width: 22,
+            height: 22
+        )
+        .offset(y: -2)
+    }
+
+    private func buildCountLabel(
+        title: String,
+        count: Int?
+    ) -> some View {
+        HStack(alignment: .center, spacing: 10) {
+            Text(title)
+                .font(.appleSDGothicNeo(size: 12, weight: .medium))
+                .foregroundColor(.customGray1)
+            Text(count.map { String($0) } ?? "-")
+                .font(.appleSDGothicNeo(size: 20, weight: .medium))
+                .foregroundColor(.pointColor)
+        }
+        .padding(.horizontal, 10)
+        .frame(height: 26)
+        .background(
+            RoundedRectangle(cornerRadius: 5)
+                .fill(Color.customGray7)
+        )
     }
 }
 

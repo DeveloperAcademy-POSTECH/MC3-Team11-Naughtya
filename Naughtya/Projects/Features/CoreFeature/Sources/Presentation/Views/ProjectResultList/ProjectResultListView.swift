@@ -11,52 +11,45 @@ import SwiftUI
 public struct ProjectResultListView: View {
     private static let projectResultUseCase: ProjectResultUseCase = DefaultProjectResultUseCase()
 
-    @State private var projectResults: [ProjectResultModel] = []
+    public let projectResults: [ProjectResultModel]
+    public let selectedProjectResult: ProjectResultModel?
+    public let projectResultSelector: ProjectResultSelectable
 
-    public init() {
+    public init(
+        projectResults: [ProjectResultModel] = [],
+        selectedProjectResult: ProjectResultModel? = nil,
+        projectResultSelector: ProjectResultSelectable
+    ) {
+        self.projectResults = projectResults
+        self.selectedProjectResult = selectedProjectResult
+        self.projectResultSelector = projectResultSelector
     }
 
     public var body: some View {
-        ScrollView {
-            HStack {
-                ForEach(projectResults) { projectResult in
-                    VStack(alignment: .leading) {
-                        Text("\(projectResult.projectName) 프로젝트")
-                        Text("\(projectResult.daysInProject)일간의 여정")
-                        if projectResult.isGenerated {
-                            Text("\(projectResult.abilitiesCount)개의 능력을 획득 했어요")
-                            ForEach(projectResult.abilities) { ability in
-                                Text("- \(ability.title) 총 \(ability.todos.count)개")
+        ZStack {
+            VStack(spacing: 15) {
+                ProjectListHeaderView()
+                if projectResults.isEmpty {
+                    ProjectListEmptyView()
+                } else {
+                    ScrollView {
+                        VStack(spacing: 10) {
+                            ForEach(projectResults) { projectResult in
+                                ProjectResultCardView(
+                                    projectResult: projectResult,
+                                    isSelected: projectResult.entity === selectedProjectResult?.entity
+                                )
+                                .onTapGesture {
+                                    projectResultSelector.selectProjectResult(projectResult)
+                                }
                             }
-                            Text("평균 To-do 달성률 \(projectResult.completedPercent)%")
-                            Text("달성 To-do 갯수 \(projectResult.completedCount)/\(projectResult.allTodosCount)")
-                            Text("Top3 미룬 To-do")
-                            ForEach(projectResult.top3DelayedTodos) { todo in
-                                Text("- \(todo.title) 총 \(todo.delayedCount)회")
-                            }
-                            Text("미완료 To-do \(projectResult.incompletedTodos.count)")
-                        } else {
-                            Text("리포트 생성중 🙂")
+                            Spacer()
                         }
                     }
                 }
+                Spacer()
             }
+            .padding(.horizontal, 10)
         }
-        .onAppear {
-            fetchProjectResults()
-        }
-    }
-
-    private func fetchProjectResults() {
-        Task {
-            projectResults = try await Self.projectResultUseCase.readList()
-                .map { .from(entity: $0) }
-        }
-    }
-}
-
-struct ProjectResultListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProjectResultListView()
     }
 }

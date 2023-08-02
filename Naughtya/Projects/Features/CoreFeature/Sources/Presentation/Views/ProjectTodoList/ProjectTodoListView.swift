@@ -16,23 +16,23 @@ public struct ProjectTodoListView: View {
     }
 
     public var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             if projects.isEmpty {
-                Spacer(minLength: 300)
-                HStack {
-                    Spacer()
-                    Text("프로젝트를 선택해주세요!")
-                        .font(Font.custom("SF Pro", size: 24).weight(.semibold))
-                        .foregroundColor(.pointColor)
-                    Spacer()
-                }
+                Spacer()
+                    .frame(height: 250)
+                MacOSCoreFeatureAsset.projecttodolistempty.swiftUIImage
+                    .resizable()
+                    .frame(maxWidth: 539)
+                    .aspectRatio(contentMode: .fill)
+                    .opacity(0.3)
             } else {
                 ForEach(projects) { project in
                     ProjectItemView(project: project)
                 }
             }
+            Spacer()
         }
-        .padding(0)
+        .padding(.horizontal, 20)
     }
 }
 

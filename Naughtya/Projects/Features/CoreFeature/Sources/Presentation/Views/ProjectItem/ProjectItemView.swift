@@ -22,75 +22,69 @@ public struct ProjectItemView: View {
     }
 
     public var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 9) {
-                Text(project.category)
-                    .lineLimit(1)
-                    .font(
-                        Font.custom("Apple SD Gothic Neo", size: 32)
-                            .weight(.semibold)
-                    )
-                    .foregroundColor(Color.customGray1)
-                HStack(spacing: 0) {
-                    Text(project.startedAt?.getDateString("yyyy.MM.dd") ?? "")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16))
-                        .foregroundColor(Color.customGray3)
-                    Text(" -")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16))
-                        .foregroundColor(Color.customGray3)
-                    Text(project.endedAt?.getDateString("yyyy.MM.dd") ?? "")
-                        .font(Font.custom("Apple SD Gothic Neo", size: 16))
-                        .foregroundColor(Color.customGray3)
-                }
-                HStack(spacing: 10) {
-                    Text("#")
-                    if let goals = project.goals,
-                       !goals.isEmpty {
-                        Text(goals)
-                    } else {
-                        Text("(선택) 목표를 입력해 보세요.")
+        VStack(spacing: 0) {
+            HStack {
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(project.category)
+                        .lineLimit(1)
+                        .font(.appleSDGothicNeo(size: 32, weight: .semibold))
+                        .foregroundColor(.customGray1)
+                        .frame(height: 23)
+                    if let startedAt = project.startedAt?.getDateString("yyyy.MM.dd"),
+                       let endedAt = project.endedAt?.getDateString("yyyy.MM.dd") {
+                        Text("\(startedAt) -\(endedAt)")
+                            .font(.appleSDGothicNeo(size: 16))
+                            .foregroundColor(Color.customGray3)
+                            .frame(height: 11)
                     }
+                    Group {
+                        if let goals = project.goals,
+                           !goals.isEmpty {
+                            Text("# \(goals)")
+                        } else {
+                            Text("# \(project.category) 할 일 완료해서 에필로그 기록하기")
+                        }
+                    }
+                    .foregroundColor(.customGray2)
+                    .font(.appleSDGothicNeo(size: 14))
+                    .padding(.horizontal, 16)
+                    .frame(height: 26)
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.customGray8)
+                    )
                 }
-                .font(Font.custom("Apple SD Gothic Neo", size: 14))
-                .foregroundColor(Color.customGray2)
-                .frame(height: 26)
-                .padding(.horizontal, 10)
-                .background(Color.customGray8)
-                .cornerRadius(5)
+                Spacer()
             }
-            .padding(.horizontal, 26)
+            .padding(.horizontal, 20)
             .padding(.top, 40)
-            .padding(.bottom, 10)
-            .frame(alignment: .topLeading)
-            Spacer()
-        }
-        VStack {
-            TodoListView(
-                section: project.entity,
-                todos: todos,
-                isBlockedToEdit: filterManager.isSearching
-            )
-            HStack(alignment: .center, spacing: 4) {
-                Text("􀅼")
-                    .font(Font.custom("SF Pro", size: 20).weight(.light))
-                Text("여기를 클릭해서 할 일을 추가해보세요.")
-                    .font(Font.custom("Apple SD Gothic Neo", size: 14))
-                    .frame(height: 16, alignment: .leading)
-            }
-            .foregroundColor(isHovered ? Color.pointColor : Color.customGray2)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Color.white.opacity(0.0001))
-                    .frame(minWidth: 1000, alignment: .leading)
-            )
-//            .padding(.top, 100)
-            .padding(.leading, 28)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .onTapGesture {
-                appendNewTodo(project: project.entity)
-            }
-            .onHover { hovered in
-                isHovered = hovered
+            .padding(.bottom, 20)
+            VStack {
+                TodoListView(
+                    section: project.entity,
+                    todos: todos,
+                    isBlockedToEdit: filterManager.isSearching
+                )
+                HStack(spacing: 4) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 20, weight: .light))
+                    Text("프로젝트 할 일을 추가해보세요.")
+                        .font(.system(size: 14))
+                    Spacer()
+                }
+                .foregroundColor(isHovered ? Color.pointColor : Color.customGray2)
+                .padding(.leading, 18)
+                .frame(height: 40)
+                .background(.white.opacity(0.001))
+                .animation(.easeOut(duration: 0.1), value: isHovered)
+                .onTapGesture {
+                    appendNewTodo(project: project.entity)
+                }
+                .onHover { hovered in
+                    isHovered = hovered
+                }
+                Spacer()
+                    .frame(height: 70)
             }
         }
     }
