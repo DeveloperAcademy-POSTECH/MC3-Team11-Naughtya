@@ -11,33 +11,46 @@ import SwiftUI
 public struct ResultCompleteTodoView: View {
     public let projectResult: ProjectResultModel
     private let geometry: GeometryProxy
-
+    private var pageNum: Binding<Int>
     public init(
         projectResult: ProjectResultModel,
-        geometry: GeometryProxy
+        geometry: GeometryProxy,
+        pageNum: Binding<Int>
     ) {
         self.projectResult = projectResult
         self.geometry = geometry
+        self.pageNum = pageNum
     }
 
     public var body: some View {
+
         HStack {
             HStack {
                 Text("\(projectResult.abilitiesCount)개의 능력을 기록했어요")
                     .font(
                         .appleSDGothicNeo(size: 42  * (geometry.size.width/1512))
-                            .weight(.bold)
+                        .weight(.bold)
                     )
                     .foregroundColor(.white)
                     .lineLimit(1)
-                Image(systemName: "chevron.forward")
 
-                    .padding(.bottom, 3)
+                Button(action: {
+                    self.pageNum.wrappedValue = 2
+                }, label: {
+                    Image(systemName: "chevron.compact.right")
 
-                    .font(
-                        .appleSDGothicNeo(size: 35  * (geometry.size.width/1512))
-                    )
-                    .foregroundColor(.white)
+                        .foregroundColor(.white)
+                })
+
+                .buttonStyle(.borderless)
+
+                .padding(.bottom, 3)
+
+                .font(
+                    .appleSDGothicNeo(size: 35  * (geometry.size.width/1512))
+                )
+                .foregroundColor(.white)
+
             }
             Spacer()
 
@@ -50,50 +63,71 @@ public struct ResultCompleteTodoView: View {
                 Text("평균 할 일 달성률")
                     .font(
                         .appleSDGothicNeo(size: 16   * (geometry.size.width/1512))
-                            .weight(.semibold)
+                        .weight(.semibold)
                     )
                     .foregroundColor(.white)
                 Text("\(projectResult.completedPercent)%")
                     .font(
                         .appleSDGothicNeo(size: 20   * (geometry.size.width/1512))
-                            .weight(.semibold)
+                        .weight(.semibold)
                     )
 
                     .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
-//                    .frame(width: 46, height: 14, alignment: .center)
+                //                    .frame(width: 46, height: 14, alignment: .center)
                     .padding(.trailing, 25  * (geometry.size.width/1512))
 
                 Text("할 일 달성 갯수")
                     .font(
                         .appleSDGothicNeo(size: 16   * (geometry.size.width/1512))
-                            .weight(.semibold)
+                        .weight(.semibold)
                     )
                     .foregroundColor(.white)
 
                 HStack(alignment: .firstTextBaseline, spacing: 0) {
                     Text("\(projectResult.completedCount)/")
+
                         .font(
                             .appleSDGothicNeo(size: 20   * (geometry.size.width/1512))
-                                .weight(.semibold)
+                            .weight(.semibold)
                         )
-                        .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
 
-                    Text("\(projectResult.allTodosCount)")
+                        .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
+                    //                    .frame(width: 46, height: 14, alignment: .center)
+                        .padding(.trailing, 25  * (geometry.size.width/1512))
+
+                    Text("할 일 달성 갯수")
                         .font(
+
                             .appleSDGothicNeo(size: 12   * (geometry.size.width/1512))
-                                .weight(.semibold)
+
+                            .weight(.semibold)
                         )
-                        .foregroundColor(.customGray1)
+                        .foregroundColor(.white)
+
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        Text("\(projectResult.completedCount)/")
+                            .font(
+                                Font.custom("Apple SD Gothic Neo", size: 20   * (geometry.size.width/1512))
+                                    .weight(.semibold)
+                            )
+                            .foregroundColor(Color(red: 0, green: 0.48, blue: 1))
+
+                        Text("\(projectResult.allTodosCount)")
+                            .font(
+                                Font.custom("Apple SD Gothic Neo", size: 12   * (geometry.size.width/1512))
+                                    .weight(.semibold)
+                            )
+                            .foregroundColor(.customGray1)
+
+                    }
 
                 }
-
+                .padding(.vertical, 12 * geometry.size.height / 892)
+                .padding(.horizontal, 40)
+                .background(Color.customGray8.opacity(0.5))
+                .cornerRadius(8)
             }
-            .padding(.vertical, 12 * geometry.size.height / 892)
-            .padding(.horizontal, 40)
-            .background(Color.customGray8.opacity(0.5))
-//            .background(.ultraThinMaterial)
 
-            .cornerRadius(8)
         }
     }
 }

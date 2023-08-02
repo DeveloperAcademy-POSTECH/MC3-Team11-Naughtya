@@ -5,13 +5,16 @@ public struct ResultCardView: View {
     private let geometry: GeometryProxy
     @State private var currentIndex = 0
     @State private var cardCount = 5
+    private var pageNum: Binding<Int>
 
     public init(
         projectResult: ProjectResultModel,
-        geometry: GeometryProxy
+        geometry: GeometryProxy,
+        pageNum: Binding<Int>
     ) {
         self.projectResult = projectResult
         self.geometry = geometry
+        self.pageNum = pageNum
     }
 
     public var body: some View {
@@ -41,7 +44,7 @@ public struct ResultCardView: View {
                         }
 
                     }
-    //                .frame(minWidth: 1412)
+                    //                .frame(minWidth: 1412)
                 case 4:
                     HStack(spacing: 50 * (geometry.size.width / 1214)) {
                         ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 4, maxLength)]) { ability in
@@ -61,7 +64,7 @@ public struct ResultCardView: View {
                         }
 
                     }
-    //                .frame(minWidth: 1114)
+                    //                .frame(minWidth: 1114)
                 default:
                     HStack(spacing: 50 * (geometry.size.width / 920)) {
                         ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 3, maxLength)]) { ability in
@@ -80,7 +83,7 @@ public struct ResultCardView: View {
                             // Your code here for the else block
                         }
                     }
-    //                .frame(minWidth: 820)
+                    //                .frame(minWidth: 820)
                 }
 
                 HStack(alignment: .center, spacing: 8) {
@@ -93,14 +96,17 @@ public struct ResultCardView: View {
                         }
                     }) {
                         Text("􀯷")
-                            .font(.appleSDGothicNeo(size: 16, weight: .light))
+                            .font(
+                                Font.custom("SF Pro", size: 16)
+                                    .weight(.light)
+                            )
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                     }
                     .buttonStyle(.borderless)
                     Text("\((currentIndex + cardCount) / cardCount)/\(Int(ceil((Double(maxLength) / Double(cardCount)))))")
                         .font(
-                            .appleSDGothicNeo(size: 23 * (geometry.size.width/1512))
+                            Font.custom("Apple SD Gothic Neo", size: 23  * (geometry.size.width/1512))
                                 .weight(.semibold)
                         )
                         .kerning(0.46)
@@ -115,7 +121,10 @@ public struct ResultCardView: View {
                         }
                     }) {
                         Text("􀁴")
-                            .font(.appleSDGothicNeo(size: 16, weight: .light))
+                            .font(
+                                Font.custom("SF Pro", size: 16)
+                                    .weight(.light)
+                            )
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
                     }
@@ -148,79 +157,65 @@ public struct ResultCardView: View {
 
     private func buildAbilityCardView(_ ability: AbilityEntity) -> some View {
         VStack(spacing: 8) {
-            HStack {
-                Spacer()
-                Text("총 \(ability.todos.count)개")
-                    .foregroundColor(.pointColor)
-                    .font(.appleSDGothicNeo(size: 10  * (geometry.size.height / 892)))
-                    .padding(.horizontal, 7  * (geometry.size.height / 892))
-                    .frame(height: 16 * (geometry.size.height / 892))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 2)
-                            .stroke(Color.pointColor, lineWidth: 1)
-                    )
-            }
-            ZStack(alignment: .topLeading) {
-                VStack(alignment: .leading, spacing: 0) {
-                    HStack {
-                        Text(ability.title)
-                            .multilineTextAlignment(.leading)
-                            .font(.appleSDGothicNeo(size: 18  * (geometry.size.height / 892)))
-                            .lineLimit(2)
-                            .lineSpacing(14)
+
+                ZStack(alignment: .topLeading) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Text(ability.title)
+                                .multilineTextAlignment(.leading)
+                                .font(.system(size: 18  * (geometry.size.height / 892)))
+                                .lineLimit(2)
+                                .lineSpacing(14)
+                            Spacer()
+                        }
                         Spacer()
                     }
-                    Spacer()
-                }
-                VStack(alignment: .leading, spacing: 5) {
-                    let colors: [Color] = [.customGray4, .customGray5, .customGray6]
-                    ForEach(Array(ability.todos.enumerated()).prefix(3), id: \.offset) { todoIndex, todo in
-                        HStack(spacing: 4) {
-                            Image(systemName: "checkmark.sqaure.fill")
-                                .font(.appleSDGothicNeo(size: 18  * (geometry.size.height / 892)))
-                            Text(todo.title.value)
-                                .font(.appleSDGothicNeo(size: 14  * (geometry.size.height / 892)))
-                                .lineLimit(1)
+                    VStack(alignment: .leading, spacing: 5) {
+                        let colors: [Color] = [.customGray4, .customGray5, .customGray6]
+                        ForEach(Array(ability.todos.enumerated()).prefix(3), id: \.offset) { todoIndex, todo in
+                            HStack(spacing: 4) {
+                                Image(systemName: "checkmark.square.fill")
+                                    .font(.system(size: 18  * (geometry.size.height / 892)))
+                                Text(todo.title.value)
+                                    .font(.system(size: 14  * (geometry.size.height / 892)))
+                                    .lineLimit(1)
+                            }
+                            .foregroundColor(colors[todoIndex])
                         }
-                        .foregroundColor(colors[todoIndex])
                     }
+                    .padding(.top, 84 * (geometry.size.height/892))
                 }
-                .padding(.top, 84 * (geometry.size.height/892))
+                .padding(.horizontal, 10 * (geometry.size.height / 892))
+                Button {
+                    self.pageNum.wrappedValue = 2
+                } label: {
+                    HStack {
+                        Spacer()
+                        Text("더보기")
+                            .font(.system(size: 14  * (geometry.size.height / 892)))
+                        Spacer()
+                    }
+                    .foregroundColor(.customGray2)
+                    .frame(height: 32 * (geometry.size.height / 892))
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.customGray6)
+                    )
+                }
+                .buttonStyle(.plain)
             }
-            .padding(.horizontal, 10 * (geometry.size.height / 892))
-            Button {
-            } label: {
-                HStack {
-                    Spacer()
-                    Text("더보기")
-                        .font(.appleSDGothicNeo(size: 14  * (geometry.size.height / 892)))
-                    Spacer()
-                }
-                .foregroundColor(.customGray2)
-                .frame(height: 32 * (geometry.size.height / 892))
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(Color.customGray6)
+            .padding(
+                EdgeInsets(
+                    top: 24 * (geometry.size.height / 892),
+                    leading: 20,
+                    bottom: 16 * (geometry.size.height / 892),
+                    trailing: 20
                 )
-            }
-            .buttonStyle(.plain)
-        }
-        .padding(
-            EdgeInsets(
-                top: 24 * (geometry.size.height / 892),
-                leading: 20,
-                bottom: 16 * (geometry.size.height / 892),
-                trailing: 20
             )
-        )
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-
-                .fill(Color.customGray8.opacity(0.5)
-
-                     ) // TODO: figma 업데이트 필요
-
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
     }
-}

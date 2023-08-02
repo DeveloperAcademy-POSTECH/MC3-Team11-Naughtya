@@ -2,19 +2,23 @@ import SwiftUI
 
 public struct ResultView: View {
     public let projectResult: ProjectResultModel
+    @State private var pageNum: Int = 1
 
     public init(projectResult: ProjectResultModel) {
         self.projectResult = projectResult
-    }
 
+    }
     public var body: some View {
-        GeometryReader { geometry in
+
+        switch pageNum {
+        case 1: GeometryReader { geometry in
+
             if projectResult.isGenerated {
                 VStack {
-                    ResultNameView(
-                        projectResult: projectResult,
-                        geometry: geometry
+                    ResultNameView(projectResult: projectResult,
+                                   geometry: geometry
                     )
+
                     HStack {
                         Divider()
                             .frame(width: 2, height: 635 * geometry.size.height / 892)
@@ -23,11 +27,13 @@ public struct ResultView: View {
                         VStack {
                             ResultCompleteTodoView(
                                 projectResult: projectResult,
-                                geometry: geometry
+                                geometry: geometry,
+                                pageNum: $pageNum
                             )
                             ResultCardView(
                                 projectResult: projectResult,
-                                geometry: geometry
+                                geometry: geometry,
+                                pageNum: $pageNum
                             )
                             HStack(spacing: 80 * (geometry.size.width / 1512)) {
                                 ResultDelayTodoView(
@@ -49,11 +55,18 @@ public struct ResultView: View {
                 .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable().aspectRatio(contentMode: .fill))
             } else {
                 emptyView
+
                     .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
+
             }
         }
-    }
+        default: GeometryReader { geometry in
+            ProjectResultDetailView(projectResult: projectResult, geometry: geometry)
 
+        }
+        }
+
+    }
     private var emptyView: some View {
         VStack {
             Spacer()
@@ -65,12 +78,8 @@ public struct ResultView: View {
                 Spacer()
             }
             Spacer()
+
         }
     }
-}
 
- struct ResultView_Previews: PreviewProvider {
-    static var previews: some View {
-        ResultView(projectResult: .from(entity: .sample))
-    }
- }
+}
