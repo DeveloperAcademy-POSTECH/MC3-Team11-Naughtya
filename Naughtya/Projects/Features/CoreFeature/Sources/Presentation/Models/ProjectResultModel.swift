@@ -73,6 +73,10 @@ public struct ProjectResultModel: Modelable {
             .title
     }
 
+    public var dateStringCompletedTodosMap: [String: [TodoEntity]] {
+        entity.dateStringCompletedTodosMap
+    }
+
     public static func from(entity: ProjectResultEntity) -> Self {
         ProjectResultModel(
             entity: entity,

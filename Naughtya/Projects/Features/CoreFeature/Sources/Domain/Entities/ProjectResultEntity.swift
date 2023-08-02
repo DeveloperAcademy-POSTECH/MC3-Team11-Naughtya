@@ -53,6 +53,19 @@ public class ProjectResultEntity: Equatable, Identifiable {
             }
     }
 
+    public var dateStringCompletedTodosMap: [String: [TodoEntity]] {
+        project.todos.value
+            .filter { $0.isCompleted }
+            .reduce([String: [TodoEntity]]()) {
+                var result = $0
+                guard let dateString = $1.completedAt.value?.getDateString() else {
+                    return result
+                }
+                result[dateString] = (result[dateString] ?? []) + [$1]
+                return result
+            }
+    }
+
     private func setupUpdatingStore() {
         let publisher = Publishers
             .Merge(
