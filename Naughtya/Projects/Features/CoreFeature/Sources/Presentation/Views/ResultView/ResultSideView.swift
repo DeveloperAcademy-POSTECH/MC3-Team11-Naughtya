@@ -29,12 +29,12 @@ public struct ResultSideView: View {
             VStack(spacing: 15) {
                 headerView
                     ScrollView {
-                        ForEach(Array(projects.enumerated()), id: \.offset) { index, project in
+                        ForEach(Array(projects.enumerated()), id: \.offset) { _, project in
                             VStack {
                                 if let projectSelector = projectSelector {
                                     ProjectCardView(
-                                        project: project,
-                                        isSelected: index == selectedProjectIndex
+                                        project: project
+//                                        isSelected: index == selectedProjectIndex
                                     )
                                 } else {
                                     ProjectCardView(
@@ -47,7 +47,7 @@ public struct ResultSideView: View {
                         }
                         Spacer()
                     }
-         
+
                 Spacer()
             }
             .padding(.horizontal, 10)

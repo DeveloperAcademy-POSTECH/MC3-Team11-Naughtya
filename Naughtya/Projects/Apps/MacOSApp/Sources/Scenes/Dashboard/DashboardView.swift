@@ -7,13 +7,8 @@ struct DashboardView: View {
     var body: some View {
 
         NavigationSplitView {
-            if viewModel.isResultTab {
-                resultSideView
-                    .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
-            } else {
                 projectListView
                     .navigationSplitViewColumnWidth(min: 195, ideal: 250, max: 298)
-            }
 
         } detail: {
             if viewModel.isResultTab {
@@ -42,12 +37,12 @@ struct DashboardView: View {
         }
     }
 
-    private var resultSideView: some View {
-        ResultSideView(
-            projects: viewModel.projectsInSidebar,
-            projectSelector: viewModel.isResultTab ? viewModel : nil
-        )
-    }
+//    private var resultSideView: some View {
+//        ResultSideView(
+//            projects: viewModel.projectsInSidebar,
+//            projectSelector: viewModel.isResultTab ? viewModel : nil
+//        )
+//    }
 
     private var projectListView: some View {
         ProjectListView(

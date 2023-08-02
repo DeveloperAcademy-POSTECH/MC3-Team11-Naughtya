@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ProjectCardView: View {
+struct DoneCardView: View {
     private static let projectUseCase: ProjectUseCase = DefaultProjectUseCase()
 
     let project: ProjectModel
