@@ -16,15 +16,18 @@ struct CreditsTodoListView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 213) {
             let dateStrings = projectResult.dateStringCompletedTodosMap.map { $0.key }.sorted()
             ForEach(dateStrings, id: \.self) { dateString in
-                HStack(alignment: .top) {
+                HStack(alignment: .top, spacing: 79) {
                     Text(dateString)
-                    VStack {
+                        .foregroundColor(.white)
+                        .font(.system(size: 32, weight: .medium))
+                        .frame(height: 31)
+                    VStack(alignment: .leading, spacing: 25) {
                         let todos = projectResult.dateStringCompletedTodosMap[dateString] ?? []
                         ForEach(todos) { todo in
-                            Text(todo.title.value)
+                            buildTodoItemView(title: todo.title.value)
                         }
                     }
                 }
@@ -32,10 +35,15 @@ struct CreditsTodoListView: View {
             }
         }
     }
-}
 
-struct CreditsTodoListView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreditsTodoListView(projectResult: .from(entity: .sample))
+    private func buildTodoItemView(title: String) -> some View {
+        HStack(spacing: 15) {
+            Image(systemName: "checkmark.square.fill")
+                .foregroundColor(.pointColor)
+            Text(title)
+                .foregroundColor(.customGray2)
+        }
+        .font(.system(size: 26))
+        .frame(height: 31)
     }
 }

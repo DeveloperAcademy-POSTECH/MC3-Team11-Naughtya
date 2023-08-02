@@ -16,10 +16,6 @@ final class CreditsViewModel: ObservableObject {
     @Published var offsetReadOnly: CGPoint = .zero
     @Published var isManualScrolling: Bool = false
 
-    deinit {
-        print("@LOG ah deinit")
-    }
-
     func setupAutoScrolling() {
         Timer.scheduledTimer(withTimeInterval: 0.005, repeats: true) { [weak self] _ in
             guard let `self` = self else {
@@ -43,7 +39,8 @@ public struct CreditsView: View {
 
     public var body: some View {
         GeometryReader { rootGeometry in
-            ScrollViewReader { _ in
+            ZStack {
+                backgroundView
                 OffsetObservingScrollView(offset: $viewModel.offsetReadOnly) {
                     ZStack(alignment: .top) {
                         VStack(spacing: 0) {
@@ -53,31 +50,29 @@ public struct CreditsView: View {
                                     .id(id)
                             }
                         }
+                        objectsView
+                            .offset(y: -CGFloat(viewModel.offsetY / 2) + viewModel.offsetReadOnly.y * 2)
                         todoListView
-                            .padding(.top, CGFloat(rootGeometry.size.height))
+                            .padding(.vertical, CGFloat(rootGeometry.size.height))
                             .background(
                                 GeometryReader { todoListGeometry in
-                                    ZStack(alignment: .bottom) {
-                                        backgroundView
-                                            .overlay(alignment: .top) {
-                                                buildObjectsView(width: rootGeometry.size.width)
-                                                    .offset(y: (-CGFloat(viewModel.offsetY) + viewModel.offsetReadOnly.y / 2) / -2)
-                                            }
-                                            .onAppear {
-                                                viewModel.todoListViewHeight = Int(todoListGeometry.size.height)
-                                            }
-                                        bottomObjectView
-                                    }
+                                    Color.clear
+                                        .onAppear {
+                                            viewModel.todoListViewHeight = Int(todoListGeometry.size.height)
+                                        }
                                 }
                             )
+                            .overlay(alignment: .bottom) {
+                                bottomObjectView
+                            }
+                            .offset(y: -CGFloat(viewModel.offsetY) + viewModel.offsetReadOnly.y * 2)
                     }
-                    .offset(y: -CGFloat(viewModel.offsetY) + viewModel.offsetReadOnly.y * 2)
                 }
-                .frame(
-                    width: rootGeometry.size.width,
-                    height: rootGeometry.size.height
-                )
             }
+            .frame(
+                width: rootGeometry.size.width,
+                height: rootGeometry.size.height
+            )
             .onAppear {
                 viewModel.rootViewHeight = Int(rootGeometry.size.height)
                 viewModel.setupAutoScrolling()
@@ -89,16 +84,22 @@ public struct CreditsView: View {
         VStack(spacing: 100) {
             VStack(spacing: 26) {
                 Text(projectResult.projectName)
-                    .font(.system(size: 80, weight: .bold))
+                    .font(.system(size: 173, weight: .bold))
+                    .frame(height: 208)
                 VStack(spacing: 5) {
-                    Text("2023.01.01 ~ 2024.01.01")
-                        .fontWeight(.medium)
+                    if let startedAt = projectResult.project.startedAt?.getDateString("yyyy.MM.dd"),
+                       let endedAt = projectResult.project.endedAt?.getDateString("yyyy.MM.dd") {
+                        Text("\(startedAt) ~ \(endedAt)")
+                            .fontWeight(.medium)
+                            .frame(height: 65)
+                    }
                     if let goals = projectResult.project.goals {
                         Text("\(goals) 위해서")
                             .fontWeight(.semibold)
+                            .frame(height: 65)
                     }
                 }
-                .font(.system(size: 20))
+                .font(.system(size: 39))
             }
             HStack {
                 Spacer()
@@ -106,36 +107,36 @@ public struct CreditsView: View {
                 Spacer()
             }
         }
-        .padding(.bottom, 200)
+    }
+
+    private var objectsView: some View {
+        VStack {
+            ForEach(0 ..< 10) { index in
+                let model = CreditsObjectModel(
+                    imageName: "credits_object_\(index % 4)",
+                    isLeading: index % 2 == 0
+                )
+                CreditsObjectView(model: model)
+            }
+        }
+    }
+
+    private var bottomObjectView: some View {
+        let model = CreditsObjectModel(
+            imageName: "credits_last_object",
+            isLeading: true
+        )
+        return CreditsObjectView(model: model)
     }
 
     private var backgroundView: some View {
         LinearGradient(
             colors: [
-                .red,
-                .blue
+                Color(red: 36 / 255, green: 37 / 255, blue: 39 / 255),
+                .black
             ],
             startPoint: .top,
             endPoint: .bottom
         )
-    }
-
-    private var bottomObjectView: some View {
-        Circle()
-            .frame(
-                width: 800,
-                height: 400
-            )
-            .offset(y: 200)
-    }
-
-    private func buildObjectsView(width: CGFloat) -> some View {
-        let spacing: CGFloat = 200
-        let count = Int(width / spacing)
-        return VStack(spacing: spacing) {
-            ForEach(0 ..< count) { _ in
-                CreditsObjectView(offsetX: .random(in: -width / 2 ... width / 2))
-            }
-        }
     }
 }

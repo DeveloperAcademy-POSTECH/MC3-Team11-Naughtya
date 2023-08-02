@@ -9,20 +9,18 @@
 import SwiftUI
 
 struct CreditsObjectView: View {
-    @State var offsetX: CGFloat
+    let model: CreditsObjectModel
 
     var body: some View {
-        Circle()
-            .frame(
-                width: 200,
-                height: 200
-            )
-            .offset(x: offsetX)
-    }
-}
-
-struct CreditsObjectView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreditsObjectView(offsetX: 0)
+        HStack {
+            if !model.isLeading {
+                Spacer()
+            }
+            MacOSCoreFeatureImages(name: model.imageName)
+                .swiftUIImage
+            if model.isLeading {
+                Spacer()
+            }
+        }
     }
 }
