@@ -73,6 +73,8 @@ public final class DashboardViewModel: ObservableObject, ProjectResultSelectable
                     .map { .from(entity: $0) }
                 projectResults = Self.localStore.projectResults
                     .map { .from(entity: $0) }
+                selectedProjectResult = projectResults
+                    .first(where: { $0.entity === selectedProjectResult?.entity })
             }
             .store(in: &cancellable)
     }
