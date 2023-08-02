@@ -262,7 +262,7 @@ public struct TodoItemView: View {
             } else {
                 try await Self.todoUseCase.complete(
                     todo.entity,
-                    date: .now
+                    date: todo.entity.dailyTodoList.value?.date ?? .now
                 )
             }
         }
