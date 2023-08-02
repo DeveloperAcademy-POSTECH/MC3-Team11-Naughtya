@@ -11,7 +11,8 @@ import SwiftUI
 public struct ResultNameView: View {
     public let projectResult: ProjectResultModel
     private let geometry: GeometryProxy
-    @State private var isHovered: Bool = false
+    @State private var isHovered = false
+    @State private var isEpilogShown = false
 
     public init(
         projectResult: ProjectResultModel,
@@ -51,7 +52,15 @@ public struct ResultNameView: View {
                     .foregroundColor(.white)
                     .font(.appleSDGothicNeo(size: 16 * relativeHeight, weight: .semibold))
             }
+            .onTapGesture {
+                isEpilogShown = true
+            }
         }
         .padding(.horizontal, 6)
+        .sheet(isPresented: $isEpilogShown) {
+            FullScreenView {
+                EpilogView(projectResult: projectResult)
+            }
+        }
     }
 }

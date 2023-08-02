@@ -1,5 +1,5 @@
 //
-//  CreditsView.swift
+//  EpilogView.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/08/01.
@@ -9,29 +9,9 @@
 import SwiftUI
 import Combine
 
-final class CreditsViewModel: ObservableObject {
-    @Published var rootViewHeight: Int = 0
-    @Published var todoListViewHeight: Int = 0
-    @Published var offsetY: Int = 0
-    @Published var offsetReadOnly: CGPoint = .zero
-    @Published var isManualScrolling: Bool = false
-
-    func setupAutoScrolling() {
-        Timer.scheduledTimer(withTimeInterval: 0.005, repeats: true) { [weak self] _ in
-            guard let `self` = self else {
-                return
-            }
-            guard offsetY <= Int(todoListViewHeight - rootViewHeight) else {
-                return
-            }
-            offsetY += 1
-        }
-    }
-}
-
-public struct CreditsView: View {
+public struct EpilogView: View {
     let projectResult: ProjectResultModel
-    @StateObject private var viewModel = CreditsViewModel()
+    @StateObject private var viewModel = EpilogViewModel()
 
     public init(projectResult: ProjectResultModel) {
         self.projectResult = projectResult
@@ -63,6 +43,7 @@ public struct CreditsView: View {
                 }
                 .background(alignment: .top) {
                     objectsView
+                        .padding(.top, CGFloat(rootGeometry.size.height))
                         .offset(y: (-CGFloat(viewModel.offsetY) + viewModel.offsetReadOnly.y * 2) / 2)
                 }
             }
@@ -81,6 +62,7 @@ public struct CreditsView: View {
         VStack(spacing: 100) {
             VStack(spacing: 26) {
                 Text(projectResult.projectName)
+                    .foregroundColor(.white)
                     .font(.system(size: 173, weight: .bold))
                     .frame(height: 208)
                 VStack(spacing: 5) {
@@ -96,11 +78,12 @@ public struct CreditsView: View {
                             .frame(height: 65)
                     }
                 }
+                .foregroundColor(.customGray2)
                 .font(.system(size: 39))
             }
             HStack {
                 Spacer()
-                CreditsTodoListView(projectResult: projectResult)
+                EpilogTodoListView(projectResult: projectResult)
                 Spacer()
             }
         }
@@ -110,11 +93,11 @@ public struct CreditsView: View {
         VStack {
             if viewModel.rootViewHeight > 0 {
                 ForEach(0 ..< 10) { index in
-                    let model = CreditsObjectModel(
+                    let model = EpilogObjectModel(
                         imageName: "credits_object_\(index % 4)",
                         isLeading: index % 2 == 0
                     )
-                    CreditsObjectView(model: model)
+                    EpilogObjectView(model: model)
                 }
             }
         }
@@ -130,8 +113,8 @@ public struct CreditsView: View {
     private var backgroundView: some View {
         LinearGradient(
             colors: [
-                Color(red: 36 / 255, green: 37 / 255, blue: 39 / 255),
-                .black
+                .black,
+                Color(red: 36 / 255, green: 37 / 255, blue: 39 / 255)
             ],
             startPoint: .top,
             endPoint: .bottom

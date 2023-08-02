@@ -1,5 +1,5 @@
 //
-//  CreditsObjectView.swift
+//  EpilogObjectView.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/08/01.
@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct CreditsObjectView: View {
-    let model: CreditsObjectModel
+struct EpilogObjectView: View {
+    let model: EpilogObjectModel
 
     var body: some View {
         HStack {

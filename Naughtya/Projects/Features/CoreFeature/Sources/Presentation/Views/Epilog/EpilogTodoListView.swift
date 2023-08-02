@@ -1,5 +1,5 @@
 //
-//  CreditsTodoListView.swift
+//  EpilogTodoListView.swift
 //  CoreFeature
 //
 //  Created by byo on 2023/07/31.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct CreditsTodoListView: View {
+struct EpilogTodoListView: View {
     let projectResult: ProjectResultModel
 
     init(projectResult: ProjectResultModel) {
