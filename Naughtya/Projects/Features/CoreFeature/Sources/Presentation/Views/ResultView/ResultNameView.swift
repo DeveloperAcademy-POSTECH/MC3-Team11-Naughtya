@@ -11,22 +11,18 @@ public struct ResultNameView: View {
     public let projectResult: ProjectResultModel
     private let geometry: GeometryProxy
 
-    let selectedNum: Int
-    @State private var rotationAngle: Double = 0
-
     @State private var isHovered: Bool = false
 
     public init(
         projectResult: ProjectResultModel,
-        geometry: GeometryProxy, selectedNum: Int
+        geometry: GeometryProxy
     ) {
         self.projectResult = projectResult
         self.geometry = geometry
-        self.selectedNum = selectedNum
     }
+
     public var body: some View {
-        switch selectedNum {
-        case 1:
+
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("\(projectResult.projectName) 프로젝트")
@@ -84,43 +80,6 @@ public struct ResultNameView: View {
             }
 
             .padding(.horizontal, 6)
-        case 2:
-            HStack {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("\(projectResult.projectName) 프로젝트")
-                        .lineLimit(1)
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 32 * (geometry.size.width/1512))
-                                .weight(.bold)
-                        )
-                        .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
-
-                    Text("\(projectResult.daysInProject)일간의 여정") // 종료된 프로젝트와 데이터 연결
-                        .lineLimit(1)
-                        .font(
-                            Font.custom("Apple SD Gothic Neo", size: 28 * (geometry.size.width/1512))
-                                .weight(.medium)
-                        )
-                        .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
-                        .padding(.vertical, 10)
-
-                }
-                Spacer()
-            }
-            .background(Color(red: 0.13, green: 0.13, blue: 0.13))
-
-//            default:
-//                Text("Default Page")
-
-        default:
-            Text("Default Page")
-        }
 
     }
 }
-
-// struct ResultNameView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ResultNameView(projectResult: .from(entity: ProjectResultEntity.sample))
-//    }
-// }

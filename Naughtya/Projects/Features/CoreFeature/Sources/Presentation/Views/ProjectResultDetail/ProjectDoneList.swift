@@ -9,10 +9,18 @@
 import SwiftUI
 
 struct ProjectDoneList: View {
-    let geometry: GeometryProxy
+    public let projectResult: ProjectResultModel
+    private let geometry: GeometryProxy
+    private let ability: AbilityEntity
 
-    public init(geometry: GeometryProxy) {
+    public init(
+        projectResult: ProjectResultModel,
+        geometry: GeometryProxy,
+        ability: AbilityEntity
+    ) {
+        self.projectResult = projectResult
         self.geometry = geometry
+        self.ability = ability
     }
     var body: some View {
         HStack {
@@ -25,22 +33,34 @@ struct ProjectDoneList: View {
                     .padding(.vertical, 35 * geometry.size.height / 892)
                     .foregroundColor(Color(red: 0.88, green: 0.88, blue: 0.88))
                 ScrollView(.vertical) {
-                    ForEach(1..<10) { _ in
+//                    ForEach(1..<10) { _ in
+//                        HStack {
+//                            Image(systemName: "checkmark.square.fill")
+//                                .font(
+//                                    .system(size: 16)
+//                                    .weight(.medium)
+//                                )
+//                                .multilineTextAlignment(.leading)
+//                                .foregroundColor(Color(red: 0.02, green: 0.32, blue: 0.98))
+//                            Text("할 일이 어쩌고 저쩌고")
+//                                .font(
+//                                    .system(size: 16)
+//                                )
+//                                .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
+//                                .padding(.vertical, 10) // 화면 비율에 따라
+//                        }
+//                    }
+                    ForEach(Array(ability.todos.enumerated()), id: \.offset) { _, todo in
                         HStack {
-                            Text("􀂒")
-                                .font(
-                                    .system(size: 16)
-                                    .weight(.medium)
-                                )
-                                .multilineTextAlignment(.leading)
-                                .foregroundColor(Color(red: 0.02, green: 0.32, blue: 0.98))
-                            Text("할 일이 어쩌고 저쩌고")
-                                .font(
-                                    .system(size: 16)
-                                )
-                                .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
-                                .padding(.vertical, 10) // 화면 비율에 따라
+                            Image(systemName: "checkmark.square")
+                                .font(.system(size: 18  * (geometry.size.height / 892)))
+                                .foregroundColor(.pointColor)
+                            Text(todo.title.value)
+                                .font(.system(size: 18  * (geometry.size.height / 892)))
+                                .padding(.vertical, 10)
+                                .lineLimit(1)
                         }
+
                     }
                 }
             }
