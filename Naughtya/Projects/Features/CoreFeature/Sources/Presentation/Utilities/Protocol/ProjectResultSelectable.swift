@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol ProjectSelectable: AnyObject {
-    func selectProject(_ project: ProjectEntity)
+public protocol ProjectResultSelectable: AnyObject {
+    func selectProjectResult(_ projectResult: ProjectResultModel)
 }

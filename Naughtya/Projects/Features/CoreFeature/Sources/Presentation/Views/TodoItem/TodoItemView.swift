@@ -103,8 +103,9 @@ public struct TodoItemView: View {
     }
 
     private var dragDropIndicator: some View {
-        Text("🖱️")
+        MacOSCoreFeatureAsset.todoHover.swiftUIImage
             .opacity(isHovered ? 1 : 0.001)
+            .frame(width: 10, height: 20)
             .animation(.easeOut, value: isHovered)
     }
 
@@ -114,15 +115,15 @@ public struct TodoItemView: View {
         } label: {
             Image(systemName: todo.isCompleted ? "checkmark.square" : "square")
                 .foregroundColor(todo.isCompleted ? .customGray4 : .pointColor)
-                .font(.system(size: 18))
+                .font(.system(size: 20, weight: .semibold))
+                .animation(.easeOut(duration: 0.1), value: todo.isCompleted)
         }
         .buttonStyle(.borderless)
     }
 
     private var categoryText: some View {
         Text("[\(todo.category)]")
-            .font(.system(size: 16))
-            .fontWeight(.bold)
+            .font(.system(size: 16, weight: .bold))
     }
 
     private var titleView: some View {
@@ -133,6 +134,7 @@ public struct TodoItemView: View {
             }
         }
         .font(.system(size: 16))
+        .frame(height: 16)
     }
 
     private var titleTextField: some View {
@@ -143,7 +145,6 @@ public struct TodoItemView: View {
             }
         }
         .textFieldStyle(.plain)
-        .padding(.leading, -8)
         .focused($focusedField, equals: .textField)
         .opacity(isStatic ? 0 : 1)
         .onChange(of: title) {

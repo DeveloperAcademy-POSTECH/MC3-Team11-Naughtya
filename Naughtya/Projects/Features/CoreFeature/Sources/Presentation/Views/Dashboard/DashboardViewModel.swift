@@ -9,8 +9,7 @@
 import Foundation
 import Combine
 
-@MainActor
-public final class DashboardViewModel: ObservableObject {
+public final class DashboardViewModel: ObservableObject, ProjectResultSelectable {
     private static let localStore: LocalStore = .shared
 
     @Published public var projects: [ProjectModel] = []
@@ -27,31 +26,38 @@ public final class DashboardViewModel: ObservableObject {
         selectedTabIndex == 1
     }
 
-    public var projectsInSidebar: [ProjectModel] {
-        isResultTab ? endedProjects : projectsInProgress
-    }
-
-    public var selectedProjectsInProgress: [ProjectModel] {
-        projectsInProgress
-            .filter { $0.isSelected }
-    }
-
-    private var projectsInProgress: [ProjectModel] {
+    public var sortedProjects: [ProjectModel] {
         projects
-            // TODO: .filter { !$0.isEnded }
+            .filter { !$0.isEnded }
             .sorted { $0.isBookmarked && !$1.isBookmarked }
     }
 
-    private var endedProjects: [ProjectModel] {
+    public var sortedProjectResults: [ProjectResultModel] {
         projectResults
-            .map { $0.project }
             .sorted {
-                guard let lhs = $0.endedAt?.timeIntervalSince1970,
-                      let rhs = $1.endedAt?.timeIntervalSince1970 else {
+                guard let lhs = $0.project.endedAt?.timeIntervalSince1970,
+                      let rhs = $1.project.endedAt?.timeIntervalSince1970 else {
                     return false
                 }
                 return lhs > rhs
             }
+    }
+
+    public var selectedProjects: [ProjectModel] {
+        sortedProjects
+            .filter { $0.isSelected }
+    }
+
+    public func selectProjectResult(_ projectResult: ProjectResultModel) {
+        guard let projectResult = projectResults
+            .first(where: { $0.entity === projectResult.entity }) else {
+            return
+        }
+        if projectResult.entity === selectedProjectResult?.entity {
+            selectedProjectResult = nil
+        } else {
+            selectedProjectResult = projectResult
+        }
     }
 
     private func setupFetchingData() {
@@ -67,19 +73,7 @@ public final class DashboardViewModel: ObservableObject {
                     .map { .from(entity: $0) }
                 projectResults = Self.localStore.projectResults
                     .map { .from(entity: $0) }
-                selectedProjectResult = projectResults
-                    .first { $0.entity === selectedProjectResult?.entity }
             }
             .store(in: &cancellable)
-    }
-}
-
-extension DashboardViewModel: ProjectSelectable {
-    public func selectProject(_ project: ProjectEntity) {
-        guard let projectResult = projectResults
-            .first(where: { $0.project.entity === project }) else {
-            return
-        }
-        selectedProjectResult = projectResult
     }
 }

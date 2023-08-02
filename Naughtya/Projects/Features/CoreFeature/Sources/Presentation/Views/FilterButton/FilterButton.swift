@@ -21,8 +21,9 @@ public struct FilterButton: View {
             buildButton(filter: .incompleted)
             buildButton(filter: .completed)
         }
-        .opacity(filterManager.filter == .all ? 0.7 : 1)
+        .opacity(filterManager.filter == .all ? 0.5 : 0.9)
         .menuButtonStyle(BorderlessButtonMenuButtonStyle())
+        .animation(.easeOut, value: filterManager.filter)
     }
 
     private func buildButton(filter: FilterCategory) -> some View {

@@ -18,129 +18,129 @@ public struct ResultCardView: View {
     }
 
     public var body: some View {
-            VStack {
-                let maxLength = projectResult.abilities.count
-                if maxLength == 0 {
+        VStack {
+            let maxLength = projectResult.abilities.count
+            if maxLength == 0 {
 
-                } else {
+            } else {
 
-                    switch cardCount {
-                    case 5:
-                        HStack(spacing: 50 * (geometry.size.width / 1512)) {
-                            ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 5, maxLength)]) { ability in
-                                buildAbilityCardView(ability)
-                                    .frame(width: 225 * (geometry.size.width / 1512), height: 269 * (geometry.size.height / 892))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
-                                    )
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                            }
-                            if (currentIndex + cardCount) / cardCount == Int(ceil(Double(maxLength) / Double(cardCount))) && maxLength - currentIndex != 5 {
-                                Spacer()
-                            } else {
-                                // Your code here for the else block
-                            }
-
-                        }
-        //                .frame(minWidth: 1412)
-                    case 4:
-                        HStack(spacing: 50 * (geometry.size.width / 1214)) {
-                            ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 4, maxLength)]) { ability in
-                                buildAbilityCardView(ability)
-                                    .frame(width: 225 * (geometry.size.width / 1214), height: 269 * (geometry.size.height / 892))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
-                                    )
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                            }
-                            if (currentIndex + cardCount) / cardCount == Int(ceil(Double(maxLength) / Double(cardCount))) && maxLength - currentIndex != 4 {
-                                Spacer()
-                            } else {
-                                // Your code here for the else block
-                            }
-
-                        }
-        //                .frame(minWidth: 1114)
-                    default:
-                        HStack(spacing: 50 * (geometry.size.width / 920)) {
-                            ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 3, maxLength)]) { ability in
-                                buildAbilityCardView(ability)
-                                    .frame(width: 225 * (geometry.size.width / 920), height: 269 * (geometry.size.height / 892))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
-                                    )
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                            }
-                            if (currentIndex + cardCount) / cardCount == Int(ceil(Double(maxLength) / Double(cardCount))) && maxLength - currentIndex != 3 {
-                                Spacer()
-                            } else {
-                                // Your code here for the else block
-                            }
-                        }
-        //                .frame(minWidth: 820)
-                    }
-
-                    HStack(alignment: .center, spacing: 8) {
-                        Button(action: {
-                            withAnimation {
-                                self.currentIndex -= cardCount
-                                if self.currentIndex < 0 {
-                                    self.currentIndex = maxLength - cardCount
-                                }
-                            }
-                        }) {
-                            Text("􀯷")
-                                .font(
-                                    Font.custom("SF Pro", size: 16)
-                                        .weight(.light)
+                switch cardCount {
+                case 5:
+                    HStack(spacing: 50 * (geometry.size.width / 1512)) {
+                        ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 5, maxLength)]) { ability in
+                            buildAbilityCardView(ability)
+                                .frame(width: 225 * (geometry.size.width / 1512), height: 269 * (geometry.size.height / 892))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
                                 )
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
-                        .buttonStyle(.borderless)
-                        Text("\((currentIndex + cardCount) / cardCount)/\(Int(ceil((Double(maxLength) / Double(cardCount)))))")
-                            .font(
-                                Font.custom("Apple SD Gothic Neo", size: 23  * (geometry.size.width/1512))
-                                    .weight(.semibold)
-                            )
-                            .kerning(0.46)
-                            .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
-                        Button(action: {
-                            withAnimation {
-                                self.currentIndex += cardCount
-                                if self.currentIndex >= maxLength {
-                                    self.currentIndex = 0
-                                }
-
-                            }
-                        }) {
-                            Text("􀁴")
-                                .font(
-                                    Font.custom("SF Pro", size: 16)
-                                        .weight(.light)
-                                )
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
+                        if (currentIndex + cardCount) / cardCount == Int(ceil(Double(maxLength) / Double(cardCount))) && maxLength - currentIndex != 5 {
+                            Spacer()
+                        } else {
+                            // Your code here for the else block
                         }
-                        .buttonStyle(.borderless)
 
                     }
-                    .padding(.vertical, 27 * geometry.size.height / 892)
-                    //                .padding(.vertical, 55 * (geometry.size.width / 1512))
+                    //                .frame(minWidth: 1412)
+                case 4:
+                    HStack(spacing: 50 * (geometry.size.width / 1214)) {
+                        ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 4, maxLength)]) { ability in
+                            buildAbilityCardView(ability)
+                                .frame(width: 225 * (geometry.size.width / 1214), height: 269 * (geometry.size.height / 892))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        if (currentIndex + cardCount) / cardCount == Int(ceil(Double(maxLength) / Double(cardCount))) && maxLength - currentIndex != 4 {
+                            Spacer()
+                        } else {
+                            // Your code here for the else block
+                        }
+
+                    }
+                    //                .frame(minWidth: 1114)
+                default:
+                    HStack(spacing: 50 * (geometry.size.width / 920)) {
+                        ForEach(projectResult.abilities[currentIndex..<min(currentIndex + 3, maxLength)]) { ability in
+                            buildAbilityCardView(ability)
+                                .frame(width: 225 * (geometry.size.width / 920), height: 269 * (geometry.size.height / 892))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        if (currentIndex + cardCount) / cardCount == Int(ceil(Double(maxLength) / Double(cardCount))) && maxLength - currentIndex != 3 {
+                            Spacer()
+                        } else {
+                            // Your code here for the else block
+                        }
+                    }
+                    //                .frame(minWidth: 820)
                 }
+
+                HStack(alignment: .center, spacing: 8) {
+                    Button(action: {
+                        withAnimation {
+                            self.currentIndex -= cardCount
+                            if self.currentIndex < 0 {
+                                self.currentIndex = maxLength - cardCount
+                            }
+                        }
+                    }) {
+                        Text("􀯷")
+                            .font(
+                                Font.custom("SF Pro", size: 16)
+                                    .weight(.light)
+                            )
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
+                    }
+                    .buttonStyle(.borderless)
+                    Text("\((currentIndex + cardCount) / cardCount)/\(Int(ceil((Double(maxLength) / Double(cardCount)))))")
+                        .font(
+                            Font.custom("Apple SD Gothic Neo", size: 23  * (geometry.size.width/1512))
+                                .weight(.semibold)
+                        )
+                        .kerning(0.46)
+                        .foregroundColor(Color(red: 0.51, green: 0.51, blue: 0.51))
+                    Button(action: {
+                        withAnimation {
+                            self.currentIndex += cardCount
+                            if self.currentIndex >= maxLength {
+                                self.currentIndex = 0
+                            }
+
+                        }
+                    }) {
+                        Text("􀁴")
+                            .font(
+                                Font.custom("SF Pro", size: 16)
+                                    .weight(.light)
+                            )
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(Color(red: 0.31, green: 0.31, blue: 0.31))
+                    }
+                    .buttonStyle(.borderless)
+
+                }
+                .padding(.vertical, 27 * geometry.size.height / 892)
+                //                .padding(.vertical, 55 * (geometry.size.width / 1512))
             }
-            .onAppear {
-                self.updateCardCount(geometry)
-            }
-            .onChange(of: geometry.size.width) { _ in
-                self.updateCardCount(geometry)
-            }
+        }
+        .onAppear {
+            self.updateCardCount(geometry)
+        }
+        .onChange(of: geometry.size.width) { _ in
+            self.updateCardCount(geometry)
+        }
 
     }
 
@@ -156,20 +156,8 @@ public struct ResultCardView: View {
     }
 
     private func buildAbilityCardView(_ ability: AbilityEntity) -> some View {
+        VStack(spacing: 8) {
 
-            VStack(spacing: 8) {
-                HStack {
-                    Spacer()
-                    Text("총 \(ability.todos.count)개")
-                        .foregroundColor(.pointColor)
-                        .font(.system(size: 10  * (geometry.size.height / 892)))
-                        .padding(.horizontal, 7  * (geometry.size.height / 892))
-                        .frame(height: 16 * (geometry.size.height / 892))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 2)
-                                .stroke(Color.pointColor, lineWidth: 1)
-                        )
-                }
                 ZStack(alignment: .topLeading) {
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
@@ -226,13 +214,8 @@ public struct ResultCardView: View {
             )
             .background(
                 RoundedRectangle(cornerRadius: 8)
-
-                    .fill(Color.customGray8.opacity(0.5)
-
-                         ) // TODO: figma 업데이트 필요
-
+                    .fill(Color.customGray8.opacity(0.5)) // TODO: figma 업데이트 필요
             )
             .clipShape(RoundedRectangle(cornerRadius: 8))
-
+        }
     }
-}

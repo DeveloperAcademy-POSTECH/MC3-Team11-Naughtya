@@ -14,43 +14,26 @@ public struct ProjectListView: View {
     private static let schedulingStore: SchedulingStore = .shared
 
     public let projects: [ProjectModel]
-    public let projectSelector: ProjectSelectable?
     @State private var showModal = false
 
-    public init(
-        projects: [ProjectModel] = [],
-        projectSelector: ProjectSelectable? = nil
-    ) {
+    public init(projects: [ProjectModel] = []) {
         self.projects = projects
-        self.projectSelector = projectSelector
     }
 
     public var body: some View {
         ZStack {
-            Color.customGray7
             VStack(spacing: 15) {
-                headerView
+                ProjectListHeaderView()
                 if projects.isEmpty {
-                    emptyView
+                    ProjectListEmptyView()
                 } else {
                     ScrollView {
-                        ForEach(projects) { project in
-                            VStack {
-                                if let projectSelector = projectSelector {
-                                    ProjectCardView(
-                                        project: project,
-                                        projectSelector: projectSelector
-                                    )
-                                } else {
-                                    ProjectCardView(
-                                        project: project,
-                                        dragDropDelegate: DragDropManager.shared
-                                    )
-                                }
+                        VStack(spacing: 10) {
+                            ForEach(projects) { project in
+                                ProjectCardView(project: project)
                             }
-                            .frame(height: 68)
+                            Spacer()
                         }
-                        Spacer()
                     }
                 }
                 Spacer()
@@ -60,70 +43,24 @@ public struct ProjectListView: View {
         }
     }
 
-    private var headerView: some View {
-        HStack {
-            Text("All My Projects")
-                .font(.system(size: 14))
-                .fontWeight(.medium)
-                .foregroundColor(Color.customGray4)
-            Spacer()
-            Button {
-                Self.dummyDataGenerator.generate()
-            } label: {
-                Text("dummy")
-            }
-            Button {
-                Self.schedulingStore.managers
-                    .forEach {
-                        $0.tasksBatch.batchTasks()
-                    }
-            } label: {
-                Text("result")
-            }
-        }
-        .padding(.horizontal, 5)
-        .padding(.top, 10)
-    }
-
-    private var emptyView: some View {
-        HStack {
-            Spacer()
-            Text("프로젝트가 없습니다.")
-                .multilineTextAlignment(.center)
-                .font(.system(size: 12))
-                .fontWeight(.semibold)
-                .foregroundColor(.customGray2)
-            Spacer()
-        }
-        .frame(height: 68)
-        .cornerRadius(5)
-        .overlay(
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(Color.customGray4, lineWidth: 1)
-        )
-    }
-
     private var addButton: some View {
         VStack(alignment: .center) {
             Spacer()
             Button {
                 showModal = true
             } label: {
-                ZStack {
-                    Circle()
-                        .fill(Color.pointColor)
-                        .frame(width: 44, height: 44)
-                    HStack(alignment: .center) {
+                Circle()
+                    .frame(width: 44, height: 44)
+                    .overlay {
                         Image(systemName: "plus")
-                            .font(.system(size: 24))
+                            .font(.appleSDGothicNeo(size: 24))
                             .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
                     }
-                    .foregroundColor(.white)
-                }
             }
             .buttonStyle(.borderless)
-            //            .padding(.horizontal, 81)
-            .padding(.bottom, 103)
+            .tint(.pointColor)
+            .padding(.bottom, 50)
             .sheet(isPresented: self.$showModal) {
                 ProjectSetModalView()
             }

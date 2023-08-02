@@ -8,31 +8,16 @@ public struct ResultView: View {
         self.projectResult = projectResult
 
     }
-
-//    public let projectResult: ProjectResultModel
-//    private let geometry: GeometryProxy
-//    private let ability: AbilityEntity
-//    @State private var pageNum: Int = 1
-//
-//    public init(
-//        projectResult: ProjectResultModel,
-//        geometry: GeometryProxy,
-//        ability: AbilityEntity
-//    ) {
-//        self.projectResult = projectResult
-//        self.geometry = geometry
-//        self.ability = ability
-//    }
-
     public var body: some View {
 
         switch pageNum {
         case 1: GeometryReader { geometry in
+
             if projectResult.isGenerated {
                 VStack {
                     ResultNameView(projectResult: projectResult,
                                    geometry: geometry
-                                   )
+                    )
 
                     HStack {
                         Divider()
@@ -55,7 +40,6 @@ public struct ResultView: View {
                                     projectResult: projectResult,
                                     geometry: geometry
                                 )
-                                //                                    Spacer(minLength: 80 * (geometry.size.width / 1512))
                                 ResultIncompleteTodoView(
                                     projectResult: projectResult,
                                     geometry: geometry
@@ -63,14 +47,12 @@ public struct ResultView: View {
                             }
                         }
                     }
-
                 }
                 .padding(.leading, 50)
                 .padding(.top, 35 * geometry.size.height / 892)
                 .padding(.trailing, 70)
                 .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
                 .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable().aspectRatio(contentMode: .fill))
-
             } else {
                 emptyView
 
@@ -82,23 +64,22 @@ public struct ResultView: View {
             ProjectResultDetailView(projectResult: projectResult, geometry: geometry)
 
         }
-
         }
 
-//        }
-
-                }
+    }
+    private var emptyView: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                ProgressView("에필로그 생성중...")
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color.pointColor))
+                    .scaleEffect(1)
+                Spacer()
             }
+            Spacer()
 
-            private var emptyView: some View {
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Text("리포트 생성중 🙂")
-                            .font(.largeTitle)
-                        Spacer()
-                    }
-                    Spacer()
-                }
-            }
+        }
+    }
+
+}
