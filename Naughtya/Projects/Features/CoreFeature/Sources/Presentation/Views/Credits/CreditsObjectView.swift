@@ -16,8 +16,9 @@ struct CreditsObjectView: View {
             if !model.isLeading {
                 Spacer()
             }
-            MacOSCoreFeatureImages(name: model.imageName)
-                .swiftUIImage
+            let image = MacOSCoreFeatureImages(name: model.imageName)
+            image.swiftUIImage
+                .offset(x: (image.image.size.width / 2) * (model.isLeading ? -1 : 1))
             if model.isLeading {
                 Spacer()
             }

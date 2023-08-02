@@ -42,31 +42,28 @@ public struct CreditsView: View {
             ZStack {
                 backgroundView
                 OffsetObservingScrollView(offset: $viewModel.offsetReadOnly) {
-                    ZStack(alignment: .top) {
-                        VStack(spacing: 0) {
-                            ForEach(0 ..< viewModel.todoListViewHeight) { id in
+                    todoListView
+                        .padding(.vertical, CGFloat(rootGeometry.size.height))
+                        .background(
+                            GeometryReader { todoListGeometry in
                                 Color.clear
-                                    .frame(height: 1)
-                                    .id(id)
+                                    .onAppear {
+                                        viewModel.todoListViewHeight = Int(todoListGeometry.size.height)
+                                    }
                             }
+                        )
+                        .background(alignment: .bottom) {
+                            bottomView
+                                .frame(
+                                    width: rootGeometry.size.width,
+                                    height: rootGeometry.size.height
+                                )
                         }
-                        objectsView
-                            .offset(y: -CGFloat(viewModel.offsetY / 2) + viewModel.offsetReadOnly.y * 2)
-                        todoListView
-                            .padding(.vertical, CGFloat(rootGeometry.size.height))
-                            .background(
-                                GeometryReader { todoListGeometry in
-                                    Color.clear
-                                        .onAppear {
-                                            viewModel.todoListViewHeight = Int(todoListGeometry.size.height)
-                                        }
-                                }
-                            )
-                            .overlay(alignment: .bottom) {
-                                bottomObjectView
-                            }
-                            .offset(y: -CGFloat(viewModel.offsetY) + viewModel.offsetReadOnly.y * 2)
-                    }
+                        .offset(y: -CGFloat(viewModel.offsetY) + viewModel.offsetReadOnly.y * 2)
+                }
+                .background(alignment: .top) {
+                    objectsView
+                        .offset(y: (-CGFloat(viewModel.offsetY) + viewModel.offsetReadOnly.y * 2) / 2)
                 }
             }
             .frame(
@@ -111,22 +108,23 @@ public struct CreditsView: View {
 
     private var objectsView: some View {
         VStack {
-            ForEach(0 ..< 10) { index in
-                let model = CreditsObjectModel(
-                    imageName: "credits_object_\(index % 4)",
-                    isLeading: index % 2 == 0
-                )
-                CreditsObjectView(model: model)
+            if viewModel.rootViewHeight > 0 {
+                ForEach(0 ..< 10) { index in
+                    let model = CreditsObjectModel(
+                        imageName: "credits_object_\(index % 4)",
+                        isLeading: index % 2 == 0
+                    )
+                    CreditsObjectView(model: model)
+                }
             }
         }
     }
 
-    private var bottomObjectView: some View {
-        let model = CreditsObjectModel(
-            imageName: "credits_last_object",
-            isLeading: true
-        )
-        return CreditsObjectView(model: model)
+    private var bottomView: some View {
+        ZStack {
+            MacOSCoreFeatureAsset.logo.swiftUIImage
+                .scaleEffect(x: 0.8, y: 0.8)
+        }
     }
 
     private var backgroundView: some View {
