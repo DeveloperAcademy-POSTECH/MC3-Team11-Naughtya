@@ -28,7 +28,7 @@ public final class DashboardViewModel: ObservableObject, ProjectResultSelectable
 
     public var sortedProjects: [ProjectModel] {
         projects
-            .filter { !$0.isEnded }
+//            .filter { !$0.isEnded } // TODO: hayo
             .sorted { $0.isBookmarked && !$1.isBookmarked }
     }
 
