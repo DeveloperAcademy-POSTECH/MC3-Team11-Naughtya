@@ -28,6 +28,7 @@ public struct DailyTodoListView: View {
                     )
                 }
             }
+            .padding(.horizontal, 20)
             Color.customGray9
                 .opacity(viewModel.dailyTodoList == nil ? 1 : 0)
                 .animation(.easeOut(duration: 0.1), value: viewModel.dailyTodoList)

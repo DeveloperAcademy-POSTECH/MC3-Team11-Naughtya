@@ -13,8 +13,7 @@ struct ProjectCardView: View {
 
     let project: ProjectModel
     let isDummy: Bool
-    let dragDropDelegate: DragDropDelegate?
-    let projectSelector: ProjectSelectable?
+    let dragDropDelegate: DragDropDelegate
     @State private var absoluteRect: CGRect!
     @State private var isBeingDragged = false
     @State private var showModal = false
@@ -25,12 +24,10 @@ struct ProjectCardView: View {
 
     init(project: ProjectModel,
          isDummy: Bool = false,
-         dragDropDelegate: DragDropDelegate? = nil,
-         projectSelector: ProjectSelectable? = nil) {
+         dragDropDelegate: DragDropDelegate = DragDropManager.shared) {
         self.project = project
         self.isDummy = isDummy
         self.dragDropDelegate = dragDropDelegate
-        self.projectSelector = projectSelector
         // 각 카드 뷰의 UserDefaults 키는 프로젝트 ID를 기반으로 생성합니다.
         self.cardViewUserDefaultsKey = "ProjectCardView_\(project.id)"
         // 해당 카드 뷰의 애니메이션 상태를 UserDefaults에서 로드합니다.
@@ -40,8 +37,9 @@ struct ProjectCardView: View {
     var body: some View {
         GeometryReader { geometry in
             let absoluteRect = geometry.frame(in: .global)
-                // MARK: - 그라데이션
             ZStack {
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(project.isSelected ? Color.customGray5 : Color.customGray7)
                 if !hasAppeared {
                     LinearGradient(
                         gradient: Gradient(colors: [.pointColor, .pointColor]),
@@ -112,19 +110,15 @@ struct ProjectCardView: View {
             contextMenu
         }
         .onTapGesture {
-            if let projectSelector = projectSelector {
-                projectSelector.selectProject(project.entity)
-            } else {
-                Task {
-                    try await Self.projectUseCase.toggleSelected(
-                        project.entity,
-                        isSelected: !project.isSelected
-                    )
-                }
+            Task {
+                try await Self.projectUseCase.toggleSelected(
+                    project.entity,
+                    isSelected: !project.isSelected
+                )
             }
         }
         .onDisappear {
-            dragDropDelegate?.unregisterAbsoluteRect(dragDropableHash)
+            dragDropDelegate.unregisterAbsoluteRect(dragDropableHash)
         }
         .sheet(isPresented: $showModal) {
             ProjectSetModalView(project: project)
@@ -170,13 +164,13 @@ struct ProjectCardView: View {
             .onChanged {
                 let itemLocation = absoluteRect.origin + $0.location - $0.startLocation
                 if !isBeingDragged {
-                    dragDropDelegate?.startToDrag(
+                    dragDropDelegate.startToDrag(
                         project.entity,
                         size: absoluteRect.size,
                         itemLocation: itemLocation
                     )
                 } else {
-                    dragDropDelegate?.drag(
+                    dragDropDelegate.drag(
                         project.entity,
                         itemLocation: itemLocation
                     )
@@ -184,7 +178,7 @@ struct ProjectCardView: View {
                 isBeingDragged = true
             }
             .onEnded {
-                dragDropDelegate?.drop(
+                dragDropDelegate.drop(
                     project.entity,
                     touchLocation: absoluteRect.origin + $0.location
                 )
@@ -241,7 +235,7 @@ struct ProjectCardView: View {
 
     private func registerAbsoluteRect(_ rect: CGRect) {
         absoluteRect = rect
-        dragDropDelegate?.registerAbsoluteRect(
+        dragDropDelegate.registerAbsoluteRect(
             dragDropableHash,
             rect: rect
         )

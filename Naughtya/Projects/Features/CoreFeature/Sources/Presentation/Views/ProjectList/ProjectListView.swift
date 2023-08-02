@@ -14,39 +14,26 @@ public struct ProjectListView: View {
     private static let schedulingStore: SchedulingStore = .shared
 
     public let projects: [ProjectModel]
-    public let projectSelector: ProjectSelectable?
     @State private var showModal = false
 
-    public init(
-        projects: [ProjectModel] = [],
-        projectSelector: ProjectSelectable? = nil
-    ) {
+    public init(projects: [ProjectModel] = []) {
         self.projects = projects
-        self.projectSelector = projectSelector
     }
 
     public var body: some View {
         ZStack {
             VStack(spacing: 15) {
-                headerView
+                ProjectListHeaderView()
                 if projects.isEmpty {
-                    emptyView
+                    ProjectListEmptyView()
                 } else {
                     ScrollView {
-                        ForEach(projects) { project in
-                            if let projectSelector = projectSelector {
-                                ProjectCardView(
-                                    project: project,
-                                    projectSelector: projectSelector
-                                )
-                            } else {
-                                ProjectCardView(
-                                    project: project,
-                                    dragDropDelegate: DragDropManager.shared
-                                )
+                        VStack(spacing: 10) {
+                            ForEach(projects) { project in
+                                ProjectCardView(project: project)
                             }
+                            Spacer()
                         }
-                        Spacer()
                     }
                 }
                 Spacer()
@@ -54,46 +41,6 @@ public struct ProjectListView: View {
             .padding(.horizontal, 10)
             addButton
         }
-    }
-
-    private var headerView: some View {
-        HStack {
-            Text("All My Projects")
-                .font(.appleSDGothicNeo(size: 14, weight: .medium))
-                .foregroundColor(Color.customGray4)
-            Spacer()
-            Button {
-                Self.dummyDataGenerator.generate()
-            } label: {
-                Text("dummy")
-            }
-            Button {
-                Self.schedulingStore.managers
-                    .forEach {
-                        $0.tasksBatch.batchTasks()
-                    }
-            } label: {
-                Text("result")
-            }
-        }
-        .padding(.horizontal, 5)
-        .padding(.top, 10)
-    }
-
-    private var emptyView: some View {
-        HStack {
-            Spacer()
-            Text("프로젝트가 없어요.")
-                .multilineTextAlignment(.center)
-                .font(.appleSDGothicNeo(size: 16))
-                .foregroundColor(.customGray3)
-            Spacer()
-        }
-        .frame(height: 68)
-        .background(
-            RoundedRectangle(cornerRadius: 5)
-                .fill(Color.customGray5)
-        )
     }
 
     private var addButton: some View {

@@ -32,7 +32,7 @@ public struct ProjectTodoListView: View {
             }
             Spacer()
         }
-        .padding(0)
+        .padding(.horizontal, 20)
     }
 }
 
