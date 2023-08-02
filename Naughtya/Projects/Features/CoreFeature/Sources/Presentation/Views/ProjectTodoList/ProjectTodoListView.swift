@@ -16,11 +16,13 @@ public struct ProjectTodoListView: View {
     }
 
     public var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             if projects.isEmpty {
-                Spacer().frame(height: 150)
+                Spacer()
+                    .frame(height: 250)
                 MacOSCoreFeatureAsset.projecttodolistempty.swiftUIImage
                     .resizable()
+                    .frame(maxWidth: 539)
                     .aspectRatio(contentMode: .fill)
                     .opacity(0.3)
             } else {
@@ -30,7 +32,7 @@ public struct ProjectTodoListView: View {
             }
             Spacer()
         }
-        .padding(0)
+        .padding(.horizontal, 20)
     }
 }
 

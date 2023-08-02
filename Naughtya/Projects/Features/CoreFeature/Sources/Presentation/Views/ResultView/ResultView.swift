@@ -9,7 +9,6 @@ public struct ResultView: View {
 
     public var body: some View {
         GeometryReader { geometry in
-
             if projectResult.isGenerated {
                 VStack {
                     ResultNameView(
@@ -35,7 +34,6 @@ public struct ResultView: View {
                                     projectResult: projectResult,
                                     geometry: geometry
                                 )
-                                //                                    Spacer(minLength: 80 * (geometry.size.width / 1512))
                                 ResultIncompleteTodoView(
                                     projectResult: projectResult,
                                     geometry: geometry
@@ -43,22 +41,17 @@ public struct ResultView: View {
                             }
                         }
                     }
-
                 }
-
                 .padding(.leading, 50)
                 .padding(.top, 35 * geometry.size.height / 892)
                 .padding(.trailing, 70)
                 .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
                 .background(MacOSCoreFeatureAsset.bbback.swiftUIImage.resizable().aspectRatio(contentMode: .fill))
-
             } else {
                 emptyView
                     .frame(minHeight: 756, maxHeight: .infinity, alignment: .topLeading)
-
             }
         }
-
     }
 
     private var emptyView: some View {
@@ -76,8 +69,8 @@ public struct ResultView: View {
     }
 }
 
-// struct ResultView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ResultView(projectResult: .from(entity: ProjectResultEntity.sample))
-//    }
-// }
+ struct ResultView_Previews: PreviewProvider {
+    static var previews: some View {
+        ResultView(projectResult: .from(entity: .sample))
+    }
+ }
