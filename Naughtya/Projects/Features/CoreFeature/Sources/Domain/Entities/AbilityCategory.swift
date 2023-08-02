@@ -76,22 +76,8 @@ public enum AbilityCategory: String {
         - "UX학개론" 36p~89p 읽기
 
         이런 식으로 알려주면 된다.
-
-        그리고 최대한 하나의 능력에 많은 ToDo를 묶어야 한다.
-        ToDo의 개수가 20개라고 가정하면, 능력의 개수는 4개 정도가 적당해.
+        알려 줄 때
+        해당 예시 부분을 포함하지 않고 들어온 INPUT으로만 알려주면 된다
         """
-//        switch self {
-//        case .performance:
-//            return """
-//            """
-//        case .delayed:
-//            return """
-//            """
-//        case .incompleted:
-//            return """
-//            """
-//        case .sample:
-//            return "sample"
-//        }
     }
 }

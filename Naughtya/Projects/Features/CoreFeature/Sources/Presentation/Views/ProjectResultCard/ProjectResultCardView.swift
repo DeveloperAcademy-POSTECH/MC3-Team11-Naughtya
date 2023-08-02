@@ -16,10 +16,12 @@ struct ProjectResultCardView: View {
         VStack {
             HStack {
                 Text(projectResult.projectName)
+                    .lineLimit(1)
                     .font(.appleSDGothicNeo(size: 24, weight: .bold))
                 Spacer()
                 if let endedAt = projectResult.project.endedAt?.getDateString("yyyy.MM.dd") {
                     Text("-\(endedAt)")
+                        .lineLimit(1)
                         .font(.appleSDGothicNeo(size: 14, weight: .semibold))
                 }
             }
@@ -32,6 +34,7 @@ struct ProjectResultCardView: View {
             RoundedRectangle(cornerRadius: 5)
                 .fill(isSelected ? Color.customGray5 : Color.customGray7)
         )
+        .animation(.easeOut, value: isSelected)
     }
 }
 

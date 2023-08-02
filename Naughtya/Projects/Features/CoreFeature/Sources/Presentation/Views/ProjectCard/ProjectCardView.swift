@@ -14,12 +14,12 @@ struct ProjectCardView: View {
     let project: ProjectModel
     let isDummy: Bool
     let dragDropDelegate: DragDropDelegate
+    private let cardViewUserDefaultsKey: String // 각 카드 뷰의 UserDefaults 키
     @State private var absoluteRect: CGRect!
     @State private var isBeingDragged = false
     @State private var showModal = false
     @State private var gradientPosition: Double = 0.0
     @State private var isAnimating = true
-    private let cardViewUserDefaultsKey: String // 각 카드 뷰의 UserDefaults 키
     @State private var hasAppeared = false
 
     init(project: ProjectModel,
@@ -105,6 +105,7 @@ struct ProjectCardView: View {
         }
         .frame(height: 68)
         .opacity(isDummy || isBeingDragged ? 0.5 : 1)
+        .animation(.easeOut, value: project.isSelected)
         .gesture(dragGesture)
         .contextMenu {
             contextMenu
@@ -152,8 +153,9 @@ struct ProjectCardView: View {
 
     private var bookmarkIndicator: some View {
         Image(systemName: project.isBookmarked ? "star.fill" : "star")
-            .font(.appleSDGothicNeo(size: 15))
             .foregroundColor(project.isBookmarked ? .pointColor : .customGray2)
+            .font(.appleSDGothicNeo(size: 15))
+            .animation(.easeOut(duration: 0.1), value: project.isBookmarked)
             .onTapGesture {
                 toggleBookmarked()
             }
