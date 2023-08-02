@@ -158,11 +158,15 @@ public struct TodoItemView: View {
                 )
         ) { _ in
             updateTitle()
-            appendMultiLineTodosIfNeeded()
+            Task {
+                try await appendMultiLineTodosIfNeeded()
+            }
         }
         .onSubmit {
             updateTitle()
-            appendNextTodo()
+            Task {
+                try await appendNextTodo()
+            }
         }
     }
 
@@ -280,7 +284,7 @@ public struct TodoItemView: View {
         }
     }
 
-    private func appendMultiLineTodosIfNeeded() {
+    private func appendMultiLineTodosIfNeeded() async throws {
         guard title.contains("\n") else {
             return
         }
@@ -288,19 +292,16 @@ public struct TodoItemView: View {
             .split(separator: "\n")
             .map { String($0) }
         title = titles.removeFirst()
-        titles
-            .forEach {
-                appendNextTodo(title: $0)
-            }
+        for title in titles.reversed() {
+            try await appendNextTodo(title: title)
+        }
     }
 
-    private func appendNextTodo(title: String? = nil) {
-        Task {
-            try await Self.todoUseCase.createAfterTodo(
-                todo.entity,
-                title: title
-            )
-        }
+    private func appendNextTodo(title: String? = nil) async throws {
+        try await Self.todoUseCase.createAfterTodo(
+            todo.entity,
+            title: title
+        )
     }
 
     private func delete() {
