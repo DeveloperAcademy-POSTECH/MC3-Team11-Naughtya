@@ -61,7 +61,6 @@ public struct ResultIncompleteTodoView: View {
 
                 if projectResult.incompletedTodos.isEmpty {
                     HStack {
-
                             Text("모두 달성했습니다! 대단해용")
                                 .font(
                                     .appleSDGothicNeo(size: 18)
@@ -131,12 +130,19 @@ public struct ResultIncompleteTodoView: View {
         Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
             // Update the current index to show the next item in the list
             withAnimation {
-                offsetY = -30 // Move the current item upward
+                if projectResult.incompletedTodos.count == 0 {
+                    offsetY = 0
+                } else {
+                    offsetY = -30 // Move the current item upward
+                }
             }
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 // Restore the offset to the original position after the animation is done
                 offsetY = 0
+                if projectResult.incompletedTodos.count == 0 {
+                    return
+                }
                 currentIndex = (currentIndex + 1) % projectResult.incompletedTodos.count
             }
         }
