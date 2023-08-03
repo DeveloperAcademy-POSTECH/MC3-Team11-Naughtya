@@ -16,7 +16,7 @@ struct EpilogTodoListView: View {
     }
 
     var body: some View {
-        VStack(spacing: 213) {
+        VStack(alignment: .leading, spacing: 213) {
             let dateStrings = projectResult.dateStringCompletedTodosMap.map { $0.key }.sorted()
             ForEach(dateStrings, id: \.self) { dateString in
                 HStack(alignment: .top, spacing: 79) {
@@ -33,7 +33,7 @@ struct EpilogTodoListView: View {
                 }
                 .padding(.bottom)
             }
-        }
+        }.frame(alignment: .center )
     }
 
     private func buildTodoItemView(title: String) -> some View {
