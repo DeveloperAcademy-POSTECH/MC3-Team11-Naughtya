@@ -11,7 +11,13 @@ struct OpenAIService {
         }
 
         let openAIMessages = messages.map { OpenAIChatMessage(role: $0.role, content: $0.content) }
-        let body = OpenAIChatBody(model: "gpt-3.5-turbo", messages: openAIMessages, temperature: 0)
+        let body = OpenAIChatBody(
+            model: "gpt-3.5-turbo",
+            messages: openAIMessages,
+            temperature: 0,
+            max_tokens: 2000, // TODO: hayo
+            top_p: 1 // TODO: hayo
+        )
 
         guard let url = URL(string: endpointUrl) else {
             throw NSError(domain: "InvalidURL", code: 0, userInfo: nil)
@@ -35,8 +41,8 @@ struct OpenAIChatBody: Encodable {
     let model: String
     let messages: [OpenAIChatMessage]
     let temperature: Float?
-    let max_tokens: Int? = nil
-    let top_p: Float? = nil
+    let max_tokens: Int?
+    let top_p: Float?
 }
 
 struct OpenAIChatMessage: Codable {

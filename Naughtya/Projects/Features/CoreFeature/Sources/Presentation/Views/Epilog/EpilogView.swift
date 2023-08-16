@@ -82,9 +82,9 @@ public struct EpilogView: View {
                 .font(.system(size: 39))
             }
             HStack {
-                Spacer()
-                EpilogTodoListView(projectResult: projectResult)
-                Spacer()
+                    Spacer()
+                    EpilogTodoListView(projectResult: projectResult)
+                    Spacer()
             }
         }
     }
